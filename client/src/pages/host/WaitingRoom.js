@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import * as colors from '../../constants/colors';
 import { ButtonStyle } from '../../styles/common';
+import Header from '../../components/common/Header';
 import Footer from '../../components/inGame/HostFooter';
 
 function WatingRoom() {
@@ -24,13 +25,6 @@ const Container = styled.div`
   flex-direction: column;
   width: 100vw;
   height: 100vh;
-`;
-
-const Header = styled.header`
-  position: relative;
-  background-color: ${colors.PRIMARY_DEEP_GREEN};
-  box-shadow: 5px 5px 5px ${colors.BACKGROUND_DEEP_GRAY};
-  height: 6rem;
 `;
 
 const StartButton = styled.button`
