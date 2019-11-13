@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { FOOTER_MARGIN_BOTTOM } from '../../constants/components/main';
+
+const FOOTER_MARGIN_BOTTOM = '1.5rem';
 
 const FooterStyle = styled.footer`
   justify-self: flex-end;
@@ -12,7 +13,7 @@ function Footer() {
   return (
     <FooterStyle>
       <div>
-        <span>Create your own kahoot for FREE at kahoot.com</span>
+        <span>Create your own pickyforky for FREE</span>
       </div>
       <div>
         <span>Terms | Privacy</span>
