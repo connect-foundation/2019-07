@@ -1,13 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-
-import {
-  BUTTON_WIDTH,
-  BUTTON_HEIGHT,
-  BUTTON_MARGIN_TOP,
-} from '../../constants/components/main';
 import * as styles from '../../styles/common';
+
+const BUTTON_WIDTH = '20rem';
+const BUTTON_HEIGHT = '5rem';
+const BUTTON_MARGIN_TOP = '1.5rem';
 
 const Button = styled.button`
   width: ${BUTTON_WIDTH};
