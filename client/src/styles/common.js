@@ -2,12 +2,22 @@ import { css } from 'styled-components';
 import * as colors from '../constants/colors';
 
 const ButtonStyle = css`
-  background-color: ${colors.PRIMARY_DEEP_YELLOW};
   border-radius: 0.5rem;
   border: none;
-  color: ${colors.TEXT_BLACK};
   font-weight: bold;
   font-size: 2rem;
+`;
+
+const YellowButtonStyle = css`
+  background-color: ${colors.PRIMARY_DEEP_YELLOW};
+  color: ${colors.TEXT_BLACK};
+  ${ButtonStyle}
+`;
+
+const GreenButtonStyle = css`
+  background-color: ${colors.PRIMARY_DEEP_GREEN};
+  color: ${colors.TEXT_WHITE};
+  ${ButtonStyle}
 `;
 
 const InGameFooterStyle = css`
@@ -26,4 +36,19 @@ const InGameFooterTextStyle = css`
   vertical-align: middle;
 `;
 
-export { ButtonStyle, InGameFooterStyle, InGameFooterTextStyle };
+const InputStyle = css`
+  color: ${colors.TEXT_BLACK};
+  font-size: 2rem;
+  border-radius: 0.5rem;
+  text-align: center;
+  border: 1px solid ${colors.BORDER_DARK_GRAY};
+`;
+
+export {
+  ButtonStyle,
+  GreenButtonStyle,
+  YellowButtonStyle,
+  InGameFooterStyle,
+  InGameFooterTextStyle,
+  InputStyle,
+};
