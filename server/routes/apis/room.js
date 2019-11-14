@@ -74,4 +74,45 @@ router.post('/checkRoomNumber', (req, res) => {
   });
 });
 
+/**
+ * @api {post} /room/enterRoom 방으로 입장 처리
+ * @apiName enterRoom
+ * @apiGroup room
+ *
+ * @apiParam {roomNumber} id 방의 고유한 6자리 번호.
+ * @apiParam {nickname} nickname 사용자가 입력한 닉네임
+ *
+ * @apiSuccess {bool} isSuccess 방을 들어갈 수 있는지 여부
+ * @apiSuccess {string} message 오류가 발생한 경우, 오류 메시지
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       isSuccess: true,
+ *     }
+ *
+ * @apiSuccessExample req.body에 인자 없음:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       isSuccess: false,
+ *       message: 'req.body에 roomNumber가 없습니다.',
+ *     }
+ */
+router.post('/enterRoom', (req, res) => {
+  const keys = ['roomNumber', 'nickname'];
+  if (!checkJsonHasKeys(req.body, keys)) {
+    res.json({
+      isSuccess: false,
+      message: 'req.body에 roomNumber가 없습니다.',
+    });
+    return;
+  }
+
+  const { roomNumber, nickname } = req.body;
+  inMemory.pushUser(roomNumber, nickname);
+  res.json({
+    isSuccess: true,
+  });
+});
+
 module.exports = router;

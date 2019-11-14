@@ -45,8 +45,6 @@ router.post('/setNickname', (req, res) => {
     return;
   }
 
-  inMemory.pushUser(roomNumber, nickname);
-
   res.json({ isSuccess: true });
 });
 
