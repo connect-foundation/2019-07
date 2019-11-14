@@ -6,6 +6,10 @@ const logger = require('morgan');
 
 const apiRouter = require('./routes/api');
 
+const initInMemory = require('./deploy/initInMemory');
+
+initInMemory();
+
 const app = express();
 
 app.use(logger('dev'));
