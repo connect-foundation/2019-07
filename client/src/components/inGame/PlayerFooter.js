@@ -1,16 +1,21 @@
 import React from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 import * as colors from '../../constants/colors';
 import * as styles from '../../styles/common';
 
-function PlayerFooter() {
+function PlayerFooter({ nickname }) {
   return (
     <Footer>
-      <Nickname />
-      <Score />
+      <Nickname>{nickname}</Nickname>
+      <Score>0</Score>
     </Footer>
   );
 }
+
+PlayerFooter.propTypes = {
+  nickname: PropTypes.string.isRequired,
+};
 
 const Nickname = styled.span`
   ${styles.InGameFooterTextStyle}
