@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import styled from 'styled-components';
 
 import Background from '../components/mainPage/Background';
@@ -24,10 +24,10 @@ function Main() {
         <ContentSection>
           <MainContainer>
             <Logo />
-            <Router>
+            <Switch>
               <Route exact path="/" component={EnterRoomNumber} />
               <Route path="/nickname" component={EnterNickname} />
-            </Router>
+            </Switch>
           </MainContainer>
           <CopyrightFooter />
         </ContentSection>
