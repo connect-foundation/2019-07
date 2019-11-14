@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import * as styles from '../../styles/common';
 
@@ -20,10 +21,24 @@ const Input = styled.input`
 `;
 
 function Nickname() {
+  const [name, setName] = useState('');
+
+  function handleInput(e) {
+    setName(e.target.value);
+  }
+
   return (
     <>
-      <Input placeholder="닉네임" />
-      <Button>닉네임 정하기</Button>
+      <Input placeholder="닉네임" onChange={handleInput} />
+      <Link to={{
+        pathname: '/player',
+        state: {
+          nickname: name,
+        },
+      }}
+      >
+        <Button>닉네임 정하기</Button>
+      </Link>
     </>
   );
 }
