@@ -27,8 +27,9 @@ function Main() {
       <Link to="nickname">
         <Button>입장하기</Button>
       </Link>
-
-      <Button>방 만들기</Button>
+      <Link to="host">
+        <Button>방 만들기</Button>
+      </Link>
     </>
   );
 }

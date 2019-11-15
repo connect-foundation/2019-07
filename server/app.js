@@ -3,6 +3,7 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const io = require('./socket.js');
 
 const apiRouter = require('./routes/api');
 
@@ -11,6 +12,7 @@ const initInMemory = require('./deploy/initInMemory');
 initInMemory();
 
 const app = express();
+app.io = io;
 
 app.use(logger('dev'));
 app.use(express.json());
