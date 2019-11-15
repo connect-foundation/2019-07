@@ -5,7 +5,9 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const io = require('./socket.js');
 
-const indexRouter = require('./routes/index');
+const apiRouter = require('./routes/api');
+
+require('./deploy/initInMemory')();
 
 const app = express();
 app.io = io;
@@ -16,7 +18,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
+app.use('/', apiRouter);
 
 app.use((req, res, next) => {
   next(createError(404));
