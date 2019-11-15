@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import io from 'socket.io-client';
 import * as colors from '../../constants/colors';
-import { YellowButtonStyle } from '../../styles/common';
 import Header from '../../components/common/Header';
 import Footer from '../../components/inGame/HostFooter';
+import { YellowButton } from '../../components/common/Buttons';
 
 function WatingRoom() {
   const [players, setPlayers] = useState([]);
-  const socket = io.connect('http://localhost:3001');
+  const socket = io.connect(process.env.REACT_APP_BACKEND_HOST);
 
   socket.emit('openRoom');
   socket.on('enterPlayer', (nickname) => {
@@ -22,7 +22,9 @@ function WatingRoom() {
   return (
     <Container>
       <Header>
-        <StartButton onClick={startQuiz}>Start</StartButton>
+        <ButtonWrapper>
+          <YellowButton onClick={startQuiz}>Start</YellowButton>
+        </ButtonWrapper>
       </Header>
       <Main>
         <PlayerCounter>대기자 {players.length}명</PlayerCounter>
@@ -42,8 +44,7 @@ const Container = styled.div`
   height: 100vh;
 `;
 
-const StartButton = styled.button`
-  ${YellowButtonStyle}
+const ButtonWrapper = styled.div`
   position: absolute;
   right: 1rem;
   top: 50%;
