@@ -8,7 +8,7 @@ import { YellowButton } from '../../components/common/Buttons';
 
 function WatingRoom() {
   const [players, setPlayers] = useState([]);
-  const socket = io.connect('http://localhost:3001');
+  const socket = io.connect(process.env.REACT_APP_BACKEND_HOST);
 
   socket.emit('openRoom');
   socket.on('enterPlayer', (nickname) => {
