@@ -30,7 +30,7 @@ function WatingRoom({ location }) {
   const [isQuizStart, setQuizStart] = useState(false);
 
   useState(() => {
-    socket = io.connect('http://localhost:3001');
+    socket = io.connect(process.env.REACT_APP_BACKEND_HOST);
     socket.emit('enterPlayer', { nickname: location.state.nickname });
   }, []);
 
