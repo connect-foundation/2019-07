@@ -41,7 +41,7 @@ function WatingRoom({ location }) {
   return (
     <Container>
       <Main>
-        {isQuizStart ? BeforeStart() : AfterStart()}
+        {!isQuizStart ? BeforeStart() : AfterStart()}
       </Main>
       <Footer nickname={location.state.nickname} />
     </Container>
