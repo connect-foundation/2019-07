@@ -1,0 +1,15 @@
+{
+  "name": "2019-07",
+  "version": "1.0.0",
+  "license": "MIT",
+  "scripts": {
+    "start": "npm-run-all install:** --parallel start:**",
+    "install:server": "yarn --cwd server install",
+    "install:client": "yarn --cwd client install",
+    "start:server": "yarn --cwd server start",
+    "start:client": "yarn --cwd client start"
+  },
+  "devDependencies": {
+    "npm-run-all": "^4.1.5"
+  }
+}
