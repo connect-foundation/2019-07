@@ -7,9 +7,7 @@ const io = require('./socket.js');
 
 const apiRouter = require('./routes/api');
 
-const initInMemory = require('./deploy/initInMemory');
-
-initInMemory();
+require('./deploy/initInMemory')();
 
 const app = express();
 app.io = io;
