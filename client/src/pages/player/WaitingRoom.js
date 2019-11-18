@@ -8,56 +8,6 @@ import ProgressBar from '../../components/inGame/ProgressBar';
 
 let socket;
 
-function BeforeStart() {
-  return (
-    <>
-      <LoadingImage />
-      <LoadingText>게임 시작을 기다리고 있습니다...</LoadingText>
-    </>
-  );
-}
-
-function AfterStart() {
-  return (
-    <>
-      <Saying>사람이 유머감각이 있는 게 아니다. <br />유머 감각이 사람을 움직이는 것이다.</Saying>
-      <ProgressBar animationDurationSeconds={3} />
-    </>
-  );
-}
-
-function WaitingRoom({ location }) {
-  const [isQuizStart, setQuizStart] = useState(false);
-
-  useState(() => {
-    socket = io.connect(process.env.REACT_APP_BACKEND_HOST);
-    socket.emit('enterPlayer', { nickname: location.state.nickname });
-  }, []);
-
-  socket.on('startQuiz', () => {
-    setQuizStart(true);
-  });
-
-  return (
-    <Container>
-      <Main>
-        {!isQuizStart ? BeforeStart() : AfterStart()}
-      </Main>
-      <PlayerFooter nickname={location.state.nickname} />
-    </Container>
-  );
-}
-
-WaitingRoom.propTypes = {
-  location: PropTypes.shape({
-    pathname: PropTypes.string.isRequired,
-    state: PropTypes.shape({
-      nickname: PropTypes.string.isRequired,
-    }),
-  }).isRequired,
-};
-
-
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -112,5 +62,54 @@ const Saying = styled.span`
   font-style: italic;
   text-align: center;
 `;
+
+function BeforeStart() {
+  return (
+    <>
+      <LoadingImage />
+      <LoadingText>게임 시작을 기다리고 있습니다...</LoadingText>
+    </>
+  );
+}
+
+function AfterStart() {
+  return (
+    <>
+      <Saying>사람이 유머감각이 있는 게 아니다. <br />유머 감각이 사람을 움직이는 것이다.</Saying>
+      <ProgressBar animationDurationSeconds={3} />
+    </>
+  );
+}
+
+function WaitingRoom({ location }) {
+  const [isQuizStart, setQuizStart] = useState(false);
+
+  useState(() => {
+    socket = io.connect(process.env.REACT_APP_BACKEND_HOST);
+    socket.emit('enterPlayer', { nickname: location.state.nickname });
+  }, []);
+
+  socket.on('startQuiz', () => {
+    setQuizStart(true);
+  });
+
+  return (
+    <Container>
+      <Main>
+        {!isQuizStart ? BeforeStart() : AfterStart()}
+      </Main>
+      <PlayerFooter nickname={location.state.nickname} />
+    </Container>
+  );
+}
+
+WaitingRoom.propTypes = {
+  location: PropTypes.shape({
+    pathname: PropTypes.string.isRequired,
+    state: PropTypes.shape({
+      nickname: PropTypes.string.isRequired,
+    }),
+  }).isRequired,
+};
 
 export default WaitingRoom;
