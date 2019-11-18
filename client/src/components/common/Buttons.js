@@ -11,7 +11,7 @@ const ButtonWrapper = styled.div.attrs({
 `;
 
 const ButtonTop = styled.button`
-  posistion: relative;
+  position: relative;
   flex: 1;
   background-color: ${(props) => props.backgroundColor};
   color: ${(props) => props.fontColor};
