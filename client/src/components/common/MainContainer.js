@@ -6,6 +6,10 @@ const MainContainer = styled.main`
   align-items: center;
   flex: 1 1 0%;
   width: 100%;
+  button, input{
+    width: 20rem;
+    height: 5rem;
+  }
 `;
 
 export default MainContainer;
