@@ -9,7 +9,7 @@ const ButtonWrapper = styled.div`
 `;
 
 const ButtonTop = styled.button`
-  posistion: absolute;
+  position: relative;
   background-color: ${(props) => props.backgroundColor};
   color: ${(props) => props.fontColor};
   filter: brightness(100%);
