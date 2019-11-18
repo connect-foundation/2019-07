@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import MainPage from './pages/MainPage';
+import MainPage from './pages/mainPage/MainPage';
 import HostPage from './pages/host/WaitingRoom';
 import PlayerPage from './pages/player/WaitingRoom';
 

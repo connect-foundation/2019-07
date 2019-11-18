@@ -2,13 +2,13 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import styled from 'styled-components';
 
-import Background from '../components/mainPage/Background';
-import Logo from '../components/logo/Logo';
-import ContentSection from '../components/common/ContentSection';
-import MainContainer from '../components/common/MainContainer';
-import CopyrightFooter from '../components/common/CopyrightFooter';
-import EnterRoomNumber from './mainPage/EnterRoomNumber';
-import EnterNickname from './mainPage/EnterNickname';
+import Background from '../../components/mainPage/Background';
+import Logo from '../../components/logo/Logo';
+import ContentSection from '../../components/common/ContentSection';
+import MainContainer from '../../components/common/MainContainer';
+import CopyrightFooter from '../../components/common/CopyrightFooter';
+import EnterRoomNumber from '../../components/mainPage/EnterRoomNumber';
+import EnterNickname from '../../components/mainPage/EnterNickname';
 
 const Wrapper = styled.div`
   height: 100%;
@@ -17,7 +17,7 @@ const Wrapper = styled.div`
   text-align: center;
 `;
 
-function Main() {
+function MainPage() {
   return (
     <Wrapper>
       <Background>
@@ -36,4 +36,4 @@ function Main() {
   );
 }
 
-export default Main;
+export default MainPage;

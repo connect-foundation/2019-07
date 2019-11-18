@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import * as styles from '../../styles/common';
-import { GreenButton } from '../../components/common/Buttons';
+import { GreenButton } from '../common/Buttons';
 
 const BUTTON_WIDTH = '20rem';
 const BUTTON_HEIGHT = '5rem';
@@ -22,7 +22,7 @@ const Input = styled.input`
   ${styles.InputStyle}
 `;
 
-function Nickname() {
+function EnterNickname() {
   const [name, setName] = useState('');
 
   function handleInput(e) {
@@ -47,4 +47,4 @@ function Nickname() {
   );
 }
 
-export default Nickname;
+export default EnterNickname;
