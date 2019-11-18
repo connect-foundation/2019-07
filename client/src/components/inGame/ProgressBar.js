@@ -3,18 +3,6 @@ import styled, { keyframes } from 'styled-components';
 import PropTypes from 'prop-types';
 import * as colors from '../../constants/colors';
 
-function ProgressBar({ animationDurationSeconds }) {
-  return (
-    <ProgressBarBackground>
-      <ProgressBarContent animationDurationSeconds={animationDurationSeconds} />
-    </ProgressBarBackground>
-  );
-}
-
-ProgressBar.propTypes = {
-  animationDurationSeconds: PropTypes.number.isRequired,
-};
-
 const ProgressBarBackground = styled.div`
  position: relative;
  justify-self: flex-end;
@@ -41,5 +29,17 @@ const ProgressBarContent = styled.div`
  animation: ${ProgressAnimation} ${(props) => props.animationDurationSeconds}s
    linear forwards;
 `;
+
+function ProgressBar({ animationDurationSeconds }) {
+  return (
+    <ProgressBarBackground>
+      <ProgressBarContent animationDurationSeconds={animationDurationSeconds} />
+    </ProgressBarBackground>
+  );
+}
+
+ProgressBar.propTypes = {
+  animationDurationSeconds: PropTypes.number.isRequired,
+};
 
 export default ProgressBar;

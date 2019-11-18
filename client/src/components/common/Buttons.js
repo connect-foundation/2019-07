@@ -81,29 +81,4 @@ function GreenButton({ children, onClick }) {
   );
 }
 
-const buttonDefaultProp = {
-  onClick: undefined,
-};
-
-Button.defaultProps = buttonDefaultProp;
-GreenButton.defaultProps = buttonDefaultProp;
-YellowButton.defaultProps = buttonDefaultProp;
-
-Button.propTypes = {
-  children: PropTypes.node.isRequired,
-  backgroundColor: PropTypes.string.isRequired,
-  fontColor: PropTypes.string.isRequired,
-  onClick: PropTypes.func,
-};
-
-YellowButton.propTypes = {
-  children: PropTypes.node.isRequired,
-  onClick: PropTypes.func,
-};
-
-GreenButton.propTypes = {
-  children: PropTypes.node.isRequired,
-  onClick: PropTypes.func,
-};
-
 export { Button, YellowButton, GreenButton };
