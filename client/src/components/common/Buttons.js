@@ -29,7 +29,7 @@ const ButtonTop = styled.button`
   &:active {
     filter: brightness(105%);
   }
-  &: focus {
+  &:focus {
     outline: 0;
   }
 `;
