@@ -3,22 +3,23 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import * as styles from '../../styles/common';
 import { GreenButton } from '../common/Buttons';
-
-const BUTTON_WIDTH = '20rem';
-const BUTTON_HEIGHT = '5rem';
-const BUTTON_MARGIN_TOP = '1.5rem';
+import {
+  MAIN_BUTTON_WIDTH,
+  MAIN_BUTTON_HEIGHT,
+  MAIN_BUTTON_MARGIN_TOP,
+} from '../../constants/sizes';
 
 const ButtonWrapper = styled.div`
-  margin-top: ${BUTTON_MARGIN_TOP};
+  margin-top: ${MAIN_BUTTON_MARGIN_TOP};
   button{
-    width: ${BUTTON_WIDTH};
-    height: ${BUTTON_HEIGHT};
+    width: ${MAIN_BUTTON_WIDTH};
+    height: ${MAIN_BUTTON_HEIGHT};
   }
 `;
 
 const Input = styled.input`
-  width: ${BUTTON_WIDTH};
-  height: ${BUTTON_HEIGHT};
+  width: ${MAIN_BUTTON_WIDTH};
+  height: ${MAIN_BUTTON_HEIGHT};
   ${styles.InputStyle}
 `;
 
