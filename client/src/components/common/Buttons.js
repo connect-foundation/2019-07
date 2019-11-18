@@ -3,16 +3,13 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import * as colors from '../../constants/colors';
 
-const ButtonWrapper = styled.div.attrs({
-  className: 'buttonWrapper',
-})`
+const ButtonWrapper = styled.div`
   position: relative;
-  display: flex;
+  display: inline-block;
 `;
 
 const ButtonTop = styled.button`
-  posistion: relative;
-  flex: 1;
+  position: relative;
   background-color: ${(props) => props.backgroundColor};
   color: ${(props) => props.fontColor};
   filter: brightness(100%);
@@ -26,19 +23,14 @@ const ButtonTop = styled.button`
   transform: translateY(-0.3rem);
   transition: transform 0.1s;
   cursor: pointer;
-
-  &:active {
+  &:hover {
     transform: translateY(-0.1rem);
-    filter: brightness(95%);
+  }
+  &:active {
+    filter: brightness(105%);
   }
   &:focus {
     outline: 0;
-  }
-
-  @media (min-width: 700px) {
-    &:hover {
-      transform: translateY(-0.1rem);
-    }
   }
 `;
 
@@ -52,15 +44,13 @@ const ButtonBottom = styled.div`
   box-shadow: 0 0.2rem 0.3rem 0.1rem gray;
 `;
 
-function Button({ children, backgroundColor, fontColor, onClick }) {
+function Button({
+  children, backgroundColor, fontColor, onClick,
+}) {
   return (
     <ButtonWrapper>
       <ButtonBottom backgroundColor={backgroundColor} fontColor={fontColor} />
-      <ButtonTop
-        onClick={onClick}
-        backgroundColor={backgroundColor}
-        fontColor={fontColor}
-      >
+      <ButtonTop onClick={onClick} backgroundColor={backgroundColor} fontColor={fontColor}>
         {children}
       </ButtonTop>
     </ButtonWrapper>
@@ -106,12 +96,12 @@ Button.propTypes = {
   onClick: PropTypes.func,
 };
 
-const customButtonProp = {
+const customuButtonProp = {
   children: PropTypes.node.isRequired,
   onClick: PropTypes.func,
 };
 
-YellowButton.propTypes = customButtonProp;
-GreenButton.propTypes = customButtonProp;
+YellowButton.propTypes = customuButtonProp;
+GreenButton.propTypes = customuButtonProp;
 
 export { Button, YellowButton, GreenButton };
