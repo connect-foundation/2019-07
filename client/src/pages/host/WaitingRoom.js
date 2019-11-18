@@ -3,10 +3,10 @@ import styled from 'styled-components';
 import io from 'socket.io-client';
 import * as colors from '../../constants/colors';
 import Header from '../../components/common/Header';
-import Footer from '../../components/inGame/HostFooter';
+import HostFooter from '../../components/inGame/HostFooter';
 import { YellowButton } from '../../components/common/Buttons';
 
-function WatingRoom() {
+function WaitingRoom() {
   const [players, setPlayers] = useState([]);
   const socket = io.connect(process.env.REACT_APP_BACKEND_HOST);
 
@@ -32,7 +32,7 @@ function WatingRoom() {
           {players.map((player) => <li key={player}>{player}</li>)}
         </PlayerList>
       </Main>
-      <Footer />
+      <HostFooter />
     </Container>
   );
 }
@@ -82,4 +82,4 @@ const PlayerList = styled.ul`
   }
 `;
 
-export default WatingRoom;
+export default WaitingRoom;
