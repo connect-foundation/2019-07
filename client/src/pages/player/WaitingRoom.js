@@ -3,7 +3,7 @@ import styled, { keyframes } from 'styled-components';
 import io from 'socket.io-client';
 import PropTypes from 'prop-types';
 import * as colors from '../../constants/colors';
-import Footer from '../../components/inGame/PlayerFooter';
+import PlayerFooter from '../../components/inGame/PlayerFooter';
 import ProgressBar from '../../components/inGame/ProgressBar';
 
 let socket;
@@ -26,7 +26,7 @@ function AfterStart() {
   );
 }
 
-function WatingRoom({ location }) {
+function WaitingRoom({ location }) {
   const [isQuizStart, setQuizStart] = useState(false);
 
   useState(() => {
@@ -43,12 +43,12 @@ function WatingRoom({ location }) {
       <Main>
         {!isQuizStart ? BeforeStart() : AfterStart()}
       </Main>
-      <Footer nickname={location.state.nickname} />
+      <PlayerFooter nickname={location.state.nickname} />
     </Container>
   );
 }
 
-WatingRoom.propTypes = {
+WaitingRoom.propTypes = {
   location: PropTypes.shape({
     pathname: PropTypes.string.isRequired,
     state: PropTypes.shape({
@@ -113,4 +113,4 @@ const Saying = styled.span`
   text-align: center;
 `;
 
-export default WatingRoom;
+export default WaitingRoom;
