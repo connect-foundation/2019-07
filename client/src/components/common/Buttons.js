@@ -96,14 +96,12 @@ Button.propTypes = {
   onClick: PropTypes.func,
 };
 
-YellowButton.propTypes = {
+const customuButtonProp = {
   children: PropTypes.node.isRequired,
   onClick: PropTypes.func,
 };
 
-GreenButton.propTypes = {
-  children: PropTypes.node.isRequired,
-  onClick: PropTypes.func,
-};
+YellowButton.propTypes = customuButtonProp;
+GreenButton.propTypes = customuButtonProp;
 
 export { Button, YellowButton, GreenButton };

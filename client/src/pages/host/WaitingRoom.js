@@ -6,37 +6,6 @@ import Header from '../../components/common/Header';
 import HostFooter from '../../components/inGame/HostFooter';
 import { YellowButton } from '../../components/common/Buttons';
 
-function WaitingRoom() {
-  const [players, setPlayers] = useState([]);
-  const socket = io.connect(process.env.REACT_APP_BACKEND_HOST);
-
-  socket.emit('openRoom');
-  socket.on('enterPlayer', (nickname) => {
-    setPlayers([...players, nickname]);
-  });
-
-  function startQuiz() {
-    socket.emit('startQuiz');
-  }
-
-  return (
-    <Container>
-      <Header>
-        <ButtonWrapper>
-          <YellowButton onClick={startQuiz}>Start</YellowButton>
-        </ButtonWrapper>
-      </Header>
-      <Main>
-        <PlayerCounter>대기자 {players.length}명</PlayerCounter>
-        <PlayerList>
-          {players.map((player) => <li key={player}>{player}</li>)}
-        </PlayerList>
-      </Main>
-      <HostFooter />
-    </Container>
-  );
-}
-
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -81,5 +50,36 @@ const PlayerList = styled.ul`
     color: ${colors.TEXT_BLACK};
   }
 `;
+
+function WaitingRoom() {
+  const [players, setPlayers] = useState([]);
+  const socket = io.connect(process.env.REACT_APP_BACKEND_HOST);
+
+  socket.emit('openRoom');
+  socket.on('enterPlayer', (nickname) => {
+    setPlayers([...players, nickname]);
+  });
+
+  function startQuiz() {
+    socket.emit('startQuiz');
+  }
+
+  return (
+    <Container>
+      <Header>
+        <ButtonWrapper>
+          <YellowButton onClick={startQuiz}>Start</YellowButton>
+        </ButtonWrapper>
+      </Header>
+      <Main>
+        <PlayerCounter>대기자 {players.length}명</PlayerCounter>
+        <PlayerList>
+          {players.map((player) => <li key={player}>{player}</li>)}
+        </PlayerList>
+      </Main>
+      <HostFooter />
+    </Container>
+  );
+}
 
 export default WaitingRoom;
