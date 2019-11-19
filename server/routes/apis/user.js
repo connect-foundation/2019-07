@@ -55,7 +55,7 @@ router.post('/setNickname', (req, res) => {
 
   const { nickname, roomNumber } = req.body;
 
-  if (isNicknameValid(nickname)) {
+  if (!isNicknameValid(nickname)) {
     res.json({ isSuccess: false, message: '유효하지 않은 닉네임입니다. 닉네임을 다시 입력해주세요.' });
     return;
   }
