@@ -63,7 +63,11 @@ function EnterRoomNumber({ history }) {
 
   return (
     <>
-      <Input placeholder="방 번호" onChange={handleInputChange} onKeyUp={handlePressEnter} />
+      <Input
+        placeholder="방 번호"
+        onChange={handleInputChange}
+        onKeyUp={handlePressEnter}
+      />
       <ButtonContainer>
         <GreenButton onClick={handleEnterButtonClick}>입장하기</GreenButton>
       </ButtonContainer>

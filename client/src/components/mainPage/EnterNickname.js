@@ -54,9 +54,15 @@ function EnterNickname({ history }) {
 
   return (
     <>
-      <Input placeholder="닉네임" onChange={handleInputChange} onKeyUp={handlePressEnter} />
+      <Input
+        placeholder="닉네임"
+        onChange={handleInputChange}
+        onKeyUp={handlePressEnter}
+      />
       <ButtonContainer>
-        <GreenButton onClick={handleCreateButtonClick}>닉네임 정하기</GreenButton>
+        <GreenButton onClick={handleCreateButtonClick}>
+          닉네임 정하기
+        </GreenButton>
       </ButtonContainer>
     </>
   );
