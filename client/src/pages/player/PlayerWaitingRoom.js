@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import * as colors from '../../constants/colors';
 import PlayerFooter from '../../components/inGame/PlayerFooter';
 import ProgressBar from '../../components/inGame/ProgressBar';
+import DESKTOP_MIN_WIDTH from '../../constants/media';
 
 let socket;
 
@@ -50,7 +51,7 @@ const LoadingText = styled.span`
   font-weight: bold;
   margin-top: auto;
   justify-self: flex-end;
-  @media (min-width: 700px) {
+  @media (min-width: ${DESKTOP_MIN_WIDTH}) {
     font-size: 2rem;
   }
 `;
@@ -75,7 +76,10 @@ function BeforeStart() {
 function AfterStart() {
   return (
     <>
-      <Saying>사람이 유머감각이 있는 게 아니다. <br />유머 감각이 사람을 움직이는 것이다.</Saying>
+      <Saying>
+        사람이 유머감각이 있는 게 아니다. <br />
+        유머 감각이 사람을 움직이는 것이다.
+      </Saying>
       <ProgressBar animationDurationSeconds={3} />
     </>
   );
@@ -95,9 +99,7 @@ function PlayerWaitingRoom({ location }) {
 
   return (
     <Container>
-      <Main>
-        {!isQuizStart ? BeforeStart() : AfterStart()}
-      </Main>
+      <Main>{!isQuizStart ? BeforeStart() : AfterStart()}</Main>
       <PlayerFooter nickname={location.state.nickname} />
     </Container>
   );

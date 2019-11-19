@@ -8,6 +8,7 @@ import EnterRoomNumber from '../components/mainPage/EnterRoomNumber';
 import EnterNickname from '../components/mainPage/EnterNickname';
 import ToastStore, { ToastContext } from '../components/common/ToastStore';
 import { PRIMARY_LIGHT_YELLOW } from '../constants/colors';
+import DESKTOP_MIN_WIDTH from '../constants/media';
 
 const Background = styled.div`
   position: relative;
@@ -44,7 +45,7 @@ const LogoContainer = styled.div`
 
   div#logo3d {
     transform: scale3d(0.4, 0.4, 0.4);
-    @media (min-width: 700px) {
+    @media (min-width: ${DESKTOP_MIN_WIDTH}) {
       transform: scale3d(1, 1, 1);
     }
   }

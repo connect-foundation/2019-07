@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import * as colors from '../../constants/colors';
+import DESKTOP_MIN_WIDTH from '../../constants/media';
 
 const ButtonWrapper = styled.div.attrs({
   className: 'buttonWrapper',
@@ -35,7 +36,7 @@ const ButtonTop = styled.button`
     outline: 0;
   }
 
-  @media (min-width: 700px) {
+  @media (min-width: ${DESKTOP_MIN_WIDTH}) {
     &:hover {
       transform: translateY(-0.1rem);
     }
