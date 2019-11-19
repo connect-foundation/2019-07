@@ -5,6 +5,20 @@ const inMemory = require('../../models/inMemory');
 const router = express.Router();
 
 /**
+ * 닉네임을 입력받으면 그 닉네임이 유효한지 확인해줌
+ *
+ * @param {string} nickname 3~20 자리의 범위인지 체크
+ *
+ * @returns {bool} 번호가 유효한지(6자리 숫자) 아닌지 여부
+ */
+function isNicknameValid(nickname) {
+  const nicknameTrimmed = nickname.trim();
+  if (nicknameTrimmed.length < 3 || nicknameTrimmed.length > 20) return false;
+  if (/[^(가-힣a-zA-Z0-9)]/.test(nicknameTrimmed)) return false;
+  return true;
+}
+
+/**
  * 입장하고싶은 방에 닉네임이 중복되어있는지 확인
  *
  * @param {string} nickname 사용자가 입력한 nickname
@@ -40,8 +54,14 @@ router.post('/setNickname', (req, res) => {
   }
 
   const { nickname, roomNumber } = req.body;
+
+  if (isNicknameValid(nickname)) {
+    res.json({ isSuccess: false, message: '유효하지 않은 닉네임입니다. 닉네임을 다시 입력해주세요.' });
+    return;
+  }
+
   if (isNicknameOverlap(nickname, roomNumber)) {
-    res.json({ isSuccess: false, message: '닉네임이 중복됩니다.' });
+    res.json({ isSuccess: false, message: '닉네임이 중복됩니다. 닉네임을 다시 입력해주세요.' });
     return;
   }
 
