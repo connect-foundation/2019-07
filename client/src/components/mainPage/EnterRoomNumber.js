@@ -17,10 +17,6 @@ const Input = styled.input`
 function EnterRoomNumber({ history }) {
   const [roomNumber, setRoomNumber] = useState('');
 
-  function handleInputChange(e) {
-    setRoomNumber(e.target.value);
-  }
-
   function moveNicknamePage() {
     history.push({
       pathname: '/nickname',
@@ -34,9 +30,21 @@ function EnterRoomNumber({ history }) {
     });
   }
 
+  function handleInputChange(e) {
+    setRoomNumber(e.target.value);
+  }
+
+  function handleEnterButtonClick() {
+    moveNicknamePage();
+  }
+
+  function handleMakeButtonClick() {
+    moveLoginPage();
+  }
+
   function handlePressEnter(e) {
     if (e.key === 'Enter') {
-      moveNicknamePage();
+      handleEnterButtonClick();
     }
   }
 
@@ -44,10 +52,10 @@ function EnterRoomNumber({ history }) {
     <>
       <Input placeholder="방 번호" onChange={handleInputChange} onKeyUp={handlePressEnter} />
       <ButtonWrapper>
-        <GreenButton onClick={moveNicknamePage}>입장하기</GreenButton>
+        <GreenButton onClick={handleEnterButtonClick}>입장하기</GreenButton>
       </ButtonWrapper>
       <ButtonWrapper>
-        <GreenButton onClick={moveLoginPage}>방 만들기</GreenButton>
+        <GreenButton onClick={handleMakeButtonClick}>방 만들기</GreenButton>
       </ButtonWrapper>
     </>
   );
