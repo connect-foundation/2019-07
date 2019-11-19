@@ -41,7 +41,10 @@
   },
   "eslintConfig": {
     "root": true,
-    "extends": "airbnb",
+    "extends": [
+      "airbnb",
+      "prettier"
+    ],
     "rules": {
       "react/prefer-stateless-function": 0,
       "react/jsx-one-expression-per-line": 0,

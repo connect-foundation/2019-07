@@ -7,7 +7,7 @@ import { fetchRoomNumber } from '../../utils/fetch';
 
 const BUTTON_MARGIN_TOP = '1.5rem';
 
-const ButtonWrapper = styled.div`
+const ButtonContainer = styled.div`
   margin-top: ${BUTTON_MARGIN_TOP};
 `;
 
@@ -64,12 +64,12 @@ function EnterRoomNumber({ history }) {
   return (
     <>
       <Input placeholder="방 번호" onChange={handleInputChange} onKeyUp={handlePressEnter} />
-      <ButtonWrapper>
+      <ButtonContainer>
         <GreenButton onClick={handleEnterButtonClick}>입장하기</GreenButton>
-      </ButtonWrapper>
-      <ButtonWrapper>
+      </ButtonContainer>
+      <ButtonContainer>
         <GreenButton onClick={handleMakeButtonClick}>방 만들기</GreenButton>
-      </ButtonWrapper>
+      </ButtonContainer>
     </>
   );
 }
