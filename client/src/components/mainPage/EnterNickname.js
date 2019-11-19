@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import * as styles from '../../styles/common';
 import { GreenButton } from '../common/Buttons';
 import { fetchNickname } from '../../utils/fetch';
+import { ToastContext } from '../common/ToastStore';
 
 const BUTTON_MARGIN_TOP = '1.5rem';
 
@@ -18,6 +19,8 @@ const Input = styled.input`
 function EnterNickname({ history }) {
   const { roomNumber } = history.location.state;
   const [nickname, setNickname] = useState('');
+  const { onToast, offToast } = useContext(ToastContext);
+  useEffect(offToast, []);
 
   function moveWaitingRoom() {
     history.push({
@@ -34,12 +37,12 @@ function EnterNickname({ history }) {
     const response = await fetchNickname(nickname, roomNumber);
 
     if (response.isError) {
-      console.log(response.message);
+      onToast(response.message);
       return;
     }
 
     if (!response.isSuccess) {
-      console.log(response.message);
+      onToast(response.message);
       return;
     }
 
