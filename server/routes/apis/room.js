@@ -25,8 +25,7 @@ function isRoomNumberValid(roomNumber) {
  * @returns {bool} isExist 존재하는지 아닌지 여부
  */
 function isRoomExist(roomNumber) {
-  const rooms = inMemory.getRooms();
-  return !!rooms.find((room) => room.roomNumber === roomNumber);
+  return !!inMemory.getRoom(roomNumber);
 }
 
 /**

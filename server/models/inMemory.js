@@ -21,10 +21,6 @@ class InMemory {
     return true;
   }
 
-  getRooms() {
-    return this.rooms;
-  }
-
   getRoom(roomNumber) {
     return this.rooms.find((room) => room.roomNumber === roomNumber);
   }
