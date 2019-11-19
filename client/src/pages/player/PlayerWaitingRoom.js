@@ -81,7 +81,7 @@ function AfterStart() {
   );
 }
 
-function WaitingRoom({ location }) {
+function PlayerWaitingRoom({ location }) {
   const [isQuizStart, setQuizStart] = useState(false);
 
   useState(() => {
@@ -103,7 +103,7 @@ function WaitingRoom({ location }) {
   );
 }
 
-WaitingRoom.propTypes = {
+PlayerWaitingRoom.propTypes = {
   location: PropTypes.shape({
     pathname: PropTypes.string.isRequired,
     state: PropTypes.shape({
@@ -112,4 +112,4 @@ WaitingRoom.propTypes = {
   }).isRequired,
 };
 
-export default WaitingRoom;
+export default PlayerWaitingRoom;
