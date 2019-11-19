@@ -7,20 +7,20 @@ const router = express.Router();
 /**
  * 방 번호를 입력받으면 그 방 번호가 유효한지 확인해줌
  *
- * @param {int} roomNumber 6자리 숫자로 이루어진 방 번호
+ * @param {string} roomNumber 6자리 숫자로 이루어진 방 번호
  *
  * @returns {bool} 번호가 유효한지(6자리 숫자) 아닌지 여부
  */
 function isRoomNumberValid(roomNumber) {
-  if (String(roomNumber).length !== 6) return false;
-  if (/[^0-9]/.test(String(roomNumber))) return false;
+  if (roomNumber.length !== 6) return false;
+  if (/[^0-9]/.test(roomNumber)) return false;
   return true;
 }
 
 /**
  * 방 번호를 입력받으면 그 방이 열려있는지 확인해줌
  *
- * @param {int} roomNumber 6자리 숫자로 이루어진 방 번호
+ * @param {string} roomNumber 6자리 숫자로 이루어진 방 번호
  *
  * @returns {bool} isExist 존재하는지 아닌지 여부
  */
@@ -91,47 +91,6 @@ router.post('/checkRoomNumber', (req, res) => {
     return;
   }
 
-  res.json({
-    isSuccess: true,
-  });
-});
-
-/**
- * @api {post} /room/enterRoom 방으로 입장 처리
- * @apiName enterRoom
- * @apiGroup room
- *
- * @apiParam {roomNumber} id 방의 고유한 6자리 번호.
- * @apiParam {nickname} nickname 사용자가 입력한 닉네임
- *
- * @apiSuccess {bool} isSuccess 방을 들어갈 수 있는지 여부
- * @apiSuccess {string} message 오류가 발생한 경우, 오류 메시지
- *
- * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- *     {
- *       isSuccess: true,
- *     }
- *
- * @apiSuccessExample req.body에 인자 없음:
- *     HTTP/1.1 200 OK
- *     {
- *       isSuccess: false,
- *       message: 'req.body에 roomNumber가 없습니다.',
- *     }
- */
-router.post('/enterRoom', (req, res) => {
-  const keys = ['roomNumber', 'nickname'];
-  if (!checkJsonHasKeys(req.body, keys)) {
-    res.json({
-      isSuccess: false,
-      message: 'req.body에 roomNumber가 없습니다.',
-    });
-    return;
-  }
-
-  const { roomNumber, nickname } = req.body;
-  inMemory.pushUser(roomNumber, nickname);
   res.json({
     isSuccess: true,
   });

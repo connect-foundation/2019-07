@@ -1,8 +1,9 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 import * as styles from '../../styles/common';
 import { GreenButton } from '../common/Buttons';
+import { fetchRoomNumber } from '../../utils/fetch';
 
 const BUTTON_MARGIN_TOP = '1.5rem';
 
@@ -14,22 +15,67 @@ const Input = styled.input`
   ${styles.InputStyle}
 `;
 
-function EnterRoomNumber() {
+function EnterRoomNumber({ history }) {
+  const [roomNumber, setRoomNumber] = useState('');
+
+  function moveNicknamePage() {
+    history.push({
+      pathname: '/nickname',
+      state: { roomNumber },
+    });
+  }
+
+  function moveLoginPage() {
+    history.push({
+      pathname: '/login',
+    });
+  }
+
+  function handleInputChange(e) {
+    setRoomNumber(e.target.value);
+  }
+
+  async function handleEnterButtonClick() {
+    const response = await fetchRoomNumber(roomNumber);
+
+    if (response.isError) {
+      console.log(response.message);
+      return;
+    }
+
+    if (!response.isSuccess) {
+      console.log(response.message);
+      return;
+    }
+
+    moveNicknamePage();
+  }
+
+  function handleMakeButtonClick() {
+    moveLoginPage();
+  }
+
+  function handlePressEnter(e) {
+    if (e.key === 'Enter') {
+      handleEnterButtonClick();
+    }
+  }
+
   return (
     <>
-      <Input placeholder="방 번호" />
-      <Link to="nickname">
-        <ButtonContainer>
-          <GreenButton>입장하기</GreenButton>
-        </ButtonContainer>
-      </Link>
-      <Link to="host">
-        <ButtonContainer>
-          <GreenButton>방 만들기</GreenButton>
-        </ButtonContainer>
-      </Link>
+      <Input placeholder="방 번호" onChange={handleInputChange} onKeyUp={handlePressEnter} />
+      <ButtonContainer>
+        <GreenButton onClick={handleEnterButtonClick}>입장하기</GreenButton>
+      </ButtonContainer>
+      <ButtonContainer>
+        <GreenButton onClick={handleMakeButtonClick}>방 만들기</GreenButton>
+      </ButtonContainer>
     </>
   );
 }
+
+EnterRoomNumber.propTypes = {
+  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
+};
 
 export default EnterRoomNumber;
