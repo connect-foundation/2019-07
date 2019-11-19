@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -6,6 +6,7 @@ import Logo from '../components/logo/Logo';
 import CopyrightFooter from '../components/common/CopyrightFooter';
 import EnterRoomNumber from '../components/mainPage/EnterRoomNumber';
 import EnterNickname from '../components/mainPage/EnterNickname';
+import ToastStore, { ToastContext } from '../components/common/ToastStore';
 import { PRIMARY_LIGHT_YELLOW } from '../constants/colors';
 
 const Background = styled.div`
@@ -60,9 +61,10 @@ const RoutingContainer = styled.div`
   }
 `;
 
-function MainPage() {
+function ToastStoreContainer() {
+  const { ToastMessage } = useContext(ToastContext);
   return (
-    <Background>
+    <>
       <ContentSection>
         <MainContainer>
           <LogoContainer>
@@ -77,6 +79,17 @@ function MainPage() {
         </MainContainer>
         <CopyrightFooter />
       </ContentSection>
+      <ToastMessage />
+    </>
+  );
+}
+
+function MainPage() {
+  return (
+    <Background>
+      <ToastStore>
+        <ToastStoreContainer />
+      </ToastStore>
     </Background>
   );
 }
