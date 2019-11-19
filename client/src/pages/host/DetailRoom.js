@@ -15,7 +15,7 @@ const RoomInfoWrapper = styled.div`
   transform: translateY(-50%);
   display: flex;
   align-items: center;
-  * {
+  span {
     color: ${colors.TEXT_WHITE};
     font-weight: bold;
     font-size: 2rem;
@@ -24,12 +24,16 @@ const RoomInfoWrapper = styled.div`
   }
 `;
 
-const RoomName = styled.button`
-  background-color: inherit;
-  border: none;
+const EditRoomNameImage = styled.img.attrs({
+  src:
+    'https://iconmonstr.com/wp-content/g/gd/makefg.php?i=../assets/preview/2012/png/iconmonstr-edit-4.png&r=255&g=255&b=255',
+})`
+  width: 2.5rem;
   cursor: pointer;
+  opacity: 0.6;
   &:hover {
     text-decoration: underline;
+    opacity: 1;
   }
   &:focus {
     outline: none;
@@ -50,9 +54,6 @@ const NavigationBar = styled.nav`
   box-shadow: 0 5px 5px -4px ${colors.TEXT_GRAY};
   justify-content: center;
   align-items: center;
-
-  button {
-  }
 `;
 
 const TabMenuButton = styled.div`
@@ -80,13 +81,13 @@ function DetailRoom() {
   const [isQuizMenuSelected, setQuizMenuState] = useState(true);
   const [isAnalysisMenuSelected, setAnalysisMenuState] = useState(false);
 
-  function changeRoomName(e) {
-    const currentRoomName = e.target.innerText;
+  function changeRoomName() {
     /**
      * 현재 방의 이름을 Modal input에 출력
      * 유저가 입력한 값을 setRoomName로 설정하고 fetch
      * 응답이 실패로 왔을 경우 상태를 이전으로 돌리고 유저에게 알림
      * */
+    const currentRoomName = roomName;
     setRoomName(currentRoomName);
   }
 
@@ -125,9 +126,8 @@ function DetailRoom() {
     <Background>
       <Header>
         <RoomInfoWrapper>
-          <RoomName title="이름 수정하기" onDoubleClick={changeRoomName}>
-            {roomName}
-          </RoomName>
+          <span>{roomName}</span>
+          <EditRoomNameImage title="이름 수정하기" onClick={changeRoomName} />
           <span>{roomNumber}</span>
         </RoomInfoWrapper>
         <ButtonContainer>
