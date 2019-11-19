@@ -22,7 +22,7 @@ function isNicknameValid(nickname) {
  * 입장하고싶은 방에 닉네임이 중복되어있는지 확인
  *
  * @param {string} nickname 사용자가 입력한 nickname
- * @param {int} roomIndex 6자리 숫자로 이루어진 방 번호
+ * @param {string} roomNumber 6자리 숫자로 이루어진 방 번호
  *
  * @returns {bool} isOverlap 중복되었는지 아닌지 여부
  */

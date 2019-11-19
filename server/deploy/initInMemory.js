@@ -15,11 +15,11 @@ function initInMemory() {
   user3.nickname = 'jjang';
   user4.nickname = 'bling';
 
-  tempRoom.roomNumber = 111111;
+  tempRoom.roomNumber = '111111';
   tempRoom.userList.push(user1);
   tempRoom.userList.push(user2);
 
-  tempRoom2.roomNumber = 222222;
+  tempRoom2.roomNumber = '222222';
   tempRoom.userList.push(user3);
   tempRoom.userList.push(user4);
   inMemory.pushRoom(tempRoom);
