@@ -6,7 +6,7 @@ import { GreenButton } from '../common/Buttons';
 
 const BUTTON_MARGIN_TOP = '1.5rem';
 
-const ButtonWrapper = styled.div`
+const ButtonContainer = styled.div`
   margin-top: ${BUTTON_MARGIN_TOP};
 `;
 
@@ -19,14 +19,14 @@ function EnterRoomNumber() {
     <>
       <Input placeholder="방 번호" />
       <Link to="nickname">
-        <ButtonWrapper>
+        <ButtonContainer>
           <GreenButton>입장하기</GreenButton>
-        </ButtonWrapper>
+        </ButtonContainer>
       </Link>
       <Link to="host">
-        <ButtonWrapper>
+        <ButtonContainer>
           <GreenButton>방 만들기</GreenButton>
-        </ButtonWrapper>
+        </ButtonContainer>
       </Link>
     </>
   );

@@ -13,7 +13,7 @@ const Container = styled.div`
   height: 100vh;
 `;
 
-const ButtonWrapper = styled.div`
+const ButtonContainer = styled.div`
   position: absolute;
   right: 1rem;
   top: 50%;
@@ -67,14 +67,16 @@ function WaitingRoom() {
   return (
     <Container>
       <Header>
-        <ButtonWrapper>
+        <ButtonContainer>
           <YellowButton onClick={startQuiz}>Start</YellowButton>
-        </ButtonWrapper>
+        </ButtonContainer>
       </Header>
       <Main>
         <PlayerCounter>대기자 {players.length}명</PlayerCounter>
         <PlayerList>
-          {players.map((player) => <li key={player}>{player}</li>)}
+          {players.map((player) => (
+            <li key={player}>{player}</li>
+          ))}
         </PlayerList>
       </Main>
       <HostFooter />
