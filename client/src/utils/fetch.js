@@ -11,4 +11,17 @@ async function fetchRoomNumber(roomNumber) {
   return responseJson;
 }
 
-export { fetchRoomNumber };
+async function fetchNickname(nickname, roomNumber) {
+  const response = await fetch('user/setNickname', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ nickname, roomNumber }),
+    credentials: 'include',
+  });
+  const responseJson = await response.json();
+  return responseJson;
+}
+
+export { fetchRoomNumber, fetchNickname };
