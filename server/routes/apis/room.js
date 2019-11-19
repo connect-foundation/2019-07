@@ -9,6 +9,19 @@ const router = express.Router();
  *
  * @param {int} roomNumber 6자리 숫자로 이루어진 방 번호
  *
+ * @returns {bool} 번호가 유효한지(6자리 숫자) 아닌지 여부
+ */
+function isRoomNumberValid(roomNumber) {
+  if (String(roomNumber).length !== 6) return false;
+  if (/[^0-9]/.test(String(roomNumber))) return false;
+  return true;
+}
+
+/**
+ * 방 번호를 입력받으면 그 방이 열려있는지 확인해줌
+ *
+ * @param {int} roomNumber 6자리 숫자로 이루어진 방 번호
+ *
  * @returns {bool} isExist 존재하는지 아닌지 여부
  */
 function isRoomExist(roomNumber) {
@@ -56,6 +69,15 @@ router.post('/checkRoomNumber', (req, res) => {
       isError: true,
       isSuccess: false,
       message: 'req.body에 roomNumber가 없습니다.',
+    });
+    return;
+  }
+
+  // 유효한 번호인지 검사
+  if (!isRoomNumberValid(req.body.roomNumber)) {
+    res.json({
+      isSuccess: false,
+      message: '유효하지 않은 번호입니다. 방 번호를 다시 입력해주세요.',
     });
     return;
   }
