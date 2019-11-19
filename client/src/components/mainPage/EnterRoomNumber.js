@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import * as styles from '../../styles/common';
 import { GreenButton } from '../common/Buttons';
+import { fetchRoomNumber } from '../../utils/fetch';
 
 const BUTTON_MARGIN_TOP = '1.5rem';
 
@@ -34,7 +35,19 @@ function EnterRoomNumber({ history }) {
     setRoomNumber(e.target.value);
   }
 
-  function handleEnterButtonClick() {
+  async function handleEnterButtonClick() {
+    const response = await fetchRoomNumber(roomNumber);
+
+    if (response.isError) {
+      console.log(response.message);
+      return;
+    }
+
+    if (!response.isSuccess) {
+      console.log(response.message);
+      return;
+    }
+
     moveNicknamePage();
   }
 

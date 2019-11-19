@@ -66,5 +66,6 @@
     "env": {
       "browser": true
     }
-  }
+  },
+  "proxy": "http://localhost:3001/"
 }
