@@ -21,7 +21,7 @@ function EnterNickname({ history }) {
 
   function moveWaitingRoom() {
     history.push({
-      pathname: '/host',
+      pathname: '/player',
       state: { roomNumber, nickname },
     });
   }
