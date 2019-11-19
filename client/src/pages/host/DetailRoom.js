@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import * as colors from '../../constants/colors';
 import Header from '../../components/common/Header';
-import { YellowButton, Button } from '../../components/common/Buttons';
+import { YellowButton } from '../../components/common/Buttons';
 
 const Background = styled.div`
   height: 100%;
@@ -73,15 +74,12 @@ const TabMenuButton = styled.div`
   }
 `;
 
-function DetailRoom() {
+function DetailRoom({ history }) {
   const [roomName, setRoomName] = useState('방 이름');
-  const [roomNumber, setRoomNumber] = useState('');
-  const [isRoomOpen, setRoomState] = useState(false);
-
   const [isQuizMenuSelected, setQuizMenuState] = useState(true);
   const [isAnalysisMenuSelected, setAnalysisMenuState] = useState(false);
 
-  function changeRoomName() {
+  function handleRoomName() {
     /**
      * 현재 방의 이름을 Modal input에 출력
      * 유저가 입력한 값을 setRoomName로 설정하고 fetch
@@ -91,20 +89,13 @@ function DetailRoom() {
     setRoomName(currentRoomName);
   }
 
-  function roomStateHandler() {
+  function handlePlayButton() {
     /**
-     * 상태에 따라 방 열기/방 닫기에 맞는 Modal 출력
-     * 유저가 상태를 변경하면 roomState를 변경하고 fetch
-     * 서버가 할당한 roomNumber를 setRoomNumber로 설정
-     * */
-    if (isRoomOpen) {
-      setRoomState(false);
-      setRoomNumber('');
-      return;
-    }
-
-    setRoomNumber('#123456');
-    setRoomState(true);
+     * 퀴즈를 시작할 것인지 확인하는 Modal 출력
+     */
+    history.push({
+      pathname: '/host',
+    });
   }
 
   function resetMenuState() {
@@ -112,12 +103,12 @@ function DetailRoom() {
     setAnalysisMenuState(false);
   }
 
-  function showQuiz() {
+  function handleQuizMenuClick() {
     resetMenuState();
     setQuizMenuState(true);
   }
 
-  function showAnalysis() {
+  function handleAnalysisMenuClick() {
     resetMenuState();
     setAnalysisMenuState(true);
   }
@@ -127,28 +118,23 @@ function DetailRoom() {
       <Header>
         <RoomInfoWrapper>
           <span>{roomName}</span>
-          <EditRoomNameImage title="이름 수정하기" onClick={changeRoomName} />
-          <span>{roomNumber}</span>
+          <EditRoomNameImage title="이름 수정하기" onClick={handleRoomName} />
         </RoomInfoWrapper>
         <ButtonContainer>
-          {isRoomOpen ? (
-            <Button onClick={roomStateHandler}>닫기</Button>
-          ) : (
-            <YellowButton onClick={roomStateHandler}>열기</YellowButton>
-          )}
+          <YellowButton onClick={handlePlayButton}>시작하기</YellowButton>
         </ButtonContainer>
       </Header>
       <NavigationBar>
         <TabMenuButton
           type="button"
-          onClick={showQuiz}
+          onClick={handleQuizMenuClick}
           isSelected={isQuizMenuSelected}
         >
           퀴즈
         </TabMenuButton>
         <TabMenuButton
           type="button"
-          onClick={showAnalysis}
+          onClick={handleAnalysisMenuClick}
           isSelected={isAnalysisMenuSelected}
         >
           분석
@@ -161,5 +147,11 @@ function DetailRoom() {
     </Background>
   );
 }
+
+DetailRoom.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+};
 
 export default DetailRoom;
