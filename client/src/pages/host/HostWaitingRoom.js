@@ -51,7 +51,7 @@ const PlayerList = styled.ul`
   }
 `;
 
-function WaitingRoom() {
+function HostWaitingRoom() {
   const [players, setPlayers] = useState([]);
   const socket = io.connect(process.env.REACT_APP_BACKEND_HOST);
 
@@ -84,4 +84,4 @@ function WaitingRoom() {
   );
 }
 
-export default WaitingRoom;
+export default HostWaitingRoom;
