@@ -5,7 +5,7 @@ const inMemory = require('../../models/inMemory');
 const router = express.Router();
 
 /**
- * 방 번호를 입력받으면 그 방이 열려있는지 확인해줌
+ * 방 번호를 입력받으면 그 방 번호가 유효한지 확인해줌
  *
  * @param {int} roomNumber 6자리 숫자로 이루어진 방 번호
  *
@@ -77,7 +77,7 @@ router.post('/checkRoomNumber', (req, res) => {
   if (!isRoomNumberValid(req.body.roomNumber)) {
     res.json({
       isSuccess: false,
-      message: '유효하지 않은 번호입니다. 방 번호를 다시 입력해주세요.',
+      message: '유효하지 않은 방입니다. 방 번호를 다시 입력해주세요.',
     });
     return;
   }
