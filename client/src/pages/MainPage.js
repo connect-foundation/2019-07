@@ -6,7 +6,7 @@ import Logo from '../components/logo/Logo';
 import CopyrightFooter from '../components/common/CopyrightFooter';
 import EnterRoomNumber from '../components/mainPage/EnterRoomNumber';
 import EnterNickname from '../components/mainPage/EnterNickname';
-import { ToastContext } from '../components/common/ToastStore';
+import { ToastContext } from '../components/common/ToastProvider';
 import { PRIMARY_LIGHT_YELLOW } from '../constants/colors';
 import DESKTOP_MIN_WIDTH from '../constants/media';
 
