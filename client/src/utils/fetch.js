@@ -27,4 +27,12 @@ async function fetchNickname(nickname, roomNumber) {
   return response;
 }
 
-export { fetchRoomNumber, fetchNickname };
+async function fetchToken(data) {
+  const response = await fetchPost({
+    url: 'login/callback',
+    data: { data },
+  });
+  return response;
+}
+
+export { fetchRoomNumber, fetchNickname, fetchToken };
