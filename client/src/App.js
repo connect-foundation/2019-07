@@ -1,8 +1,13 @@
 import React from 'react';
 import Router from './Router';
+import ToastStore from './components/common/ToastStore';
 
 function App() {
-  return <Router />;
+  return (
+    <ToastStore>
+      <Router />
+    </ToastStore>
+  );
 }
 
 export default App;

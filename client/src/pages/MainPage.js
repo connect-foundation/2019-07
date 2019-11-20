@@ -6,7 +6,7 @@ import Logo from '../components/logo/Logo';
 import CopyrightFooter from '../components/common/CopyrightFooter';
 import EnterRoomNumber from '../components/mainPage/EnterRoomNumber';
 import EnterNickname from '../components/mainPage/EnterNickname';
-import ToastStore, { ToastContext } from '../components/common/ToastStore';
+import { ToastContext } from '../components/common/ToastStore';
 import { PRIMARY_LIGHT_YELLOW } from '../constants/colors';
 import DESKTOP_MIN_WIDTH from '../constants/media';
 
@@ -62,10 +62,10 @@ const RoutingContainer = styled.div`
   }
 `;
 
-function ToastStoreContainer() {
+function MainPage() {
   const { ToastMessage } = useContext(ToastContext);
   return (
-    <>
+    <Background>
       <ContentSection>
         <MainContainer>
           <LogoContainer>
@@ -81,16 +81,6 @@ function ToastStoreContainer() {
         <CopyrightFooter />
       </ContentSection>
       <ToastMessage />
-    </>
-  );
-}
-
-function MainPage() {
-  return (
-    <Background>
-      <ToastStore>
-        <ToastStoreContainer />
-      </ToastStore>
     </Background>
   );
 }
