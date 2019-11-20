@@ -13,7 +13,7 @@ const ToastMessageBackground = styled.div`
   background-color: ${colors.PRIMARY_DEEP_GREEN};
   transform: translateY(100%);
 
-  animation-name: ${(props) => props.animationName};
+  animation-name: ${props => props.animationName};
   animation-duration: 3s;
   animation-timing-function: linear;
 `;
@@ -28,7 +28,7 @@ const ToastMessageContent = styled.span`
   margin: 0 1rem;
 `;
 
-function ToastStore({ children }) {
+function ToastProvider({ children }) {
   const [isToastOn, setToastOn] = useState(false);
   const [isTriggerOn, setTrigger] = useState(false);
   const [message, setMessage] = useState('');
@@ -89,7 +89,7 @@ function ToastStore({ children }) {
   );
 }
 
-ToastStore.propTypes = {
+ToastProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
-export default ToastStore;
+export default ToastProvider;

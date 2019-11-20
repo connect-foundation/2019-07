@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import * as styles from '../../styles/common';
 import { GreenButton } from '../common/Buttons';
 import { fetchNickname } from '../../utils/fetch';
-import { ToastContext } from '../common/ToastStore';
+import { ToastContext } from '../common/ToastProvider';
 
 const BUTTON_MARGIN_TOP = '1.5rem';
 

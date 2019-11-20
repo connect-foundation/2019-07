@@ -1,12 +1,12 @@
 import React from 'react';
 import Router from './Router';
-import ToastStore from './components/common/ToastStore';
+import ToastProvider from './components/common/ToastProvider';
 
 function App() {
   return (
-    <ToastStore>
+    <ToastProvider>
       <Router />
-    </ToastStore>
+    </ToastProvider>
   );
 }
 
