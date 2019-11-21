@@ -1,6 +1,6 @@
 const express = require('express');
 const checkJsonHasKeys = require('../../utils/checkJsonHasKeys');
-const inMemory = require('../../models/inMemory');
+const rooms = require('../../models/rooms');
 
 const router = express.Router();
 
@@ -27,9 +27,9 @@ function isNicknameValid(nickname) {
  * @returns {bool} isOverlap 중복되었는지 아닌지 여부
  */
 function isNicknameOverlap(nickname, roomNumber) {
-  const room = inMemory.getRoom(roomNumber);
+  const room = rooms.getRoom(roomNumber);
   // need to check Error : room이 비어있으면? 방 번호 먼저 입력하니까 그럴 일은 없겠지만..
-  return !!room.userList.find((user) => user.nickname === nickname);
+  return !!room.players.find((player) => player.nickname === nickname);
 }
 
 /**
@@ -56,12 +56,18 @@ router.post('/setNickname', (req, res) => {
   const { nickname, roomNumber } = req.body;
 
   if (!isNicknameValid(nickname)) {
-    res.json({ isSuccess: false, message: '유효하지 않은 닉네임입니다. 닉네임을 다시 입력해주세요.' });
+    res.json({
+      isSuccess: false,
+      message: '유효하지 않은 닉네임입니다. 닉네임을 다시 입력해주세요.',
+    });
     return;
   }
 
   if (isNicknameOverlap(nickname, roomNumber)) {
-    res.json({ isSuccess: false, message: '닉네임이 중복됩니다. 닉네임을 다시 입력해주세요.' });
+    res.json({
+      isSuccess: false,
+      message: '닉네임이 중복됩니다. 닉네임을 다시 입력해주세요.',
+    });
     return;
   }
 

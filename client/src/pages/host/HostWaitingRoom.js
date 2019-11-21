@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import io from 'socket.io-client';
 import * as colors from '../../constants/colors';
@@ -53,15 +53,30 @@ const PlayerList = styled.ul`
 
 function HostWaitingRoom() {
   const [players, setPlayers] = useState([]);
+  const [roomNumber, setRoomNumber] = useState('');
   const socket = io.connect(process.env.REACT_APP_BACKEND_HOST);
 
-  socket.emit('openRoom');
-  socket.on('enterPlayer', (nickname) => {
-    setPlayers([...players, nickname]);
+  useEffect(() => {
+    socket.emit('openRoom');
+    socket.on('openRoom', roomCode => {
+      setRoomNumber(roomCode.roomNumber);
+    });
+
+    return () => {
+      socket.emit('closeRoom');
+    };
+  }, []);
+
+  socket.on('enterPlayer', playerList => {
+    setPlayers(playerList);
+  });
+
+  socket.on('leavePlayer', playerList => {
+    setPlayers(playerList);
   });
 
   function startQuiz() {
-    socket.emit('startQuiz');
+    socket.emit('startQuiz', { roomNumber });
   }
 
   return (
@@ -74,12 +89,12 @@ function HostWaitingRoom() {
       <Main>
         <PlayerCounter>대기자 {players.length}명</PlayerCounter>
         <PlayerList>
-          {players.map((player) => (
-            <li key={player}>{player}</li>
+          {players.map(player => (
+            <li key={player.nickname}>{player.nickname}</li>
           ))}
         </PlayerList>
       </Main>
-      <HostFooter />
+      <HostFooter roomNumber={roomNumber} />
     </Container>
   );
 }
