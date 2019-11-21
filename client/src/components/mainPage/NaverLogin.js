@@ -7,7 +7,7 @@ import * as address from '../../constants/apiAddresses';
 
 const { callbackPageFullUrl } = address;
 const { roomListUrl } = address;
-const clientId = 'UuzGjP3W5wERxwznlaYv';
+const clientId = process.env.REACT_APP_NAVER_LOGIN_API_CLIENT_ID;
 
 const NoStyleButton = styled.button`
   background: none;
