@@ -89,8 +89,8 @@ function HostWaitingRoom() {
       <Main>
         <PlayerCounter>대기자 {players.length}명</PlayerCounter>
         <PlayerList>
-          {players.map((player) => (
-            <li key={player}>{player}</li>
+          {players.map(player => (
+            <li key={player.nickname}>{player.nickname}</li>
           ))}
         </PlayerList>
       </Main>
