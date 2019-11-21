@@ -1,3 +1,5 @@
+import * as address from '../constants/apiAddresses';
+
 async function fetchPost({ url, data }) {
   const response = await fetch(url, {
     method: 'POST',
@@ -13,7 +15,7 @@ async function fetchPost({ url, data }) {
 
 async function fetchRoomNumber(roomNumber) {
   const response = await fetchPost({
-    url: '/room/checkRoomNumber',
+    url: address.checkRoomNumber,
     data: { roomNumber },
   });
   return response;
@@ -21,7 +23,7 @@ async function fetchRoomNumber(roomNumber) {
 
 async function fetchNickname(nickname, roomNumber) {
   const response = await fetchPost({
-    url: 'user/setNickname',
+    url: address.setNickname,
     data: { nickname, roomNumber },
   });
   return response;
@@ -29,7 +31,7 @@ async function fetchNickname(nickname, roomNumber) {
 
 async function fetchToken(data) {
   const response = await fetchPost({
-    url: 'login/callback',
+    url: address.setJWT,
     data: { data },
   });
   return response;
