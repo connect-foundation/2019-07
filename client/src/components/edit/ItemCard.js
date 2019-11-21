@@ -14,15 +14,16 @@ const ItemCardWrapper = styled.div`
 
 const ItemInput = styled.input`
   position: relative;
-  left: 50%;
+  left: 2rem;
   top: 50%;
-  transform: translate(-50%, -50%);
-  width: 75%;
+  transform: translateY(-50%);
+  width: 80%;
   border: none;
   outline: none;
   background: none;
   font-size: 1.5rem;
   color: #ffffff;
+
   @media (min-width: 1000px) {
     font-size: 2rem;
   }
@@ -40,6 +41,7 @@ const ItemCheckBox = styled.div`
     50% 50%;
   background-size: 1rem 1rem;
   cursor: pointer;
+  transition: 0.3s;
   @media (min-width: 1000px) {
     top: 50%;
     transform: translateY(-50%);
