@@ -1,3 +1,8 @@
+/**
+ * 이 코드는 외부에서 가져온 것이므로 리뷰하지 않아도 됩니다
+ * 출처 : https://www.npmjs.com/package/react-naver-login
+ */
+
 import { Component } from 'react';
 
 /*! *****************************************************************************
@@ -15,7 +20,7 @@ See the Apache Version 2.0 License for specific language governing permissions
 and limitations under the License.
 ***************************************************************************** */
 
-var extendStatics = function(d, b) {
+let extendStatics = (d, b) => {
   extendStatics =
     Object.setPrototypeOf ||
     ({ __proto__: [] } instanceof Array &&
