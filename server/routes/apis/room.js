@@ -1,6 +1,6 @@
 const express = require('express');
 const checkJsonHasKeys = require('../../utils/checkJsonHasKeys');
-const inMemory = require('../../models/inMemory');
+const rooms = require('../../models/rooms');
 
 const router = express.Router();
 
@@ -25,7 +25,7 @@ function isRoomNumberValid(roomNumber) {
  * @returns {bool} isExist 존재하는지 아닌지 여부
  */
 function isRoomExist(roomNumber) {
-  return !!inMemory.getRoom(roomNumber);
+  return !!rooms.getRoom(roomNumber);
 }
 
 /**
