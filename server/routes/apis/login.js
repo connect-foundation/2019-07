@@ -27,15 +27,15 @@ router.post('/setJWT', async (req, res) => {
   };
   let profileObject;
   let getNidSuccess = false;
-
+  let errorCode = 'unknown';
   await new Promise((resolve) => {
     request.get(options, async (error, response, body) => {
       if (error || response.statusCode !== 200) {
         getNidSuccess = false;
 
-        // if (response != null) {
-        //   console.log(`error code : ${response.statusCode}`);
-        // }
+        if (response != null) {
+          errorCode = `${response.statusCode}`;
+        }
 
         resolve();
         return;
@@ -51,7 +51,9 @@ router.post('/setJWT', async (req, res) => {
 
   if (!getNidSuccess) {
     res.json({
-      success: false,
+      isError: true,
+      isSuccess: false,
+      message: `네이버 프로필 API를 호출할 수 없습니다. 에러코드 : ${errorCode}`,
     });
     return;
   }
@@ -86,7 +88,7 @@ router.post('/setJWT', async (req, res) => {
 
   res.cookie('jwt', token);
   res.json({
-    success: true,
+    isSuccess: true,
   });
 });
 
