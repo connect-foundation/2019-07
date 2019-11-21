@@ -6,6 +6,7 @@ import Logo from '../components/logo/Logo';
 import CopyrightFooter from '../components/common/CopyrightFooter';
 import EnterRoomNumber from '../components/mainPage/EnterRoomNumber';
 import EnterNickname from '../components/mainPage/EnterNickname';
+import NaverLogin from '../components/mainPage/NaverLogin';
 import { ToastContext } from '../components/common/ToastProvider';
 import { PRIMARY_LIGHT_YELLOW } from '../constants/colors';
 import DESKTOP_MIN_WIDTH from '../constants/media';
@@ -57,8 +58,8 @@ const RoutingContainer = styled.div`
   flex-direction: column;
   button,
   input {
-    width: 20rem;
-    height: 5rem;
+    width: 25rem;
+    min-height: 5rem;
   }
 `;
 
@@ -75,6 +76,7 @@ function MainPage() {
             <Switch>
               <Route exact path="/" component={EnterRoomNumber} />
               <Route path="/nickname" component={EnterNickname} />
+              <Route path="/login" component={NaverLogin} />
             </Switch>
           </RoutingContainer>
         </MainContainer>
