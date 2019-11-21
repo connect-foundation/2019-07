@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { fetchToken } from '../../utils/fetch';
+import * as address from '../../constants/apiAddresses';
 
-const roomListUrl = '/host/select-room';
+const { roomListUrl } = address;
 const loginPageUrl = '/login';
 
 function splitHash(rawHash) {
