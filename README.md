@@ -10,7 +10,7 @@
 
 **위 로고나 [여기](<(http://45.119.145.141:3000/)>)를 클릭하면 배포 페이지로 이동합니다!**
 
-[위키](https://github.com/connect-foundation/2019-07/wiki)로 오시면 더 자세한 정보들을 확인할 수 있어요!
+[위키](https://github.com/connect-foundation/2019-07/wiki)로 오시면 더 자세한 정보들을 확인할 수 있고, [프로젝트](https://github.com/connect-foundation/2019-07/projects)에선 개발 진행 상황을 보실 수 있어요!
 
 <br>
 
@@ -20,7 +20,7 @@
 
 ## 프로젝트 데모 영상 링크
 
-[![demo1](./docs/demo1.jpg)](https://www.youtube.com/embed/BryQwK4Rigw)
+[![demo1](https://img.youtube.com/vi/BryQwK4Rigw/maxresdefault.jpg)](https://www.youtube.com/embed/BryQwK4Rigw)
 
 2주차 프로젝트 데모입니다.
 
@@ -92,7 +92,9 @@
 
 청중의 집중도와 참여도를 높이기 위해 발표·강의 중간중간 돌발 퀴즈 또는 게임을 진행합니다.
 
-이런 일을 실시간으로 웹을 통해 함께하고, 응답률/정답률과 같은 결과도 볼 수 있다면 얼마나 편리할까요?
+청중이 많을 땐 일일이 정답자를 확인하는 작업도 번거로울 때가 많습니다.
+
+이런 일을 웹을 통해 실시간으로 함께하고, 응답률/정답률과 같은 결과도 확인할 수 있다면 얼마나 편리할까요?
 
 알찬 수업과 발표를 위한 서비스 '피키포키'를 기획했습니다.
 
@@ -114,7 +116,7 @@
 
 2. 사용자가 몰려도 안정적인 서비스
 
-   - 100명 정도의 사용자가 한 번에 피키포키를 이용해도 견디는 서비스를 만들고자 합니다!
+   - 1차 목표로, 100명 정도의 사용자가 한 번에 피키포키를 이용해도 견디는 서비스를 만들고자 합니다!
 
 3. 팀원이 즐거운 프로젝트
    - 프로젝트 목표를 달성해도 팀원끼리 기분이 상하면 안되겠죠?
@@ -128,39 +130,48 @@
 
 ## 사용 기술
 
-### Front-end
-
-|  이름   |        목적         |
-| :-----: | :-----------------: |
-|  React  | Javascript Library  |
-|  Babel  | Javascript Compiler |
-| Webpack |   Module Bundler    |
-
-<br>
-
-### Back-end
-
-|    이름    |       목적        |
-| :--------: | :---------------: |
-|  Node.js   |      Runtime      |
-| Express.js | Web app framework |
-|  MySQL5.7  |     Database      |
-
-<br>
-
 ### 개발 환경
 
-|   이름    |     목적     |
-| :-------: | :----------: |
-| GitKraken | Git GUI tool |
+| 플랫폼                             |                 | 선택기술                                 |
+| ---------------------------------- | --------------- | ---------------------------------------- |
+| Tool                               | Editor          | VSCode                                   |
+|                                    | GitGUI          | GitKraken                                |
+|                                    | package manager | yarn                                     |
+| Server                             | OS              | Ubuntu v16.04                            |
+|                                    | DBMS            | Mysql v5.7                               |
+|                                    | IPC             | https                                    |
+|                                    | 개발 언어       | Node.js                                  |
+| Client                             | PC, 모바일      | 웹 브라우저(chrome, firefox) + 반응형    |
+|                                    | 개발 언어       | Javascript, HTML/SCSS (Styled Component) |
+| 기반 라이브러리 <br> 및 프레임워크 | Server          | Express                                  |
+|                                    | Client          | React(Create React App)                  |
+| 배포                               | -               | NCloud                                   |
 
 <br>
 
-### 배포
+### 사용 모듈
 
-|  이름  |  목적  |
-| :----: | :----: |
-| Ncloud | Deploy |
+| module name                                                                 | description                                                                                                                                                                                                       |
+| --------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Express](https://expressjs.com/)                                           | Fast, unopinionated, minimalist web framework for Node.js                                                                                                                                                         |
+| [mysql2](https://www.npmjs.com/package/mysql2)                              | MySQL client for Node.js with focus on performance. Supports prepared statements, non-utf8 encodings, binary log protocol, compression, ssl                                                                       |
+| [dotenv](https://www.npmjs.com/package/dotenv)                              | Dotenv is a zero-dependency module that loads environment variables from a .env file into process.env. Storing configuration in the environment separate from code is based on The Twelve-Factor App methodology. |
+| [create-react-app](https://www.npmjs.com/package/create-react-app)          | Create React apps with no build configuration.                                                                                                                                                                    |
+| [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)                  | An implementation of JSON Web Tokens. This was developed against draft-ietf-oauth-json-web-token-08. It makes use of node-jws                                                                                     |
+| [styled component](https://www.npmjs.com/package/styled-components)         | Visual primitives for the component age. Use the best bits of ES6 and CSS to style your apps without stress 💅                                                                                                    |
+| [socket.io](https://www.npmjs.com/package/socket.io)                        | Socket.IO enables real-time, bidirectional and event-based communication.                                                                                                                                         |
+| [socket.io-client](https://www.npmjs.com/package/socket.io-client)          | Socket.IO enables real-time, bidirectional and event-based communication.                                                                                                                                         |
+| [네이버 아이디로 로그인](https://developers.naver.com/docs/login/overview/) | 네이버 아이디로 로그인은 OAuth 2.0 기반의 사용자 인증 기능을 제공해 네이버가 아닌 다른 서비스에서 네이버의 사용자 인증 기능을 이용할 수 있게 하는 서비스입니다.                                                   |
+
+<br>
+
+### 사용을 고려중인 기술
+
+|        이름         |     목적      |
+| :-----------------: | :-----------: |
+|        NGINX        | Load Balancer |
+| Custom Shell Script |     CI/CD     |
+|        Jest         |    Testing    |
 
 <br>
 
@@ -190,4 +201,4 @@ yarn start
 
 ## 응원하기
 
-이 프로젝트가 마음에 드셨다면 ⭐️ 을 눌러주세요!
+이 프로젝트가 마음에 드셨다면 ⭐️을 눌러주세요!
