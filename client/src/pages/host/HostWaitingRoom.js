@@ -22,6 +22,20 @@ const ButtonContainer = styled.div`
   width: 7rem;
 `;
 
+const RoomInformation = styled.div`
+  @media (min-width: 700px) {
+    width: auto;
+    font-size: 3rem;
+  }
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 2rem;
+  width: 10rem;
+  color: ${colors.TEXT_WHITE};
+`;
+
 const Main = styled.main`
   display: flex;
   flex-direction: column;
@@ -82,6 +96,9 @@ function HostWaitingRoom() {
   return (
     <Container>
       <Header>
+        <RoomInformation>
+          방 번호 <strong>{roomNumber}</strong>
+        </RoomInformation>
         <ButtonContainer>
           <YellowButton onClick={startQuiz}>Start</YellowButton>
         </ButtonContainer>
