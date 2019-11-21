@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import NaverLogin from '../../utils/naverLoginSdk';
 import loginImage from '../../assets/images/naverLoginButton_long.PNG';
+import * as address from '../../constants/apiAddresses';
 
 const ButtonNoStyle = styled.button`
   background: none;
@@ -17,8 +18,8 @@ const ButtonNoStyle = styled.button`
   background-size: contain;
 `;
 
-const callbackUrl = 'http://localhost:3000/callback';
-const roomListUrl = '/host/select-room';
+const { callbackPageFullUrl } = address;
+const { roomListUrl } = address;
 const clientId = 'UuzGjP3W5wERxwznlaYv';
 
 function checkJWT(cookie) {
@@ -40,10 +41,8 @@ function LoginPage() {
   return (
     <NaverLogin
       clientId={clientId}
-      callbackUrl={callbackUrl}
+      callbackUrl={callbackPageFullUrl}
       render={props => <ButtonNoStyle onClick={props.onClick} type="button" />}
-      onSuccess={result => console.log(result)}
-      onFailure={result => console.error(result)}
     />
   );
 }
