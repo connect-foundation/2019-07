@@ -7,7 +7,7 @@ require('dotenv').config();
 const router = express.Router();
 
 const jwtObj = {};
-jwtObj.secret = 'apple';
+jwtObj.secret = process.env.JWT_SECRET;
 
 /**
  * @api {post} /login/setJWT 네이버 프로필 조회 후 쿠키에 jwt로 설정하는 API.
