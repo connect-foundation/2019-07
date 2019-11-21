@@ -59,7 +59,6 @@ LoginPage.propTypes = {
       }),
     }),
   }).isRequired,
-  onClick: PropTypes.func.isRequired,
 };
 
 export default LoginPage;
