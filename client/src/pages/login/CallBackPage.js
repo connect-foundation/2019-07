@@ -1,6 +1,9 @@
 import React from 'react';
 import { fetchToken } from '../../utils/fetch';
 
+const roomListUrl = '/host/select-room';
+const loginPageUrl = '/login';
+
 function splitHash(rawHash) {
   // hash는 #access_token=....... 의 형태로 이루어 지기 때문에 앞의 # 제거
   const hash = rawHash.replace('#', '');
@@ -8,7 +11,7 @@ function splitHash(rawHash) {
 
   const hashParams = hash.split('&');
 
-  hashParams.forEach((element) => {
+  hashParams.forEach(element => {
     const [key, value] = element.split('=');
     object[key] = value;
   });
@@ -21,11 +24,11 @@ function LoginPage() {
 
   const tokenObject = splitHash(hash);
 
-  fetchToken(tokenObject).then((response) => {
+  fetchToken(tokenObject).then(response => {
     if (response.success) {
-      window.location.href = '/';
+      window.location.href = roomListUrl;
     } else {
-      window.location.href = '/login';
+      window.location.href = loginPageUrl;
     }
   });
 

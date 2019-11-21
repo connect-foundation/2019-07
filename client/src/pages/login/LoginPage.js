@@ -42,8 +42,24 @@ const ButtonNoStyle = styled.button`
 `;
 
 const callbackUrl = 'http://localhost:3000/callback';
+const roomListUrl = '/host/select-room';
+
+function checkJWT(cookie) {
+  const [key] = cookie.split('=');
+
+  if (key === 'jwt') {
+    return true;
+  }
+  return false;
+}
 
 function LoginPage() {
+  const { cookie } = document;
+
+  if (checkJWT(cookie)) {
+    window.location.href = roomListUrl;
+  }
+
   return (
     <Background>
       <ContentSection>
