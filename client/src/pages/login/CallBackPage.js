@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { fetchToken } from '../../utils/fetch';
 
 const roomListUrl = '/host/select-room';
@@ -19,20 +20,35 @@ function splitHash(rawHash) {
   return object;
 }
 
-function LoginPage() {
+function LoginPage({ history }) {
   const { hash } = window.location;
 
   const tokenObject = splitHash(hash);
 
   fetchToken(tokenObject).then(response => {
-    if (response.success) {
-      window.location.href = roomListUrl;
+    if (response.isSuccess) {
+      history.push({
+        pathname: roomListUrl,
+      });
     } else {
-      window.location.href = loginPageUrl;
+      history.push({
+        pathname: loginPageUrl,
+      });
     }
   });
 
   return <></>;
 }
+
+LoginPage.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+    location: PropTypes.shape({
+      state: PropTypes.shape({
+        roomNumber: PropTypes.string.isRequired,
+      }),
+    }),
+  }).isRequired,
+};
 
 export default LoginPage;

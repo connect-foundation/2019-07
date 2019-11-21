@@ -1,16 +1,21 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import NaverLogin from '../../utils/naverLoginSdk';
 import loginImage from '../../assets/images/naverLoginButton_long.PNG';
 import * as address from '../../constants/apiAddresses';
 
-const ButtonNoStyle = styled.button`
+const { callbackPageFullUrl } = address;
+const { roomListUrl } = address;
+const clientId = 'UuzGjP3W5wERxwznlaYv';
+
+const NoStyleButton = styled.button`
   background: none;
   cursor: pointer;
   color: #fff;
   border: none;
-  margin: 0px;
-  padding: 0px;
+  margin: 0;
+  padding: 0;
 
   height: 6rem;
   background-image: url(${loginImage});
@@ -18,11 +23,7 @@ const ButtonNoStyle = styled.button`
   background-size: contain;
 `;
 
-const { callbackPageFullUrl } = address;
-const { roomListUrl } = address;
-const clientId = 'UuzGjP3W5wERxwznlaYv';
-
-function checkJWT(cookie) {
+function checkValidToken(cookie) {
   const [key] = cookie.split('=');
 
   if (key === 'jwt') {
@@ -31,20 +32,34 @@ function checkJWT(cookie) {
   return false;
 }
 
-function LoginPage() {
+function LoginPage({ history }) {
   const { cookie } = document;
 
-  if (checkJWT(cookie)) {
-    window.location.href = roomListUrl;
+  if (checkValidToken(cookie)) {
+    history.push({
+      pathname: roomListUrl,
+    });
   }
 
   return (
     <NaverLogin
       clientId={clientId}
       callbackUrl={callbackPageFullUrl}
-      render={props => <ButtonNoStyle onClick={props.onClick} type="button" />}
+      render={props => <NoStyleButton onClick={props.onClick} type="button" />}
     />
   );
 }
+
+LoginPage.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+    location: PropTypes.shape({
+      state: PropTypes.shape({
+        roomNumber: PropTypes.string.isRequired,
+      }),
+    }),
+  }).isRequired,
+  onClick: PropTypes.func.isRequired,
+};
 
 export default LoginPage;
