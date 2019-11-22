@@ -85,7 +85,7 @@ client
 ### 실행 흐름
 
 1. `src/pages/editPage.js`에서
-2. `src/components/ItemCard.js`, `src/components/TimeLimitPicker.js`, `src/components/ScorePicker.js` 컴포넌트를 생성
+2. `src/components/edit/ItemCard.js`, `src/components/edit/TimeLimitPicker.js`, `src/components/edit/ScorePicker.js` 컴포넌트를 생성
 
 ### 파일 설명
 
