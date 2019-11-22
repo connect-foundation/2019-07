@@ -4,7 +4,7 @@ const setJWT = 'login/setJWT';
 const callbackPageUrl = 'callback';
 const currentHost = 'http://localhost:3000/';
 const callbackPageFullUrl = `${currentHost}${callbackPageUrl}`;
-const roomListUrl = '/host/detail';
+const roomListUrl = '/host/room/detail';
 
 export {
   checkRoomNumber,
