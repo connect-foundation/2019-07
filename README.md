@@ -1,6 +1,6 @@
 # Welcome to 피키포키 👋
 
-![Version](https://img.shields.io/badge/version-0.0.1-blue.svg?cacheSeconds=2592000) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](#)
+![Version](https://img.shields.io/badge/version-0.2.0-blue.svg?cacheSeconds=2592000) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](#)
 
 <br>
 
@@ -8,7 +8,7 @@
 
 > 교실에서 사용하는 실시간 퀴즈풀이 게이미피케이션 교육 플랫폼!
 
-**위 로고나 [여기](<(http://45.119.145.141:3000/)>)를 클릭하면 배포 페이지로 이동합니다!**
+**위 로고나 [여기](http://45.119.145.141:3000/)를 클릭하면 배포 페이지로 이동합니다!**
 
 [위키](https://github.com/connect-foundation/2019-07/wiki)로 오시면 더 자세한 정보들을 확인할 수 있고, [프로젝트](https://github.com/connect-foundation/2019-07/projects)에선 개발 진행 상황을 보실 수 있어요!
 
@@ -72,7 +72,13 @@
 
 궁금하시면 확인해보세요~
 
-[각자 컨디션 확인하러 가기](https://github.com/connect-foundation/2019-07/wiki#%EB%8D%B0%EC%9D%BC%EB%A6%AC-%EC%8A%A4%ED%81%AC%EB%9F%BC)
+[데일리 스크럼 보러가기](https://github.com/connect-foundation/2019-07/wiki#%EB%8D%B0%EC%9D%BC%EB%A6%AC-%EC%8A%A4%ED%81%AC%EB%9F%BC)
+
+- [1주차 데일리 스크럼](https://github.com/connect-foundation/2019-07/wiki/1%EC%A3%BC%EC%B0%A8-%EB%8D%B0%EC%9D%BC%EB%A6%AC-%EC%8A%A4%ED%81%AC%EB%9F%BC)
+
+- [2주차 데일리 스크럼](https://github.com/connect-foundation/2019-07/wiki/2%EC%A3%BC%EC%B0%A8-%EB%8D%B0%EC%9D%BC%EB%A6%AC-%EC%8A%A4%ED%81%AC%EB%9F%BC)
+
+- [3주차 데일리 스크럼](https://github.com/connect-foundation/2019-07/wiki/3%EC%A3%BC%EC%B0%A8-%EB%8D%B0%EC%9D%BC%EB%A6%AC-%EC%8A%A4%ED%81%AC%EB%9F%BC)
 
 <br>
 
