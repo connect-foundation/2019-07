@@ -134,7 +134,10 @@ function EditPage() {
         </SideBar>
         <Main>
           <TitleWrapper>
-            <FlexibleInput />
+            <FlexibleInput
+              maxLength={120}
+              placeholder="문제를 입력해주세요."
+            />
             <OptionImage />
           </TitleWrapper>
           <QuizDetailContainer>
