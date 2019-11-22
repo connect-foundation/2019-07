@@ -1,33 +1,78 @@
-# Week 2 review 요청
+# Week 3 review 요청
 
 리뷰 요청합니다!
 
-### server side directory tree
+### client side directory tree
 
 <details>
+
 <summary>디렉토리 트리</summary>
 
 ```
-server
-├── app.js
-├── bin
-│   └── www
-├── deploy
-│   └── initInMemory.js
-├── models
-│   ├── inMemory.js *
-│   └── templates.js *
+client
+├── README.md
+├── dev.env
 ├── package-lock.json
 ├── package.json
 ├── public
-├── routes
-│   ├── api.js
-│   └── apis
-│       ├── room.js *
-│       └── user.js *
-├── socket.js
-├── utils
-│   └── checkJsonHasKeys.js
+│   ├── favicon.ico
+│   ├── index.html
+│   └── static-logo.png
+├── src
+│   ├── App.js
+│   ├── Router.js
+│   ├── assets
+│   │   └── images
+│   │       ├── checkMark.png
+│   │       ├── naverLoginButton.PNG
+│   │       └── naverLoginButton_long.PNG
+│   ├── components
+│   │   ├── common
+│   │   │   ├── Buttons.js
+│   │   │   ├── CopyrightFooter.js
+│   │   │   ├── FlexibleInput.js
+│   │   │   ├── Header.js
+│   │   │   └── ToastProvider.js
+│   │   ├── detailRoom
+│   │   │   ├── RoomInformation.js
+│   │   │   └── TabContents.js
+│   │   ├── edit
+│   │   │   ├── ItemCard.js *
+│   │   │   ├── ScorePicker.js *
+│   │   │   └── TimeLimitPicker.js *
+│   │   ├── inGame
+│   │   │   ├── HostFooter.js
+│   │   │   ├── PlayerFooter.js
+│   │   │   └── ProgressBar.js
+│   │   ├── logo
+│   │   │   ├── Logo.css
+│   │   │   └── Logo.js
+│   │   └── mainPage
+│   │       ├── EnterNickname.js
+│   │       ├── EnterRoomNumber.js
+│   │       └── NaverLogin.js
+│   ├── constants
+│   │   ├── apiAddresses.js
+│   │   ├── colors.js
+│   │   ├── domain.js
+│   │   └── media.js
+│   ├── index.css
+│   ├── index.js
+│   ├── pages
+│   │   ├── MainPage.js
+│   │   ├── host
+│   │   │   ├── EditPage.js *
+│   │   │   ├── HostDetailRoom.js
+│   │   │   └── HostWaitingRoom.js
+│   │   ├── login
+│   │   │   └── CallBackPage.js
+│   │   └── player
+│   │       └── PlayerWaitingRoom.js
+│   ├── styles
+│   │   └── common.js
+│   └── utils
+│       ├── fetch.js
+│       └── naverLoginSdk.js
 └── yarn.lock
 ```
 
@@ -35,27 +80,22 @@ server
 
 ### 구현한 기능
 
-- server side의 방 입장, 닉네임 생성에 대한 라우팅 처리(유효성 체크) 및 응답
+- client side의 퀴즈 편집 페이지 UI 작업 60% 완료
 
 ### 실행 흐름
 
-1. 클라이언트에서 사용자의 방 번호 입력
-2. 서버에서 방 번호 유효성 체크 및 응답
-3. 클라이언트에서 사용자의 닉네임 입력
-4. 서버에서 닉네임 유효성 체크 및 응답
-5. 클라이언트에서 성공 응답을 받아 방 입장 요청
+1. `src/pages/editPage.js`에서
+2. `src/components/ItemCard.js`, `src/components/TimeLimitPicker.js`, `src/components/ScorePicker.js` 컴포넌트를 생성
 
 ### 파일 설명
 
-- inMemory.js : 게임 실행 중(열려 있는 방)에 사용될 인메모리를 다루기 위한 파일
-- templates.js : 인메모리 데이터 생성을 위한 객체 템플릿 반환 메서드 파일
-- room.js : api 라우터로, room에 접근하는 동작에 대한 라우팅 처리
-- user.js : api 라우터로, user에 접근하는 동작에 대한 라우팅 처리
+- `src/pages/host/editPage.js` : 퀴즈 편집 페이지
+- `src/components/edit/ItemCard.js` : 퀴즈의 n지선다 항목 아이템이 되는 n개의 컴포넌트
+- `src/components/edit/TimeLimitPicker.js` : 퀴즈의 제한시간을 선택할 수 있는 컴포넌트
+- `src/components/edit/ScorePicker.js` : 퀴즈의 점수를 선택할 수 있는 컴포넌트
 
 ### 질문
 
-- server side 디렉토리 구조가 더 좋은 방법이 있을까요?
-- 현재 게임 실행 중(방이 열려있을 때)에만 서버의 인메모리를 사용하도록 했는데 이렇게 client side에 serving해주어야 할 데이터를 인메모리로 사용하는 것이 괜찮은가요?
-  - 이런 부분도 DB에 저장해서 사용해야 하는 걸까요?
-  - 서버가 꺼지면 실행 중인 게임도 의미가 없어서 일단 인메모리를 사용하는 쪽으로 선택했습니다.
-- res.json 응답 양식을 `{isError, isSuccess, message, data, ...}`로 정했는데 더 많이 사용되는 방법이 있을까요?
+- UI 동작을 구현할 때 라이브러리를 많이 사용하는지, 직접 구현하는 일이 많은지 궁금합니다.
+  - 현재 퀴즈 편집 페이지에서 `TimeLimitPicker`, `ScorePicker`를 바닐라로 구현해보았는데 코드가 지저분해지는 것 같아 고민입니다.
+  - 애니메이션을 구현하다 보면 리액트의 state를 1px 단위로 update하는 일이 많은 듯 합니다. 이때 렌더링이 너무 많이 일어나면 성능에 영향이 클 것 같은데 어떻게 처리하는 것이 좋은지 궁금합니다.
