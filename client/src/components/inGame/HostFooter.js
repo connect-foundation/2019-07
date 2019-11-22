@@ -1,17 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 import * as colors from '../../constants/colors';
 import * as styles from '../../styles/common';
 import DOMAIN from '../../constants/domain';
-
-function HostFooter() {
-  return (
-    <Footer>
-      <ServiceDomain>{DOMAIN}</ServiceDomain>
-      <RoomCode />
-    </Footer>
-  );
-}
 
 const ServiceDomain = styled.span`
   ${styles.InGameFooterTextStyle}
@@ -28,5 +20,18 @@ const RoomCode = styled.span`
 const Footer = styled.footer`
   ${styles.InGameFooterStyle}
 `;
+
+function HostFooter({ roomNumber }) {
+  return (
+    <Footer>
+      <ServiceDomain>{DOMAIN}</ServiceDomain>
+      <RoomCode>#{roomNumber}</RoomCode>
+    </Footer>
+  );
+}
+
+HostFooter.propTypes = {
+  roomNumber: PropTypes.string.isRequired,
+};
 
 export default HostFooter;

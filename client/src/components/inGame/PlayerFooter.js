@@ -4,19 +4,6 @@ import PropTypes from 'prop-types';
 import * as colors from '../../constants/colors';
 import * as styles from '../../styles/common';
 
-function PlayerFooter({ nickname }) {
-  return (
-    <Footer>
-      <Nickname>{nickname}</Nickname>
-      <Score>0</Score>
-    </Footer>
-  );
-}
-
-PlayerFooter.propTypes = {
-  nickname: PropTypes.string.isRequired,
-};
-
 const Nickname = styled.span`
   ${styles.InGameFooterTextStyle}
   margin-left: 0.5rem;
@@ -35,5 +22,18 @@ const Score = styled.span`
 const Footer = styled.footer`
   ${styles.InGameFooterStyle}
 `;
+
+function PlayerFooter({ nickname }) {
+  return (
+    <Footer>
+      <Nickname>{nickname}</Nickname>
+      <Score>0</Score>
+    </Footer>
+  );
+}
+
+PlayerFooter.propTypes = {
+  nickname: PropTypes.string.isRequired,
+};
 
 export default PlayerFooter;

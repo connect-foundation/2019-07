@@ -11,19 +11,16 @@
 }
 
 div#logo3d {
-  margin-top: 10rem;
   position: relative;
-  display: inline-block;
   perspective: 900px;
   perspective-origin: 50% -100%;
   transform-style: preserve-3d;
-  transform: scale3d(0.4, 0.4, 0.4);
 }
 
 div#string {
   position: relative;
-  margin-bottom: 5rem;
   transform-style: preserve-3d;
+  align-self: center;
 
   animation-name: rotate;
   animation-duration: 1.5s;
@@ -62,12 +59,4 @@ div.shadow {
   background-color: #495057;
   border: 1px solid #495057;
   transform-origin: 50% 100%;
-}
-
-@media only screen and (min-width: 700px) {
-  div#logo3d {
-    transform: scale3d(1, 1, 1);
-    margin-top: 20rem;
-    margin-bottom: 15rem;
-  }
 }

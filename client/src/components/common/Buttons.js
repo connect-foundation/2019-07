@@ -2,14 +2,18 @@ import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import * as colors from '../../constants/colors';
+import DESKTOP_MIN_WIDTH from '../../constants/media';
 
-const ButtonWrapper = styled.div`
+const ButtonWrapper = styled.div.attrs({
+  className: 'buttonWrapper',
+})`
   position: relative;
-  display: inline-block;
+  display: flex;
 `;
 
 const ButtonTop = styled.button`
-  posistion: absolute;
+  position: relative;
+  flex: 1;
   background-color: ${(props) => props.backgroundColor};
   color: ${(props) => props.fontColor};
   filter: brightness(100%);
@@ -23,14 +27,19 @@ const ButtonTop = styled.button`
   transform: translateY(-0.3rem);
   transition: transform 0.1s;
   cursor: pointer;
-  &:hover {
-    transform: translateY(-0.1rem);
-  }
+
   &:active {
-    filter: brightness(105%);
+    transform: translateY(-0.1rem);
+    filter: brightness(95%);
   }
-  &: focus {
+  &:focus {
     outline: 0;
+  }
+
+  @media (min-width: ${DESKTOP_MIN_WIDTH}) {
+    &:hover {
+      transform: translateY(-0.1rem);
+    }
   }
 `;
 
@@ -44,13 +53,15 @@ const ButtonBottom = styled.div`
   box-shadow: 0 0.2rem 0.3rem 0.1rem gray;
 `;
 
-function Button({
-  children, backgroundColor, fontColor, onClick,
-}) {
+function Button({ children, backgroundColor, fontColor, onClick }) {
   return (
     <ButtonWrapper>
       <ButtonBottom backgroundColor={backgroundColor} fontColor={fontColor} />
-      <ButtonTop onClick={onClick} backgroundColor={backgroundColor} fontColor={fontColor}>
+      <ButtonTop
+        onClick={onClick}
+        backgroundColor={backgroundColor}
+        fontColor={fontColor}
+      >
         {children}
       </ButtonTop>
     </ButtonWrapper>
@@ -81,29 +92,32 @@ function GreenButton({ children, onClick }) {
   );
 }
 
-const buttonDefaultProp = {
+Button.defaultProps = {
+  backgroundColor: colors.BACKGROUND_DEEP_GRAY,
+  fontColor: colors.TEXT_BLACK,
   onClick: undefined,
 };
 
-Button.defaultProps = buttonDefaultProp;
-GreenButton.defaultProps = buttonDefaultProp;
-YellowButton.defaultProps = buttonDefaultProp;
+const customButtonDefaultProps = {
+  onClick: undefined,
+};
+
+GreenButton.defaultProps = customButtonDefaultProps;
+YellowButton.defaultProps = customButtonDefaultProps;
 
 Button.propTypes = {
   children: PropTypes.node.isRequired,
-  backgroundColor: PropTypes.string.isRequired,
-  fontColor: PropTypes.string.isRequired,
+  backgroundColor: PropTypes.string,
+  fontColor: PropTypes.string,
   onClick: PropTypes.func,
 };
 
-YellowButton.propTypes = {
+const customButtonPropTypes = {
   children: PropTypes.node.isRequired,
   onClick: PropTypes.func,
 };
 
-GreenButton.propTypes = {
-  children: PropTypes.node.isRequired,
-  onClick: PropTypes.func,
-};
+YellowButton.propTypes = customButtonPropTypes;
+GreenButton.propTypes = customButtonPropTypes;
 
 export { Button, YellowButton, GreenButton };
