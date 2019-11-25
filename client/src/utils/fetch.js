@@ -13,18 +13,22 @@ async function fetchPost({ url, data }) {
   return responseJson;
 }
 
+async function fetchGet({ url }) {
+  const response = await fetch(url);
+  const responseJson = await response.json();
+  return responseJson;
+}
+
 async function fetchRoomNumber(roomNumber) {
-  const response = await fetchPost({
-    url: address.checkRoomNumber,
-    data: { roomNumber },
+  const response = await fetchGet({
+    url: `${address.roomApiUrl}/${roomNumber}`,
   });
   return response;
 }
 
 async function fetchNickname(nickname, roomNumber) {
-  const response = await fetchPost({
-    url: address.setNickname,
-    data: { nickname, roomNumber },
+  const response = await fetchGet({
+    url: `${address.roomApiUrl}/${roomNumber}/${nickname}`,
   });
   return response;
 }
