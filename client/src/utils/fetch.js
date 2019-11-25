@@ -34,9 +34,8 @@ async function fetchNickname(nickname, roomNumber) {
 }
 
 async function fetchToken(data) {
-  const response = await fetchPost({
-    url: address.setJWT,
-    data: { data },
+  const response = await fetchGet({
+    url: `${address.getToken}${data.access_token}`,
   });
   return response;
 }
