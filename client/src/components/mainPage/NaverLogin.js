@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import NaverLogin from '../../utils/naverLoginSdk';
 import loginImage from '../../assets/images/naverLoginButton_long.PNG';
-import * as address from '../../constants/apiAddresses';
+import * as apiAddresses from '../../constants/apiAddresses';
 
-const { callbackPageFullUrl } = address;
-const { roomListUrl } = address;
+const { callbackPageFullUrl } = apiAddresses;
+const { roomListUrl } = apiAddresses;
 const clientId = process.env.REACT_APP_NAVER_LOGIN_API_CLIENT_ID;
 
 const NoStyleButton = styled.button`
