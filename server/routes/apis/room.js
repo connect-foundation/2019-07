@@ -8,6 +8,13 @@ const {
 
 const router = express.Router();
 
+router.get('/', (req, res) => {
+  res.json({
+    isError: true,
+    message: '방 번호를 입력하세요.',
+  });
+});
+
 /**
  * @api {get} /room/:roomNumber 유효한 방인지 확인 요청
  * @apiName checkValidRoomNumber
@@ -37,6 +44,13 @@ router.get('/:roomNumber', isRoomNumberValid, isRoomExist, (req, res) => {
   });
 });
 
+router.get('/:roomNumber/name', isRoomNumberValid, isRoomExist, (req, res) => {
+  res.json({
+    isError: true,
+    message: '닉네임을 입력하세요.',
+  });
+});
+
 /**
  * @api {get} /room/:roomNumber/:nickname 방에서 유효한 닉네임인지 확인 요청
  * @apiName checkValidNickname
@@ -49,7 +63,7 @@ router.get('/:roomNumber', isRoomNumberValid, isRoomExist, (req, res) => {
  * @apiSuccess {String} message 오류가 발생한 경우, 오류 메시지
  */
 router.get(
-  '/:roomNumber/:nickname',
+  '/:roomNumber/name/:nickname',
   isRoomNumberValid,
   isRoomExist,
   isValidNickname,
