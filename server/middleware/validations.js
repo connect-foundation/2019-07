@@ -1,3 +1,4 @@
+const { check, validationResult } = require('express-validator');
 const rooms = require('../models/rooms');
 
 /**
@@ -14,13 +15,18 @@ const rooms = require('../models/rooms');
  * @action Check-Success:
  *  next middleware
  */
-function isRoomNumberValid(req, res, next) {
-  const { roomNumber } = req.params;
+async function isRoomNumberValid(req, res, next) {
+  await check('roomNumber')
+    .trim()
+    .isLength(6)
+    .bail()
+    .isNumeric()
+    .run(req);
 
-  if (!roomNumber || roomNumber.length !== 6 || /[^0-9]/.test(roomNumber)) {
+  if (!validationResult(req).isEmpty()) {
     res.json({
       isSuccess: false,
-      message: '유효하지 않은 방입니다. 방 번호를 다시 입력해주세요',
+      message: '유효하지 않은 방입니다. 방 번호를 다시 입력해주세요.',
     });
     return;
   }
@@ -70,11 +76,15 @@ function isRoomExist(req, res, next) {
  * @action Check-Success:
  *  next middleware
  */
-function isValidNickname(req, res, next) {
-  const { nickname } = req.params;
-  const TrimmedNickname = nickname.trim();
+async function isValidNickname(req, res, next) {
+  await check('nickname')
+    .trim()
+    .isLength({ min: 3, max: 20 })
+    .bail()
+    .custom((value) => /[가-힣\w]+/g.exec(value)[0] === value)
+    .run(req);
 
-  if (!nickname || TrimmedNickname.length < 3 || TrimmedNickname.length > 20) {
+  if (!validationResult(req).isEmpty()) {
     res.json({
       isSuccess: false,
       message: '유효하지 않은 닉네임입니다. 닉네임을 다시 입력해주세요.',
@@ -101,11 +111,10 @@ function isValidNickname(req, res, next) {
  */
 function isNicknameOverlap(req, res, next) {
   const { nickname, roomNumber } = req.params;
-  const TrimmedNickname = nickname.trim();
 
   const room = rooms.getRoom(roomNumber);
   const isAlreadyExist = !!room.players.find(
-    (player) => player.nickname === TrimmedNickname,
+    (player) => player.nickname === nickname,
   );
 
   if (isAlreadyExist) {
