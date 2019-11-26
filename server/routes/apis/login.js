@@ -10,14 +10,14 @@ const jwtObj = {};
 jwtObj.secret = process.env.JWT_SECRET;
 
 /**
- * @api {post} /login/setJWT 네이버 프로필 조회 후 쿠키에 jwt로 설정하는 API.
- * @apiName setJWT
- * @apiGroup Login
+ * @api {get} /login/token/:accessToken 네이버 프로필 조회 후 쿠키에 jwt로 설정하는 API.
+ * @apiName setToken
+ * @apiGroup login
  *
- * @apiParam {string} access_token 네이버 로그인 후 제공한 접근 토큰
+ * @apiParam {String} accessToken 네이버 로그인 후 제공한 접근 토큰
  */
-router.post('/setJWT', async (req, res) => {
-  const accessToken = req.body.data.access_token;
+router.get('/token/:accessToken', async (req, res) => {
+  const { accessToken } = req.params;
   const header = `Bearer ${accessToken}`; // Bearer 다음에 공백을 추가해야함
   const apiUrl = 'https://openapi.naver.com/v1/nid/me';
 

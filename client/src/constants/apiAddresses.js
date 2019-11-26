@@ -1,13 +1,6 @@
-const checkRoomNumber = '/room/checkRoomNumber';
-const setNickname = 'user/setNickname';
-const setJWT = 'login/setJWT';
+const roomApiUrl = '/room/';
+const getToken = '/login/token/';
 const callbackPageFullUrl = `${process.env.REACT_APP_HOST}/callback`;
 const roomListUrl = '/host/room/detail';
 
-export {
-  checkRoomNumber,
-  setNickname,
-  setJWT,
-  callbackPageFullUrl,
-  roomListUrl,
-};
+export { roomApiUrl, getToken, callbackPageFullUrl, roomListUrl };
