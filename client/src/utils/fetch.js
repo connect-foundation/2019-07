@@ -28,7 +28,7 @@ async function fetchRoomNumber(roomNumber) {
 
 async function fetchNickname(nickname, roomNumber) {
   const response = await fetchGet({
-    url: `${address.roomApiUrl}${roomNumber}/${nickname}`,
+    url: `${address.roomApiUrl}${roomNumber}/name/${nickname}`,
   });
   return response;
 }
