@@ -8,6 +8,13 @@ const {
 
 const router = express.Router();
 
+router.get('/', (req, res) => {
+  res.json({
+    isError: true,
+    message: '방 번호를 입력하세요.',
+  });
+});
+
 /**
  * @api {get} /room/:roomNumber 유효한 방인지 확인 요청
  * @apiName checkValidRoomNumber
