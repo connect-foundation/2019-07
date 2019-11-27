@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import io from 'socket.io-client';
 import PropTypes from 'prop-types';
+import { Prompt } from 'react-router';
 
 import * as colors from '../../constants/colors';
 import PlayerFooter from '../../components/inGame/PlayerFooter';
@@ -62,6 +63,7 @@ function PlayerGameRoom({ location, history }) {
 
   return (
     <Container>
+      <Prompt message="페이지를 이동하면 방에서 나가게 됩니다. 계속 하시겠습니까?" />
       <Main>{!isQuizStart ? PlayerWaiting() : PlayerQuizLoading()}</Main>
       <PlayerFooter nickname={location.state.nickname} />
     </Container>
