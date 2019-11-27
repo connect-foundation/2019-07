@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import io from 'socket.io-client';
 import HostFooter from '../../components/inGame/HostFooter';
 import HostWaitingRoom from '../../components/inGame/HostWaitingRoom';
+import HostLoading from '../../components/inGame/HostLoading';
 
 const Container = styled.div`
   display: flex;
@@ -35,6 +36,8 @@ function HostGameRoom() {
     roomNumber: '',
     players: [],
     socket,
+    isQuizStart: false,
+    currentQuiz: null,
   };
   const [roomState, dispatcher] = useReducer(roomReducer, initialRoomState);
 
@@ -67,6 +70,7 @@ function HostGameRoom() {
       {!roomState.isQuizStart && (
         <HostWaitingRoom dispatcher={dispatcher} state={roomState} />
       )}
+      {roomState.isQuizStart && !roomState.currentQuiz && <HostLoading />}
       <HostFooter roomNumber={roomState.roomNumber} />
     </Container>
   );
