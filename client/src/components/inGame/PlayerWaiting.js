@@ -35,13 +35,22 @@ const LoadingText = styled.span`
   }
 `;
 
-function BeforeStart() {
+const Main = styled.main`
+  display: flex;
+  flex-direction: column;
+  background-color: ${colors.BACKGROUND_LIGHT_GRAY};
+  flex: 1;
+  padding: 3rem;
+  align-items: center;
+`;
+
+function PlayerWaiting() {
   return (
-    <>
+    <Main>
       <LoadingImage />
       <LoadingText>게임 시작을 기다리고 있습니다...</LoadingText>
-    </>
+    </Main>
   );
 }
 
-export default BeforeStart;
+export default PlayerWaiting;
