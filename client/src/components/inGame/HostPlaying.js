@@ -48,10 +48,7 @@ function HostPlaying({ state, dispatcher }) {
       setRemainTime(cur => {
         if (cur === 0) {
           clearInterval(timer);
-          dispatcher({
-            type: 'subResult',
-            index: state.currentQuiz.index,
-          });
+          dispatcher({ type: 'break' });
           return 0;
         }
         return cur - 1;

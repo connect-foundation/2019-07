@@ -26,10 +26,10 @@ function HostSubResult({ state, dispatcher }) {
           다음퀴즈
         </GreenButton>
       </ButtonContainer>
-      <li>{state.quizSubResult.items[0].playerCount}</li>
-      <li>{state.quizSubResult.items[1].playerCount}</li>
-      <li>{state.quizSubResult.items[2].playerCount}</li>
-      <li>{state.quizSubResult.items[3].playerCount}</li>
+      <li>{state.quizSubResult[0].playerCount}</li>
+      <li>{state.quizSubResult[1].playerCount}</li>
+      <li>{state.quizSubResult[2].playerCount}</li>
+      <li>{state.quizSubResult[3].playerCount}</li>
     </>
   );
 }
