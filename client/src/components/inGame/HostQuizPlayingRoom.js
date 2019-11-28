@@ -33,15 +33,13 @@ const ItemContainer = styled.div`
   width: 100%;
   height: 45%;
   flex-flow: wrap;
-  justify-content: center;
+  justify-content: space-evenly;
   li {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: ${colors.PRIMARY_DEEP_YELLOW};
-    margin: 1rem;
-    max-width: 85rem;
-    width: 100%;
+    width: calc(50% - 2rem);
+    height: calc(50% - 1rem);
     color: ${colors.TEXT_WHITE};
     font-size: 2rem;
     font-weight: bold;
@@ -79,16 +77,16 @@ function HostQuizPlayingRoom({ state, dispatcher }) {
       {!showSubResult && <HostPlaying state={state} dispatcher={dispatcher} />}
       {showSubResult && <HostSubResult state={state} dispatcher={dispatcher} />}
       <ItemContainer>
-        <li style={{ backgroundColor: colors.TEXT_BLACK }}>
+        <li style={{ backgroundColor: colors.ITEM_COLOR[0] }}>
           {state.currentQuiz.items[0].title}
         </li>
-        <li style={{ backgroundColor: colors.BORDER_DARK_GRAY }}>
+        <li style={{ backgroundColor: colors.ITEM_COLOR[1] }}>
           {state.currentQuiz.items[1].title}
         </li>
-        <li style={{ backgroundColor: colors.PRIMARY_DEEP_YELLOW }}>
+        <li style={{ backgroundColor: colors.ITEM_COLOR[2] }}>
           {state.currentQuiz.items[2].title}
         </li>
-        <li style={{ backgroundColor: colors.PRIMARY_DEEP_GREEN }}>
+        <li style={{ backgroundColor: colors.ITEM_COLOR[3] }}>
           {state.currentQuiz.items[3].title}
         </li>
       </ItemContainer>
