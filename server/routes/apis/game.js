@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 
 const inMemory = require('../../models/rooms');
+const dao = require('../../models/dao/dao');
 
 const {
   isRoomExist,
@@ -18,18 +19,15 @@ const {
  *
  * @apiSuccess {Object} quizDataSet 퀴즈 세트
  */
-router.get(
-  '/room/:roomNumber/user/:nickname',
-  isRoomExist,
-  async (req, res) => {
-    const quizSet = {};
-    // 데이터 베이스 관리 객체에서 quizSet을 가져와 갱신해줌.
+router.get('/room/:roomNumber/player/:nickname', async (req, res) => {
+  let quizSet = {};
+  // 데이터 베이스 관리 객체에서 quizSet을 가져와 갱신해줌.
+  quizSet = await dao.selectQuizSet();
 
-    res.json({
-      quizSet,
-    });
-  },
-);
+  res.json({
+    quizSet,
+  });
+});
 
 /**
  * 유저의 점수 총 합을 알려주는 API
@@ -51,10 +49,10 @@ router.get(
     const { roomNumber, nickname } = req.params;
 
     const currentRoom = inMemory.rooms.find(
-      (room) => room.roomNumber === roomNumber,
+      room => room.roomNumber === roomNumber,
     );
     const currentUser = currentRoom.players.find(
-      (player) => player.nickname === nickname,
+      player => player.nickname === nickname,
     );
 
     res.json({
@@ -85,10 +83,10 @@ router.get(
     const { roomNumber, nickname } = req.params;
 
     const currentRoom = inMemory.rooms.find(
-      (room) => room.roomNumber === roomNumber,
+      room => room.roomNumber === roomNumber,
     );
     const rank = currentRoom.players.findIndex(
-      (player) => player.nickname === nickname,
+      player => player.nickname === nickname,
     );
     const currentUser = currentRoom.players[rank];
 
