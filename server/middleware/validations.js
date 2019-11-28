@@ -129,7 +129,7 @@ function isNicknameOverlap(req, res, next) {
 }
 
 /**
- * 닉네임을 입력받아서 현재 방에서 존재하는지 확인
+ * param으로 받은 닉네임이 현재 방에서 존재하는지 확인
  *
  * @param {String} nickname 3자리 이상, 20자리 이하의 닉네임
  *
@@ -153,7 +153,7 @@ function isNicknameExist(req, res, next) {
   if (!isAlreadyExist) {
     res.json({
       isSuccess: false,
-      message: '존재하지 않는 닉네임입니다. 닉네임을 다시 입력해주세요',
+      message: '존재하지 않는 닉네임입니다.',
     });
     return;
   }
