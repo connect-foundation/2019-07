@@ -56,6 +56,7 @@ function handleCloseRoom() {
 }
 
 io.on('connection', (socket) => {
+  socket.on('disconnect', handleCloseRoom.bind(socket));
   socket.on('openRoom', handleOpenRoom.bind(socket));
   socket.on('closeRoom', handleCloseRoom.bind(socket));
   socket.on('startQuiz', handleStartQuiz.bind(socket));
