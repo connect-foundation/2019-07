@@ -23,6 +23,8 @@ function PlayerGameRoom({ location, history }) {
   const [isQuizStart, setQuizStart] = useState(false);
   const [isLoadingOver, setLoadingOver] = useState(false);
   const [isCurrentQuizOver, setCurrentQuizOver] = useState(false);
+  const [quizSet, setQuizSet] = useState({});
+  const [currentIndex, setCurrentQuiz] = useState(-1);
 
   useEffect(() => {
     socket.emit('enterPlayer', {
@@ -45,25 +47,22 @@ function PlayerGameRoom({ location, history }) {
   socket.on('start', () => {
     setQuizStart(true);
     setCurrentQuizOver(false);
-    // 로딩이 끝난 신호.
-    setTimeout(() => {
-      setLoadingOver(true);
-    }, 5000);
   });
 
   // 다음 문제 (새로운 문제) 시작;
-  socket.on('next', () => {
+  socket.on('next', nextQuizIndex => {
     setCurrentQuizOver(false);
     setLoadingOver(true);
+    setCurrentQuiz(nextQuizIndex);
   });
 
   // 현제 문제 제한시간 끝, 중간 결과 페이지 출력
-  socket.on('end', () => {
+  socket.on('break', () => {
     setCurrentQuizOver(true);
   });
 
   // 현제 문제 제한시간 끝, 중간 결과 페이지 출력
-  socket.on('quizResult', () => {
+  socket.on('end', () => {
     setCurrentQuizOver(true);
   });
 
@@ -82,8 +81,17 @@ function PlayerGameRoom({ location, history }) {
       <Prompt message="페이지를 이동하면 방에서 나가게 됩니다. 계속 하시겠습니까?" />
       {/* 이 컴포넌트 안에서 WaitingRoom, GameRoom 등을 갈아끼워야함 */}
       {!isQuizStart && <PlayerWaiting />}
-      {isQuizStart && !isLoadingOver && <PlayerQuizLoading />}
-      {isQuizStart && isLoadingOver && !isCurrentQuizOver && <PlayerQuiz />}
+      {isQuizStart && !isLoadingOver && (
+        <PlayerQuizLoading
+          setQuizSet={setQuizSet}
+          roomNumber={location.state.roomNumber}
+          nickname={location.state.nickname}
+          setCurrentQuiz={setCurrentQuiz}
+        />
+      )}
+      {isQuizStart && isLoadingOver && !isCurrentQuizOver && (
+        <PlayerQuiz quizSet={quizSet} currentIndex={currentIndex} />
+      )}
       {isQuizStart && isLoadingOver && isCurrentQuizOver && <PlayerSubResult />}
 
       <PlayerFooter nickname={location.state.nickname} />

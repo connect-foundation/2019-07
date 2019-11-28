@@ -65,16 +65,26 @@ function FullButton({ children, backgroundColor }) {
   );
 }
 
-function Quiz() {
+function Quiz({ quizSet, currentIndex }) {
+  console.log('new quiz', currentIndex);
+
   return (
     <>
-      <PlayerHeader title="오늘 저녁은 뭘 먹을까요?" />
+      <PlayerHeader title={quizSet[currentIndex].title} />
       <Main />
       <ItemCardsPanel>
-        <HalfButton backgroundColor={colors.ITEM_COLOR[0]}>1번</HalfButton>
-        <HalfButton backgroundColor={colors.ITEM_COLOR[1]}>2번</HalfButton>
-        <HalfButton backgroundColor={colors.ITEM_COLOR[2]}>3번</HalfButton>
-        <HalfButton backgroundColor={colors.ITEM_COLOR[3]}>4번</HalfButton>
+        <HalfButton backgroundColor={colors.ITEM_COLOR[0]}>
+          {quizSet[currentIndex].items[0].title}
+        </HalfButton>
+        <HalfButton backgroundColor={colors.ITEM_COLOR[1]}>
+          {quizSet[currentIndex].items[1].title}
+        </HalfButton>
+        <HalfButton backgroundColor={colors.ITEM_COLOR[2]}>
+          {quizSet[currentIndex].items[2].title}
+        </HalfButton>
+        <HalfButton backgroundColor={colors.ITEM_COLOR[3]}>
+          {quizSet[currentIndex].items[3].title}
+        </HalfButton>
       </ItemCardsPanel>
     </>
   );

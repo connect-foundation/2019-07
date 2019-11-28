@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 
 import ProgressBar from './ProgressBar';
+import { fetchQuizSet } from '../../utils/fetch';
 
 const Saying = styled.span`
   margin-top: auto;
@@ -11,7 +12,18 @@ const Saying = styled.span`
   text-align: center;
 `;
 
-function PlayerQuizLoading({ setQuizSet, roomNumber, nickname }) {
+function PlayerQuizLoading({
+  setQuizSet,
+  roomNumber,
+  nickname,
+  setCurrentQuiz,
+}) {
+  useEffect(() => {
+    fetchQuizSet(roomNumber, nickname).then(response => {
+      setQuizSet(response.quizSet);
+    });
+  }, []);
+
   return (
     <>
       <Saying>
