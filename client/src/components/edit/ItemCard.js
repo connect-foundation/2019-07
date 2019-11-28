@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import checkMark from '../../assets/images/checkMark.png';
@@ -6,10 +6,11 @@ import checkMark from '../../assets/images/checkMark.png';
 const ItemCardWrapper = styled.div`
   position: relative;
   flex: 1 1 calc(50% - 0.5rem);
-  height: 30%;
+  height: calc(50% - 0.5rem);
   margin: 0 0.25rem;
-  background-color: ${props => props.ItemCardColor};
+  background-color: ${props => props.itemCardColor};
   border-radius: 0.4rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 `;
 
 const ItemInput = styled.input`
@@ -17,7 +18,8 @@ const ItemInput = styled.input`
   left: 2rem;
   top: 50%;
   transform: translateY(-50%);
-  width: 80%;
+  width: calc(100% - 7rem);
+  padding: 2rem 0;
   border: none;
   outline: none;
   background: none;
@@ -37,11 +39,12 @@ const ItemCheckBox = styled.div`
   height: 2rem;
   border: 2px solid #ffffff;
   border-radius: 50%;
-  background: ${props => props.isChecked && 'green'} url(${checkMark}) no-repeat
-    50% 50%;
+  background: ${props => props.isChecked && '#51cf66'} url(${checkMark})
+    no-repeat 50% 50%;
   background-size: 1rem 1rem;
   cursor: pointer;
-  transition: 0.3s;
+  transition: background 0.3s;
+
   @media (min-width: 1000px) {
     top: 50%;
     transform: translateY(-50%);
@@ -53,9 +56,29 @@ const ItemCheckBox = styled.div`
   }
 `;
 
-function ItemCard({ ItemCardColor }) {
-  const [isChecked, setChecked] = useState(false);
-  const [title, setTitle] = useState('');
+function ItemCard({
+  itemCardColor,
+  index,
+  item,
+  isAnswer,
+  handleItemCheck,
+  handleItemTitleChange,
+}) {
+  const [isChecked, setChecked] = useState(isAnswer);
+  const [title, setTitle] = useState(item.title);
+
+  useEffect(() => {
+    setChecked(isAnswer);
+    setTitle(item.title);
+  }, [item, isAnswer]);
+
+  useEffect(() => {
+    handleItemCheck(index, isChecked);
+  }, [isChecked]);
+
+  useEffect(() => {
+    handleItemTitleChange(index, title);
+  }, [title]);
 
   function handleInputChange(e) {
     setTitle(e.target.value);
@@ -66,15 +89,20 @@ function ItemCard({ ItemCardColor }) {
   }
 
   return (
-    <ItemCardWrapper ItemCardColor={ItemCardColor}>
-      <ItemInput onChange={handleInputChange} />
+    <ItemCardWrapper itemCardColor={itemCardColor}>
+      <ItemInput value={title} onChange={handleInputChange} />
       <ItemCheckBox isChecked={isChecked} onClick={handleCheckBoxClick} />
     </ItemCardWrapper>
   );
 }
 
 ItemCard.propTypes = {
-  ItemCardColor: PropTypes.string.isRequired,
+  itemCardColor: PropTypes.string.isRequired,
+  index: PropTypes.number.isRequired,
+  item: PropTypes.shape({ title: PropTypes.string.isRequired }).isRequired,
+  isAnswer: PropTypes.bool.isRequired,
+  handleItemCheck: PropTypes.func.isRequired,
+  handleItemTitleChange: PropTypes.func.isRequired,
 };
 
 export default ItemCard;

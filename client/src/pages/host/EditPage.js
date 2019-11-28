@@ -1,12 +1,99 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import * as colors from '../../constants/colors';
 import Header from '../../components/common/Header';
 import { YellowButton } from '../../components/common/Buttons';
-import ItemCard from '../../components/edit/ItemCard';
-import TimeLimitPicker from '../../components/edit/TimeLimitPicker';
-import ScorePicker from '../../components/edit/ScorePicker';
-import FlexibleInput from '../../components/common/FlexibleInput';
+import EditBody from '../../components/edit/EditBody';
+
+const quizSetTemplate = [
+  {
+    title: '',
+    image: '',
+    items: [
+      {
+        title: '',
+      },
+      {
+        title: '',
+      },
+      {
+        title: '',
+      },
+      {
+        title: '',
+      },
+    ],
+    answers: [],
+    timeLimit: 30,
+    score: 1000,
+  },
+];
+
+const quizSetData = [
+  {
+    title: '오늘 점심은 무엇을 먹었을까요',
+    image: '',
+    items: [
+      {
+        title: '밥',
+      },
+      {
+        title: '라면',
+      },
+      {
+        title: '만두',
+      },
+      {
+        title: '찐빵',
+      },
+    ],
+    answers: [0],
+    timeLimit: 30,
+    score: 1000,
+  },
+  {
+    title: '제일 좋아하는 게임은 무엇일까요',
+    image: '',
+    items: [
+      {
+        title: '리그오브레전드',
+      },
+      {
+        title: '크레이지아케이드',
+      },
+      {
+        title: '오버워치',
+      },
+      {
+        title: '서든어택',
+      },
+    ],
+    answers: [2],
+    timeLimit: 10,
+    score: 0,
+  },
+  {
+    title: '카훗은 만들기 쉽다',
+    image: 'https://files.slack.com/files-pri/TP94WHR34-FQQ2ZAN4X/k-035.png',
+    items: [
+      {
+        title: '예',
+      },
+      {
+        title: '아니오',
+      },
+      {
+        title: '',
+      },
+      {
+        title: '',
+      },
+    ],
+    answers: [1],
+    timeLimit: 60,
+    score: 2000,
+  },
+];
 
 const Container = styled.div`
   display: flex;
@@ -26,135 +113,36 @@ const Section = styled.section`
   flex: 1;
   display: flex;
   color: ${colors.TEXT_BLACK};
-  background-color: ${colors.BACKGROUND_LIGHT_GRAY};
+  background-color: ${colors.BACKGROUND_DEEP_GRAY};
   flex-direction: column-reverse;
+  overflow: hidden;
 
-  @media (min-width: 700px) {
+  @media (min-width: 1000px) {
+    flex-direction: row;
+  }
+
+  @media (min-width: 1300px) {
     flex-direction: row;
   }
 `;
 
-const Main = styled.main`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  width: 100%;
-  overflow-x: hidden;
-  margin: 2rem;
-  padding: 2rem;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
-  border-radius: 0.4rem;
-  background-color: ${colors.BACKGROUND_LIGHT_WHITE};
-`;
-
-const SideBar = styled.aside`
-  display: flex;
-  background-color: ${colors.BACKGROUND_DEEP_GRAY};
-  flex-direction: row;
-  width: 100%;
-  height: 10rem;
-
-  @media (min-width: 700px) {
-    flex-direction: column;
-    width: 20rem;
-    height: 100%;
-  }
-`;
-
-const AddTemplateButtonContainer = styled.div`
-  position: relative;
-  top: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 85%;
-`;
-
-const TitleWrapper = styled.div`
-  position: relative;
-  display: flex;
-  width: 100%;
-  align-items: center;
-`;
-
-const OptionImage = styled.img.attrs({
-  src: 'https://image.flaticon.com/icons/svg/483/483345.svg',
-})`
-  margin-left: 1rem;
-  height: 50%;
-
-  @media (min-width: 700px) {
-    display: none;
-  }
-`;
-
-const QuizDetailContainer = styled.div`
-  position: relative;
-  display: flex;
-  flex: 1 1 auto;
-  border: 1px solid black;
-`;
-
-const QuizImageContainer = styled.div`
-  flex: 1;
-  height: calc(100% - 4rem);
-  padding: 2rem;
-  border: 1px solid red;
-`;
-
-const QuizControlContainer = styled.div`
-  z-index: 5;
-  position: relative;
-  top: 5rem;
-  width: 20rem;
-  height: 30rem;
-`;
-
-const ItemCardsPanel = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  height: 30%;
-  border: 1px solid black;
-`;
-
 function EditPage() {
+  const [quizSet, setQuizSet] = useState(quizSetTemplate);
   return (
     <Container>
       <Header>
         <ButtonContainer>
-          <YellowButton>저장</YellowButton>
+          <YellowButton
+            onClick={() => {
+              console.log(quizSet);
+            }}
+          >
+            저장
+          </YellowButton>
         </ButtonContainer>
       </Header>
       <Section>
-        <SideBar>
-          <AddTemplateButtonContainer>
-            <YellowButton>새 템플릿 추가하기</YellowButton>
-          </AddTemplateButtonContainer>
-        </SideBar>
-        <Main>
-          <TitleWrapper>
-            <FlexibleInput
-              maxLength={120}
-              placeholder="문제를 입력해주세요."
-            />
-            <OptionImage />
-          </TitleWrapper>
-          <QuizDetailContainer>
-            <QuizImageContainer />
-            <QuizControlContainer>
-              <TimeLimitPicker />
-              <ScorePicker />
-            </QuizControlContainer>
-          </QuizDetailContainer>
-          <ItemCardsPanel>
-            <ItemCard ItemCardColor="red" />
-            <ItemCard ItemCardColor="blue" />
-            <ItemCard ItemCardColor="green" />
-            <ItemCard ItemCardColor="orange" />
-            <ItemCard ItemCardColor="salmon" />
-          </ItemCardsPanel>
-        </Main>
+        <EditBody quizSet={quizSet} setQuizSet={setQuizSet} />
       </Section>
     </Container>
   );

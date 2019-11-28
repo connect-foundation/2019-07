@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import * as colors from '../../constants/colors';
+import transparencyImage from '../../assets/images/transparency.png';
 
 const translates = [-6, 0, 6];
+const dragImage = new Image();
+dragImage.src = transparencyImage;
 
 const ScorePickerWrapper = styled.div`
   z-index: 4;
@@ -12,9 +15,8 @@ const ScorePickerWrapper = styled.div`
   justify-content: center;
   align-items: center;
   top: 15rem;
-  width: 20rem;
+  width: 100%;
   height: 10rem;
-  border: 1px solid black;
 `;
 
 const Title = styled.div`
@@ -76,11 +78,10 @@ const SlideButton = styled.button`
   transform: translateX(${props => props.translateX}px);
 `;
 
-function ScorePicker() {
+function ScorePicker({ score, setScore }) {
   const [startX, setStartX] = useState(0);
   const [startTranslateX, setStartTranslateX] = useState(0);
   const [translateX, setTranslateX] = useState(0);
-  const [score, setScore] = useState(1000);
 
   function handleScoreChange() {
     if (translateX >= -60 && translateX < -30) {
@@ -93,6 +94,22 @@ function ScorePicker() {
       setScore(2000);
     }
   }
+
+  function synchronizeTranslateX() {
+    if (score === 0 && !(translateX >= -60 && translateX < -30)) {
+      setTranslateX(-60);
+    }
+    if (score === 1000 && !(translateX >= -30 && translateX < 30)) {
+      setTranslateX(0);
+    }
+    if (score === 2000 && !(translateX >= 30 && translateX <= 60)) {
+      setTranslateX(60);
+    }
+  }
+
+  useEffect(() => {
+    synchronizeTranslateX();
+  }, [score]);
 
   useEffect(() => {
     handleScoreChange();
@@ -115,7 +132,7 @@ function ScorePicker() {
         translateX={translateX}
         draggable
         onDragStart={e => {
-          e.dataTransfer.setDragImage(new Image(), 0, 0);
+          e.dataTransfer.setDragImage(dragImage, 0, 0);
           setStartX(e.clientX);
           setStartTranslateX(translateX);
         }}
@@ -141,5 +158,10 @@ function ScorePicker() {
     </ScorePickerWrapper>
   );
 }
+
+ScorePicker.propTypes = {
+  score: PropTypes.number.isRequired,
+  setScore: PropTypes.func.isRequired,
+};
 
 export default ScorePicker;
