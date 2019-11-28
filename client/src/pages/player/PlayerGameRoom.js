@@ -51,9 +51,10 @@ function PlayerGameRoom({ location, history }) {
 
   // 다음 문제 (새로운 문제) 시작;
   socket.on('next', nextQuizIndex => {
+    setCurrentQuiz(nextQuizIndex);
+
     setCurrentQuizOver(false);
     setLoadingOver(true);
-    setCurrentQuiz(nextQuizIndex);
   });
 
   // 현제 문제 제한시간 끝, 중간 결과 페이지 출력
@@ -79,14 +80,11 @@ function PlayerGameRoom({ location, history }) {
   return (
     <Container>
       <Prompt message="페이지를 이동하면 방에서 나가게 됩니다. 계속 하시겠습니까?" />
-      {/* 이 컴포넌트 안에서 WaitingRoom, GameRoom 등을 갈아끼워야함 */}
       {!isQuizStart && <PlayerWaiting />}
       {isQuizStart && !isLoadingOver && (
         <PlayerQuizLoading
           setQuizSet={setQuizSet}
           roomNumber={location.state.roomNumber}
-          nickname={location.state.nickname}
-          setCurrentQuiz={setCurrentQuiz}
         />
       )}
       {isQuizStart && isLoadingOver && !isCurrentQuizOver && (
