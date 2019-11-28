@@ -47,6 +47,20 @@ class Rooms {
     this.rooms.splice(roomIndex, 1);
     return roomNumber;
   }
+
+  UpdatePlayerScore({
+    roomNumber, nickname, quizIndex, selectItemIndex,
+  }) {
+    const playingRoom = this.getRoom(roomNumber);
+    const player = this.getPlayer(playingRoom, nickname);
+    const playingQuiz = playingRoom.quizSet[quizIndex];
+
+    playingQuiz.itmes[selectItemIndex].playerCount += 1;
+
+    if (playingQuiz.answer === selectItemIndex) {
+      player.score += playingQuiz.score;
+    }
+  }
 }
 
 const rooms = new Rooms();

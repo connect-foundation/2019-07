@@ -37,6 +37,22 @@ function handleNextQuiz({ roomNumber, nextQuizIndex }) {
   io.to(roomNumber).emit('next', nextQuizIndex);
 }
 
+function handlePlayerChoose({
+  roomNumber,
+  nickname,
+  quizIndex,
+  selectItemIndex,
+}) {
+  if (!isRoomExist(roomNumber)) return;
+
+  rooms.UpdatePlayerScore({
+    roomNumber,
+    nickname,
+    quizIndex,
+    selectItemIndex,
+  });
+}
+
 function handleEnterPlayer({ roomNumber, nickname }) {
   if (!isRoomExist(roomNumber)) return;
 
@@ -71,6 +87,7 @@ io.on('connection', (socket) => {
   socket.on('closeRoom', handleCloseRoom.bind(socket));
   socket.on('start', handleStartQuiz.bind(socket));
   socket.on('next', handleNextQuiz.bind(socket));
+  socket.on('choose', handlePlayerChoose.bind(socket));
   socket.on('enterPlayer', handleEnterPlayer.bind(socket));
   socket.on('leavePlayer', handleLeavePlayer.bind(socket));
 });
