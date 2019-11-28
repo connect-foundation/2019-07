@@ -1,17 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import io from 'socket.io-client';
+import PropTypes from 'prop-types';
 import * as colors from '../../constants/colors';
-import Header from '../../components/common/Header';
-import HostFooter from '../../components/inGame/HostFooter';
-import { YellowButton } from '../../components/common/Buttons';
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100vw;
-  height: 100vh;
-`;
+import Header from '../common/Header';
+import { YellowButton } from '../common/Buttons';
 
 const ButtonContainer = styled.div`
   position: absolute;
@@ -65,55 +57,39 @@ const PlayerList = styled.ul`
   }
 `;
 
-function HostWaitingRoom() {
-  const [players, setPlayers] = useState([]);
-  const [roomNumber, setRoomNumber] = useState('');
-  const socket = io.connect(process.env.REACT_APP_BACKEND_HOST);
-
-  useEffect(() => {
-    socket.emit('openRoom');
-    socket.on('openRoom', roomCode => {
-      setRoomNumber(roomCode.roomNumber);
-    });
-
-    return () => {
-      socket.emit('closeRoom');
-    };
-  }, []);
-
-  socket.on('enterPlayer', playerList => {
-    setPlayers(playerList);
-  });
-
-  socket.on('leavePlayer', playerList => {
-    setPlayers(playerList);
-  });
-
+function HostWaitingRoom({ state, dispatcher }) {
   function startQuiz() {
-    socket.emit('start', { roomNumber });
+    dispatcher({ type: 'start' });
   }
 
   return (
-    <Container>
+    <>
       <Header>
         <RoomInformation>
-          방 번호 <strong>{roomNumber}</strong>
+          방 번호 <strong>{state.roomNumber}</strong>
         </RoomInformation>
         <ButtonContainer>
           <YellowButton onClick={startQuiz}>Start</YellowButton>
         </ButtonContainer>
       </Header>
       <Main>
-        <PlayerCounter>대기자 {players.length}명</PlayerCounter>
+        <PlayerCounter>대기자 {state.players.length}명</PlayerCounter>
         <PlayerList>
-          {players.map(player => (
+          {state.players.map(player => (
             <li key={player.nickname}>{player.nickname}</li>
           ))}
         </PlayerList>
       </Main>
-      <HostFooter roomNumber={roomNumber} />
-    </Container>
+    </>
   );
 }
+
+HostWaitingRoom.propTypes = {
+  state: PropTypes.shape({
+    roomNumber: PropTypes.string.isRequired,
+    players: PropTypes.array.isRequired,
+  }).isRequired,
+  dispatcher: PropTypes.func.isRequired,
+};
 
 export default HostWaitingRoom;

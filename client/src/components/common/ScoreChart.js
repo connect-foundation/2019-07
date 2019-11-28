@@ -83,15 +83,15 @@ const GraphCount = styled.span`
 `;
 
 function findMaxHandler(previous, current) {
-  return previous.count > current.count ? previous : current;
+  return previous.playerCount > current.playerCount ? previous : current;
 }
 
 function findMaxCount(array) {
-  return array.reduce(findMaxHandler).count;
+  return array.reduce(findMaxHandler).playerCount;
 }
 
 function getAnimation(item, maxCount) {
-  const scorePercent = (item.count / maxCount) * 100;
+  const scorePercent = (item.playerCount / maxCount) * 100;
   const animationName = keyframes`
     from{
       max-height: 0%;
@@ -128,7 +128,7 @@ function ScoreChart({ itemDatas }) {
           </GraphBottom>
           <GraphTop index={index} animationName={item.animationName} />
           <GraphCount index={index} isAnswer={item.isAnswer}>
-            {item.count}
+            {item.playerCount}
           </GraphCount>
         </GraphWrapper>
       ))}
@@ -136,49 +136,14 @@ function ScoreChart({ itemDatas }) {
   );
 }
 
-ScoreChart.defaultProps = {
-  itemDatas: [
-    {
-      title: '기본데이터입니다',
-      count: 18,
-      isAnswer: false,
-    },
-    {
-      title: '수정 하지 않으면',
-      count: 9,
-      isAnswer: true,
-    },
-    {
-      title: '계속 이 결과가',
-      count: 2,
-      isAnswer: true,
-    },
-    {
-      title: '출력됩니다!',
-      count: 4,
-      isAnswer: false,
-    },
-    {
-      title: '개수 제한은',
-      count: 5,
-      isAnswer: false,
-    },
-    {
-      title: '없습니다',
-      count: 10,
-      isAnswer: true,
-    },
-  ],
-};
-
 ScoreChart.propTypes = {
   itemDatas: PropTypes.arrayOf(
     PropTypes.shape({
       title: PropTypes.string.isRequired,
-      count: PropTypes.number.isRequired,
+      playerCount: PropTypes.number.isRequired,
       isAnswer: PropTypes.bool.isRequired,
     }),
-  ),
+  ).isRequired,
 };
 
 export default ScoreChart;
