@@ -44,11 +44,13 @@ class Rooms {
 
   getFinalResult(roomNumber) {
     const playingRoom = this.getRoom(roomNumber);
-    const TopTenPlayers = playingRoom.players
-      .sort((player1, player2) => player2.score - player1.score)
-      .splice(0, 9);
+    const sortPlayers = playingRoom.players.sort(
+      (player1, player2) => player2.score - player1.score,
+    );
 
-    return TopTenPlayers;
+    playingRoom.players = sortPlayers;
+
+    return sortPlayers.splice(0, 9);
   }
 
   removePlayer(roomNumber, nickname) {
