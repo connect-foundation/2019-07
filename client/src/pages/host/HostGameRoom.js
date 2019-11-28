@@ -57,8 +57,8 @@ const roomReducer = (state, action) => {
     case 'setFullQuiz': {
       return {
         ...state,
-        fullQuizData: action.quizData,
-        totalQuizCount: action.quizData.length,
+        fullQuizData: action.data,
+        totalQuizCount: action.data.length,
       };
     }
     default:
