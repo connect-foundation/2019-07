@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import * as colors from '../../constants/colors';
 import ProgressBar from './ProgressBar';
+import { fetchQuizSet } from '../../utils/fetch';
 
 const Container = styled.div`
   display: flex;
@@ -31,10 +32,15 @@ const Notify = styled.p`
   color: ${colors.TEXT_BLACK};
 `;
 
-function HostLoading({ dispatcher }) {
-  /**
-   * fetch를 통해 데이터를 받고 dispatcher({type: 'setFullQuiz', quizData })로 설정할 예정
-   */
+function HostLoading({ state, dispatcher }) {
+  useEffect(() => {
+    fetchQuizSet(state.roomNumber).then(response => {
+      dispatcher({
+        type: 'setFullQuiz',
+        data: response.quizSet,
+      });
+    });
+  }, []);
   return (
     <Container>
       <Main>
@@ -50,6 +56,9 @@ function HostLoading({ dispatcher }) {
 
 HostLoading.propTypes = {
   dispatcher: PropTypes.func.isRequired,
+  state: PropTypes.shape({
+    roomNumber: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 export default HostLoading;
