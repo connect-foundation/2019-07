@@ -79,7 +79,6 @@ function PlayerGameRoom({ location, history }) {
   return (
     <Container>
       <Prompt message="페이지를 이동하면 방에서 나가게 됩니다. 계속 하시겠습니까?" />
-      {/* 이 컴포넌트 안에서 WaitingRoom, GameRoom 등을 갈아끼워야함 */}
       {!isQuizStart && <PlayerWaiting />}
       {isQuizStart && !isLoadingOver && (
         <PlayerQuizLoading
