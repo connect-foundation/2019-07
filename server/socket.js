@@ -63,6 +63,16 @@ function handleBreakQuiz({ roomNumber, quizIndex }) {
   io.to(roomNumber).emit('break');
 }
 
+function handleEndQuiz({ roomNumber }) {
+  if (!isRoomExist(roomNumber)) return;
+
+  this.join(roomNumber, () => {
+    io.to(this.id).emit('end', rooms.getFinalResult(roomNumber));
+  });
+
+  io.to(roomNumber).emit('end');
+}
+
 function handleEnterPlayer({ roomNumber, nickname }) {
   if (!isRoomExist(roomNumber)) return;
 
@@ -99,6 +109,7 @@ io.on('connection', (socket) => {
   socket.on('next', handleNextQuiz.bind(socket));
   socket.on('choose', handlePlayerChoose.bind(socket));
   socket.on('break', handleBreakQuiz.bind(socket));
+  socket.on('end', handleEndQuiz.bind(socket));
   socket.on('enterPlayer', handleEnterPlayer.bind(socket));
   socket.on('leavePlayer', handleLeavePlayer.bind(socket));
 });

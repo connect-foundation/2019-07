@@ -36,6 +36,15 @@ class Rooms {
     return playingRoom.quizSet[quizIndex].items;
   }
 
+  getFinalResult(roomNumber) {
+    const playingRoom = this.getRoom(roomNumber);
+    const TopTenPlayers = playingRoom.players
+      .sort((player1, player2) => player2.score - player1.score)
+      .splice(0, 9);
+
+    return TopTenPlayers;
+  }
+
   removePlayer(roomNumber, nickname) {
     const playersRoom = this.getRoom(roomNumber);
     const playerIndex = playersRoom.players.findIndex(
