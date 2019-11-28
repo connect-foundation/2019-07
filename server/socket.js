@@ -66,11 +66,7 @@ function handleBreakQuiz({ roomNumber, quizIndex }) {
 function handleEndQuiz({ roomNumber }) {
   if (!isRoomExist(roomNumber)) return;
 
-  this.join(roomNumber, () => {
-    io.to(this.id).emit('end', rooms.getFinalResult(roomNumber));
-  });
-
-  io.to(roomNumber).emit('end');
+  io.to(roomNumber).emit('end', rooms.getFinalResult(roomNumber));
 }
 
 function handleEnterPlayer({ roomNumber, nickname }) {

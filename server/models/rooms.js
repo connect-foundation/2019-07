@@ -30,6 +30,12 @@ class Rooms {
     return String(newRoomNumber);
   }
 
+  getPlayer(roomNumber, nickname) {
+    const playingRoom = this.getRoom(roomNumber);
+
+    return playingRoom.players.find((player) => player.nickname === nickname);
+  }
+
   getSubResult(roomNumber, quizIndex) {
     const playingRoom = this.getRoom(roomNumber);
 
@@ -67,7 +73,7 @@ class Rooms {
     roomNumber, nickname, quizIndex, selectItemIndex,
   }) {
     const playingRoom = this.getRoom(roomNumber);
-    const player = this.getPlayer(playingRoom, nickname);
+    const player = this.getPlayer(roomNumber, nickname);
     const playingQuiz = playingRoom.quizSet[quizIndex];
 
     playingQuiz.itmes[selectItemIndex].playerCount += 1;
