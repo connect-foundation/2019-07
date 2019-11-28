@@ -53,6 +53,16 @@ function handlePlayerChoose({
   });
 }
 
+function handleBreakQuiz({ roomNumber, quizIndex }) {
+  if (!isRoomExist(roomNumber)) return;
+
+  this.join(roomNumber, () => {
+    io.to(this.id).emit('subResult', rooms.getSubResult(roomNumber, quizIndex));
+  });
+
+  io.to(roomNumber).emit('break');
+}
+
 function handleEnterPlayer({ roomNumber, nickname }) {
   if (!isRoomExist(roomNumber)) return;
 
@@ -88,6 +98,7 @@ io.on('connection', (socket) => {
   socket.on('start', handleStartQuiz.bind(socket));
   socket.on('next', handleNextQuiz.bind(socket));
   socket.on('choose', handlePlayerChoose.bind(socket));
+  socket.on('break', handleBreakQuiz.bind(socket));
   socket.on('enterPlayer', handleEnterPlayer.bind(socket));
   socket.on('leavePlayer', handleLeavePlayer.bind(socket));
 });

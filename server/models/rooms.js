@@ -30,6 +30,12 @@ class Rooms {
     return String(newRoomNumber);
   }
 
+  getSubResult(roomNumber, quizIndex) {
+    const playingRoom = this.getRoom(roomNumber);
+
+    return playingRoom.quizSet[quizIndex].items;
+  }
+
   removePlayer(roomNumber, nickname) {
     const playersRoom = this.getRoom(roomNumber);
     const playerIndex = playersRoom.players.findIndex(
