@@ -11,9 +11,8 @@ const TimeLimitPickerWrapper = styled.div`
   z-index: 5;
   position: absolute;
   display: flex;
-  width: 20rem;
+  width: 100%;
   height: 15rem;
-  border: 1px solid black;
   justify-content: center;
   align-items: center;
   user-select: none;
@@ -28,6 +27,7 @@ const CenterCircle = styled.button`
   border-radius: 50%;
   outline: none;
   cursor: pointer;
+  background: #ffffff;
   box-shadow: rgba(0, 0, 0, 0.7) 0px 1px 2px 0px;
   font-size: 2rem;
   font-weight: bold;
@@ -54,6 +54,7 @@ const Circle = styled.button`
   outline: none;
   cursor: pointer;
   transform: rotate(${props => -props.deg}deg);
+  background: #ffffff;
   box-shadow: rgba(0, 0, 0, 0.7) 0px 1px 2px 0px;
   transition: left 0.1s;
   transition-delay: ${props => props.delay}s;
@@ -66,7 +67,7 @@ const Circle = styled.button`
   }
 `;
 
-function TimeLimitPicker() {
+function TimeLimitPicker({ timeLimit, setTimeLimit }) {
   const [isClicked, setClicked] = useState(false);
 
   function handleCenterClick() {
@@ -75,10 +76,18 @@ function TimeLimitPicker() {
 
   return (
     <TimeLimitPickerWrapper>
-      <CenterCircle onClick={handleCenterClick}>30 sec</CenterCircle>
+      <CenterCircle onClick={handleCenterClick}>{timeLimit} sec</CenterCircle>
       {circles.map((circle, index) => (
-        <CircleWrapper key={index} deg={degs[index]}>
-          <Circle deg={degs[index]} isClicked={isClicked} delay={delays[index]}>
+        <CircleWrapper key={circles[index]} deg={degs[index]}>
+          <Circle
+            deg={degs[index]}
+            isClicked={isClicked}
+            delay={delays[index]}
+            onClick={() => {
+              setTimeLimit(circles[index]);
+              setClicked(!isClicked);
+            }}
+          >
             {circle}
           </Circle>
         </CircleWrapper>
@@ -86,5 +95,10 @@ function TimeLimitPicker() {
     </TimeLimitPickerWrapper>
   );
 }
+
+TimeLimitPicker.propTypes = {
+  timeLimit: PropTypes.number.isRequired,
+  setTimeLimit: PropTypes.func.isRequired,
+};
 
 export default TimeLimitPicker;

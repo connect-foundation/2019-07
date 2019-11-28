@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { InputStyle } from '../../styles/common';
@@ -19,9 +19,10 @@ const InputContainer = styled.div.attrs({
 
 const Input = styled.div.attrs({
   contentEditable: true,
+  className: 'inputTitle',
 })`
-  ${InputStyle}
-  position:relative;
+  ${InputStyle};
+  position: relative;
   display: inline-block;
   align-self: center;
   width: 100%;
@@ -73,6 +74,11 @@ function FlexibleInput({ maxLength, mobileFontSize, placeholder, callback }) {
   const [inputValue, setInputValue] = useState('');
   const [isFocus, setFocus] = useState(false);
 
+  // useEffect(() => {
+  //   setInputValue(title);
+  //   document.querySelector('.inputTitle').innerText = title;
+  // }, [title]);
+
   function handleKeyDown(event) {
     if (
       event.target.innerText.length >= maxLength &&
@@ -96,6 +102,7 @@ function FlexibleInput({ maxLength, mobileFontSize, placeholder, callback }) {
         onBlur={() => setFocus(false)}
         mobileFontSize={mobileFontSize}
       />
+
       <Placeholder
         isOn={isFocus || inputValue.length > 0}
         mobileFontSize={mobileFontSize}
