@@ -96,9 +96,9 @@ function HostQuizPlayingRoom({ state, dispatcher }) {
 
 HostQuizPlayingRoom.propTypes = {
   state: PropTypes.shape({
-    quizSubResult: PropTypes.object.isRequired,
+    quizSubResult: PropTypes.array,
     currentQuiz: PropTypes.object.isRequired,
-    totalQuizCount: PropTypes.string.isRequired,
+    totalQuizCount: PropTypes.number.isRequired,
   }).isRequired,
   dispatcher: PropTypes.func.isRequired,
 };
