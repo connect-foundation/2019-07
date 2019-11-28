@@ -128,9 +128,43 @@ function isNicknameOverlap(req, res, next) {
   next();
 }
 
+/**
+ * 닉네임을 입력받아서 현재 방에서 존재하는지 확인
+ *
+ * @param {String} nickname 3자리 이상, 20자리 이하의 닉네임
+ *
+ * @action Check-Fail:
+ * HTTP/1.1 200 OK
+ * {
+ *    isSuccess: false,
+ *    message: '존재하지 않는 닉네임입니다. 닉네임을 다시 입력해주세요'
+ * }
+ * @action Check-Success:
+ *  next middleware
+ */
+function isNicknameExist(req, res, next) {
+  const { nickname, roomNumber } = req.params;
+
+  const room = rooms.getRoom(roomNumber);
+  const isAlreadyExist = !!room.players.find(
+    (player) => player.nickname === nickname,
+  );
+
+  if (!isAlreadyExist) {
+    res.json({
+      isSuccess: false,
+      message: '존재하지 않는 닉네임입니다. 닉네임을 다시 입력해주세요',
+    });
+    return;
+  }
+
+  next();
+}
+
 module.exports = {
   isRoomExist,
   isRoomNumberValid,
   isNicknameOverlap,
   isValidNickname,
+  isNicknameExist,
 };

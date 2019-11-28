@@ -40,4 +40,11 @@ async function fetchToken(data) {
   return response;
 }
 
-export { fetchRoomNumber, fetchNickname, fetchToken };
+async function fetchQuizSet(roomNumber, nickname) {
+  const response = await fetchGet({
+    url: `${address.roomApiUrl}${roomNumber}${address.roomApiGetQuizSet}${nickname}`,
+  });
+  return response;
+}
+
+export { fetchRoomNumber, fetchNickname, fetchToken, fetchQuizSet };

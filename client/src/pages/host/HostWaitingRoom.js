@@ -90,7 +90,7 @@ function HostWaitingRoom() {
   });
 
   function startQuiz() {
-    socket.emit('startQuiz', { roomNumber });
+    socket.emit('start', { roomNumber });
   }
 
   return (

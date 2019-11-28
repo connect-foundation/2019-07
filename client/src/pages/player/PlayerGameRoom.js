@@ -1,10 +1,14 @@
-import React from 'react';
-import styled, { css } from 'styled-components';
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import io from 'socket.io-client';
 import PropTypes from 'prop-types';
-import * as colors from '../../constants/colors';
-import { Button } from '../../components/common/Buttons';
+import { Prompt } from 'react-router';
+
 import PlayerFooter from '../../components/inGame/PlayerFooter';
-import PlayerHeader from '../../components/inGame/PlayerHeader';
+import PlayerWaiting from '../../components/inGame/PlayerWaiting';
+import PlayerQuizLoading from '../../components/inGame/PlayerQuizLoading';
+import PlayerQuiz from '../../components/inGame/PlayerQuiz';
+import PlayerSubResult from '../../components/inGame/PlayerSubResult';
 
 const Container = styled.div`
   display: flex;
@@ -13,84 +17,89 @@ const Container = styled.div`
   height: 100%;
 `;
 
-const Main = styled.main`
-  display: flex;
-  flex-direction: column;
-  background-color: ${colors.BACKGROUND_LIGHT_GRAY};
-  flex: 1;
-  padding: 3rem;
-  align-items: center;
-`;
+function PlayerGameRoom({ location, history }) {
+  const socket = io.connect(process.env.REACT_APP_BACKEND_HOST);
 
-const ItemCardsPanel = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  margin: 0 0 1rem 0;
-`;
+  const [isQuizStart, setQuizStart] = useState(false);
+  const [isLoadingOver, setLoadingOver] = useState(false);
+  const [isCurrentQuizOver, setCurrentQuizOver] = useState(false);
+  const [quizSet, setQuizSet] = useState({});
+  const [currentIndex, setCurrentQuiz] = useState(-1);
 
-const ButtonDefault = css`
-  position: relative;
-  padding: 0.5rem;
-  border: none;
-  outline: none;
-  button {
-    height: 6rem;
-    color: #ffffff;
-    font-size: 2rem;
-  }
-  @media (min-width: 1000px) {
-    button {
-      height: 10rem;
-    }
-    font-size: 3rem;
-  }
-`;
+  useEffect(() => {
+    socket.emit('enterPlayer', {
+      nickname: location.state.nickname,
+      roomNumber: location.state.roomNumber,
+    });
 
-function HalfButton({ children, backgroundColor }) {
-  const HalfSizeButton = styled.div`
-    ${ButtonDefault}
-    width: calc(50% - 1rem);
-  `;
-  return (
-    <HalfSizeButton>
-      <Button backgroundColor={backgroundColor}>{children}</Button>
-    </HalfSizeButton>
-  );
-}
+    return () => {
+      /**
+       * react-router의 Prompt를 사용하면 페이지를 나가는 것을 막을 수 있지만
+       * 아래 closeRoom 수신 시 history.push가 정상동작하지 않는 문제가 있음.
+       */
+      socket.emit('leavePlayer', {
+        nickname: location.state.nickname,
+        roomNumber: location.state.roomNumber,
+      });
+    };
+  }, []);
 
-function FullButton({ children, backgroundColor }) {
-  const FullSizeButton = styled.div`
-    ${ButtonDefault}
-    width: 100%;
-  `;
-  return (
-    <FullSizeButton>
-      <Button backgroundColor={backgroundColor}>{children}</Button>
-    </FullSizeButton>
-  );
-}
+  socket.on('start', () => {
+    setQuizStart(true);
+    setCurrentQuizOver(false);
+  });
 
-function PlayerWaitingRoom() {
+  // 다음 문제 (새로운 문제) 시작;
+  socket.on('next', nextQuizIndex => {
+    setCurrentQuizOver(false);
+    setLoadingOver(true);
+    setCurrentQuiz(nextQuizIndex);
+  });
+
+  // 현제 문제 제한시간 끝, 중간 결과 페이지 출력
+  socket.on('break', () => {
+    setCurrentQuizOver(true);
+  });
+
+  // 현제 문제 제한시간 끝, 중간 결과 페이지 출력
+  socket.on('end', () => {
+    setCurrentQuizOver(true);
+  });
+
+  socket.on('closeRoom', () => {
+    /**
+     * 사용자에게 Modal로 방이 닫혔음을 알림
+     * 사용자가 어떤 형태로든 창을 닫으면 경로를 바꾼다.
+     */
+    history.push({
+      pathname: '/',
+    });
+  });
+
   return (
     <Container>
-      <PlayerHeader title="오늘 저녁은 뭘 먹을까요?" />
-      <Main />
-      <ItemCardsPanel>
-        <HalfButton backgroundColor="red">1번</HalfButton>
-        <HalfButton backgroundColor="blue">2번</HalfButton>
-        <HalfButton backgroundColor="green">3번</HalfButton>
-        <HalfButton backgroundColor="orange">4번</HalfButton>
-        <FullButton backgroundColor="salmon">5번</FullButton>
-      </ItemCardsPanel>
-      {/* <PlayerFooter nickname={location.state.nickname} /> */}
-      <PlayerFooter />
+      <Prompt message="페이지를 이동하면 방에서 나가게 됩니다. 계속 하시겠습니까?" />
+      {/* 이 컴포넌트 안에서 WaitingRoom, GameRoom 등을 갈아끼워야함 */}
+      {!isQuizStart && <PlayerWaiting />}
+      {isQuizStart && !isLoadingOver && (
+        <PlayerQuizLoading
+          setQuizSet={setQuizSet}
+          roomNumber={location.state.roomNumber}
+          nickname={location.state.nickname}
+          setCurrentQuiz={setCurrentQuiz}
+        />
+      )}
+      {isQuizStart && isLoadingOver && !isCurrentQuizOver && (
+        <PlayerQuiz quizSet={quizSet} currentIndex={currentIndex} />
+      )}
+      {isQuizStart && isLoadingOver && isCurrentQuizOver && <PlayerSubResult />}
+
+      <PlayerFooter nickname={location.state.nickname} />
     </Container>
   );
 }
 
-PlayerWaitingRoom.propTypes = {
+PlayerGameRoom.propTypes = {
   location: PropTypes.shape({
     pathname: PropTypes.string.isRequired,
     state: PropTypes.shape({
@@ -103,14 +112,4 @@ PlayerWaitingRoom.propTypes = {
   }).isRequired,
 };
 
-FullButton.propTypes = {
-  children: PropTypes.node.isRequired,
-  backgroundColor: PropTypes.string.isRequired,
-};
-
-HalfButton.propTypes = {
-  children: PropTypes.node.isRequired,
-  backgroundColor: PropTypes.string.isRequired,
-};
-
-export default PlayerWaitingRoom;
+export default PlayerGameRoom;
