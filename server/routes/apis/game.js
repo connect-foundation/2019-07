@@ -42,7 +42,7 @@ router.get('/room/:roomNumber/player/:nickname', async (req, res) => {
  * @apiSuccess {Integer} scores 최신 상태의 점수 (int)
  */
 router.get(
-  '/room/:roomNumber/user/:nickname',
+  '/room/:roomNumber/player/:nickname',
   isRoomExist,
   isNicknameExist,
   async (req, res) => {
@@ -76,7 +76,7 @@ router.get(
  * @apiSuccess {Integer} 등수 (int)
  */
 router.get(
-  '/room/:roomNumber/user/:nickname',
+  '/room/:roomNumber/player/:nickname',
   isRoomExist,
   isNicknameExist,
   async (req, res) => {
