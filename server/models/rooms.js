@@ -30,6 +30,29 @@ class Rooms {
     return String(newRoomNumber);
   }
 
+  getPlayer(roomNumber, nickname) {
+    const playingRoom = this.getRoom(roomNumber);
+
+    return playingRoom.players.find((player) => player.nickname === nickname);
+  }
+
+  getSubResult(roomNumber, quizIndex) {
+    const playingRoom = this.getRoom(roomNumber);
+
+    return playingRoom.quizSet[quizIndex].items;
+  }
+
+  getFinalResult(roomNumber) {
+    const playingRoom = this.getRoom(roomNumber);
+    const sortPlayers = playingRoom.players.sort(
+      (player1, player2) => player2.score - player1.score,
+    );
+
+    playingRoom.players = sortPlayers;
+
+    return sortPlayers.splice(0, 9);
+  }
+
   removePlayer(roomNumber, nickname) {
     const playersRoom = this.getRoom(roomNumber);
     const playerIndex = playersRoom.players.findIndex(
@@ -42,10 +65,27 @@ class Rooms {
 
   removeRoom(hostId) {
     const roomIndex = this.rooms.findIndex((room) => room.hostId === hostId);
+
+    if (roomIndex < 0) return false;
+
     const { roomNumber } = this.rooms[roomIndex];
 
     this.rooms.splice(roomIndex, 1);
     return roomNumber;
+  }
+
+  UpdatePlayerScore({
+    roomNumber, nickname, quizIndex, selectItemIndex,
+  }) {
+    const playingRoom = this.getRoom(roomNumber);
+    const player = this.getPlayer(roomNumber, nickname);
+    const playingQuiz = playingRoom.quizSet[quizIndex];
+
+    playingQuiz.itmes[selectItemIndex].playerCount += 1;
+
+    if (playingQuiz.answer === selectItemIndex) {
+      player.score += playingQuiz.score;
+    }
   }
 }
 
