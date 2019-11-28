@@ -40,9 +40,9 @@ async function fetchToken(data) {
   return response;
 }
 
-async function fetchQuizSet(roomNumber, nickname) {
+async function fetchQuizSet(roomNumber) {
   const response = await fetchGet({
-    url: `${address.roomApiUrl}${roomNumber}${address.roomApiGetQuizSet}${nickname}`,
+    url: `${address.roomApiUrl}${roomNumber}${address.roomApiGetQuizSet}`,
   });
   return response;
 }

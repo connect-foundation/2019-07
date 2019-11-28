@@ -11,7 +11,7 @@ const {
 } = require('../../middleware/validations');
 
 /**
- * @api {get} /room/:id/quiz 현재 방에서 진행 할 퀴즈 세트를 가져오는 API
+ * @api {get} /room/:roomNumber/quiz 현재 방에서 진행 할 퀴즈 세트를 가져오는 API
  * @apiName quiz
  * @apiGroup room
  *
@@ -19,7 +19,7 @@ const {
  *
  * @apiSuccess {Object} quizDataSet 퀴즈 세트
  */
-router.get('/room/:roomNumber/player/:nickname', async (req, res) => {
+router.get('/room/:roomNumber/quiz', async (req, res) => {
   let quizSet = {};
   // 데이터 베이스 관리 객체에서 quizSet을 가져와 갱신해줌.
   quizSet = await dao.selectQuizSet();

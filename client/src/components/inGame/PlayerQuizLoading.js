@@ -12,14 +12,9 @@ const Saying = styled.span`
   text-align: center;
 `;
 
-function PlayerQuizLoading({
-  setQuizSet,
-  roomNumber,
-  nickname,
-  setCurrentQuiz,
-}) {
+function PlayerQuizLoading({ setQuizSet, roomNumber }) {
   useEffect(() => {
-    fetchQuizSet(roomNumber, nickname).then(response => {
+    fetchQuizSet(roomNumber).then(response => {
       setQuizSet(response.quizSet);
     });
   }, []);
