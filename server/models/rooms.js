@@ -63,6 +63,9 @@ class Rooms {
 
   removeRoom(hostId) {
     const roomIndex = this.rooms.findIndex((room) => room.hostId === hostId);
+
+    if (roomIndex < 0) return false;
+
     const { roomNumber } = this.rooms[roomIndex];
 
     this.rooms.splice(roomIndex, 1);
