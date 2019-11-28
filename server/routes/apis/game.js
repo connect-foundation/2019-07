@@ -42,17 +42,17 @@ router.get('/room/:roomNumber/player/:nickname', async (req, res) => {
  * @apiSuccess {Integer} scores 최신 상태의 점수 (int)
  */
 router.get(
-  '/room/:roomNumber/user/:nickname',
+  '/room/:roomNumber/player/:nickname',
   isRoomExist,
   isNicknameExist,
   async (req, res) => {
     const { roomNumber, nickname } = req.params;
 
     const currentRoom = inMemory.rooms.find(
-      room => room.roomNumber === roomNumber,
+      (room) => room.roomNumber === roomNumber,
     );
     const currentUser = currentRoom.players.find(
-      player => player.nickname === nickname,
+      (player) => player.nickname === nickname,
     );
 
     res.json({
@@ -76,17 +76,17 @@ router.get(
  * @apiSuccess {Integer} 등수 (int)
  */
 router.get(
-  '/room/:roomNumber/user/:nickname',
+  '/room/:roomNumber/player/:nickname',
   isRoomExist,
   isNicknameExist,
   async (req, res) => {
     const { roomNumber, nickname } = req.params;
 
     const currentRoom = inMemory.rooms.find(
-      room => room.roomNumber === roomNumber,
+      (room) => room.roomNumber === roomNumber,
     );
     const rank = currentRoom.players.findIndex(
-      player => player.nickname === nickname,
+      (player) => player.nickname === nickname,
     );
     const currentUser = currentRoom.players[rank];
 
