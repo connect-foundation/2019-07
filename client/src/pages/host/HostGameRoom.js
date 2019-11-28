@@ -7,6 +7,7 @@ import HostWaitingRoom from '../../components/inGame/HostWaitingRoom';
 import HostLoading from '../../components/inGame/HostLoading';
 import HostQuizPlayingRoom from '../../components/inGame/HostQuizPlayingRoom';
 import GameResult from './GameResult';
+import { roomReducer, initialRoomState } from '../../reducer/hostGameReducer';
 
 const Container = styled.div`
   display: flex;
@@ -15,77 +16,12 @@ const Container = styled.div`
   height: 100vh;
 `;
 
-const roomReducer = (state, action) => {
-  switch (action.type) {
-    case 'roomNumber': {
-      return { ...state, roomNumber: action.roomNumber };
-    }
-    case 'players': {
-      return { ...state, players: action.players };
-    }
-    case 'start': {
-      state.socket.emit('start', { roomNumber: state.roomNumber });
-      return { ...state, isQuizStart: true };
-    }
-    case 'setCurrentQuiz': {
-      return {
-        ...state,
-        currentQuiz: {
-          ...state.fullQuizData[action.index],
-          index: action.index,
-        },
-      };
-    }
-    case 'next': {
-      state.socket.emit('next', {
-        roomNumber: state.roomNumber,
-        nextQuizIndex: state.currentQuiz.index + 1,
-      });
-
-      return state;
-    }
-    case 'break': {
-      state.socket.emit('break', {
-        roomNumber: state.roomNumber,
-        quizIndex: state.currentQuiz.index,
-      });
-
-      return state;
-    }
-    case 'setSubResult': {
-      return { ...state, quizSubResult: action.subResult };
-    }
-    case 'setFullQuiz': {
-      return {
-        ...state,
-        fullQuizData: action.data,
-        totalQuizCount: action.data.length,
-      };
-    }
-    case 'scoreBoard': {
-      return { ...state, isQuizEnd: true };
-    }
-    default:
-      return state;
-  }
-};
-
 function HostGameRoom() {
   const socket = io.connect(process.env.REACT_APP_BACKEND_HOST);
-  const initialRoomState = {
-    roomNumber: '',
-    players: [],
-    socket,
-    fullQuizData: [],
-    totalQuizCount: 0,
-    isQuizStart: false,
-    isQuizEnd: false,
-    currentQuiz: null,
-    quizSubResult: null,
-  };
   const [roomState, dispatcher] = useReducer(roomReducer, initialRoomState);
 
   useEffect(() => {
+    dispatcher({ type: 'socket', socket });
     socket.emit('openRoom');
     socket.on('openRoom', ({ roomNumber }) => {
       dispatcher({ type: 'roomNumber', roomNumber });
