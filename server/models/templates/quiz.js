@@ -1,7 +1,10 @@
 const quizTemplate = () => ({
   title: '',
+  image: '',
   items: [],
-  answer: -1,
+  answer: [],
+  timeLimit: 30,
+  score: 1000,
 });
 
 const itemTemplate = () => ({
