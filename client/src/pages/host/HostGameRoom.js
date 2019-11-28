@@ -6,6 +6,7 @@ import HostFooter from '../../components/inGame/HostFooter';
 import HostWaitingRoom from '../../components/inGame/HostWaitingRoom';
 import HostLoading from '../../components/inGame/HostLoading';
 import HostQuizPlayingRoom from '../../components/inGame/HostQuizPlayingRoom';
+import GameResult from './GameResult';
 
 const Container = styled.div`
   display: flex;
@@ -61,6 +62,9 @@ const roomReducer = (state, action) => {
         totalQuizCount: action.data.length,
       };
     }
+    case 'scoreBoard': {
+      return { ...state, isQuizEnd: true };
+    }
     default:
       return state;
   }
@@ -75,6 +79,7 @@ function HostGameRoom() {
     fullQuizData: [],
     totalQuizCount: 0,
     isQuizStart: false,
+    isQuizEnd: false,
     currentQuiz: null,
     quizSubResult: null,
   };
@@ -114,15 +119,16 @@ function HostGameRoom() {
   return (
     <Container>
       <Prompt message="페이지를 이동하면 방이 닫힐 수 있습니다. 계속 하시겠습니까?" />
-      {!roomState.isQuizStart && (
+      {!roomState.isQuizStart && !roomState.currentQuiz && (
         <HostWaitingRoom dispatcher={dispatcher} state={roomState} />
       )}
       {roomState.isQuizStart && !roomState.currentQuiz && (
-        <HostLoading dispatcher={dispatcher} />
+        <HostLoading state={roomState} dispatcher={dispatcher} />
       )}
-      {roomState.currentQuiz && (
+      {roomState.currentQuiz && !roomState.isQuizEnd && (
         <HostQuizPlayingRoom dispatcher={dispatcher} state={roomState} />
       )}
+      {roomState.isQuizEnd && <GameResult />}
       <HostFooter roomNumber={roomState.roomNumber} />
     </Container>
   );

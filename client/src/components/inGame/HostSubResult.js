@@ -37,6 +37,10 @@ function HostSubResult({ state, dispatcher }) {
       <ButtonContainer>
         <GreenButton
           onClick={() => {
+            if (state.currentQuiz.index === state.totalQuizCount - 1) {
+              dispatcher({ type: 'scoreBoard' });
+              return;
+            }
             dispatcher({ type: 'next' });
           }}
         >
@@ -54,6 +58,7 @@ HostSubResult.propTypes = {
   state: PropTypes.shape({
     quizSubResult: PropTypes.array.isRequired,
     currentQuiz: PropTypes.object.isRequired,
+    totalQuizCount: PropTypes.number.isRequired,
   }).isRequired,
   dispatcher: PropTypes.func.isRequired,
 };
