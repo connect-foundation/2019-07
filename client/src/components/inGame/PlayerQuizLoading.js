@@ -11,7 +11,7 @@ const Saying = styled.span`
   text-align: center;
 `;
 
-function PlayerQuizLoading() {
+function PlayerQuizLoading({ setQuizSet, roomNumber, nickname }) {
   return (
     <>
       <Saying>

@@ -4,10 +4,11 @@ import io from 'socket.io-client';
 import PropTypes from 'prop-types';
 import { Prompt } from 'react-router';
 
-import * as colors from '../../constants/colors';
 import PlayerFooter from '../../components/inGame/PlayerFooter';
 import PlayerWaiting from '../../components/inGame/PlayerWaiting';
 import PlayerQuizLoading from '../../components/inGame/PlayerQuizLoading';
+import PlayerQuiz from '../../components/inGame/PlayerQuiz';
+import PlayerSubResult from '../../components/inGame/PlayerSubResult';
 
 const Container = styled.div`
   display: flex;
@@ -16,18 +17,12 @@ const Container = styled.div`
   height: 100%;
 `;
 
-const Main = styled.main`
-  display: flex;
-  flex-direction: column;
-  background-color: ${colors.BACKGROUND_LIGHT_GRAY};
-  flex: 1;
-  padding: 3rem;
-  align-items: center;
-`;
-
 function PlayerGameRoom({ location, history }) {
-  const [isQuizStart, setQuizStart] = useState(false);
   const socket = io.connect(process.env.REACT_APP_BACKEND_HOST);
+
+  const [isQuizStart, setQuizStart] = useState(false);
+  const [isLoadingOver, setLoadingOver] = useState(false);
+  const [isCurrentQuizOver, setCurrentQuizOver] = useState(false);
 
   useEffect(() => {
     socket.emit('enterPlayer', {
@@ -47,8 +42,29 @@ function PlayerGameRoom({ location, history }) {
     };
   }, []);
 
-  socket.on('startQuiz', () => {
+  socket.on('start', () => {
     setQuizStart(true);
+    setCurrentQuizOver(false);
+    // 로딩이 끝난 신호.
+    setTimeout(() => {
+      setLoadingOver(true);
+    }, 5000);
+  });
+
+  // 다음 문제 (새로운 문제) 시작;
+  socket.on('next', () => {
+    setCurrentQuizOver(false);
+    setLoadingOver(true);
+  });
+
+  // 현제 문제 제한시간 끝, 중간 결과 페이지 출력
+  socket.on('end', () => {
+    setCurrentQuizOver(true);
+  });
+
+  // 현제 문제 제한시간 끝, 중간 결과 페이지 출력
+  socket.on('quizResult', () => {
+    setCurrentQuizOver(true);
   });
 
   socket.on('closeRoom', () => {
@@ -64,7 +80,12 @@ function PlayerGameRoom({ location, history }) {
   return (
     <Container>
       <Prompt message="페이지를 이동하면 방에서 나가게 됩니다. 계속 하시겠습니까?" />
-      <Main>{!isQuizStart ? PlayerWaiting() : PlayerQuizLoading()}</Main>
+      {/* 이 컴포넌트 안에서 WaitingRoom, GameRoom 등을 갈아끼워야함 */}
+      {!isQuizStart && <PlayerWaiting />}
+      {isQuizStart && !isLoadingOver && <PlayerQuizLoading />}
+      {isQuizStart && isLoadingOver && !isCurrentQuizOver && <PlayerQuiz />}
+      {isQuizStart && isLoadingOver && isCurrentQuizOver && <PlayerSubResult />}
+
       <PlayerFooter nickname={location.state.nickname} />
     </Container>
   );
