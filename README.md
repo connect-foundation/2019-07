@@ -20,9 +20,9 @@
 
 ## 프로젝트 데모 영상 링크
 
-[![demo1](https://img.youtube.com/vi/BryQwK4Rigw/maxresdefault.jpg)](https://www.youtube.com/embed/BryQwK4Rigw)
+[![demo4](https://img.youtube.com/vi/-NXKO7ySTSs/0.jpg)](https://www.youtube.com/watch?v=-NXKO7ySTSs)
 
-2주차 프로젝트 데모입니다.
+4주차 프로젝트 데모입니다.
 
 <br>
 
@@ -32,7 +32,7 @@
 
 ## 목차
 
-1. [팀원](#팀원)
+1. [팀원소개](#팀원소개)
 2. [프로젝트 소개](#프로젝트-소개)
 3. [사용 기술](#사용-기술)
 4. [실행 방법](#실행-방법)
@@ -44,7 +44,7 @@
 
 <br>
 
-## 팀원
+## 팀원소개
 
 <table>
   <tr>
@@ -59,10 +59,10 @@
 
 ### 팀원들이 담당한 부분이에요
 
-- [오창영씨는 이 부분을 만들었어요](https://github.com/connect-foundation/2019-07/wiki/works-%EC%98%A4%EC%B0%BD%EC%98%81)
-- [이수정씨는 이 파트를 완성했습니다.](https://github.com/connect-foundation/2019-07/wiki/works-%EC%9D%B4%EC%88%98%EC%A0%95)
-- [이재민씨는 이런걸 맡아서 했어요](https://github.com/connect-foundation/2019-07/wiki/works-%EC%9D%B4%EC%9E%AC%EB%AF%BC)
-- [조찬기씨는 이걸 담당했습니다.](https://github.com/connect-foundation/2019-07/wiki/works-%EC%A1%B0%EC%B0%AC%EA%B8%B0)
+- [오창영님은 이 부분을 만들었어요](https://github.com/connect-foundation/2019-07/wiki/works-%EC%98%A4%EC%B0%BD%EC%98%81)
+- [이수정님은 이 파트를 완성했습니다.](https://github.com/connect-foundation/2019-07/wiki/works-%EC%9D%B4%EC%88%98%EC%A0%95)
+- [이재민님은 이런걸 맡아서 했어요](https://github.com/connect-foundation/2019-07/wiki/works-%EC%9D%B4%EC%9E%AC%EB%AF%BC)
+- [조찬기님은 이걸 담당했습니다.](https://github.com/connect-foundation/2019-07/wiki/works-%EC%A1%B0%EC%B0%AC%EA%B8%B0)
 
 <br>
 
@@ -80,6 +80,8 @@
 
 - [3주차 데일리 스크럼](https://github.com/connect-foundation/2019-07/wiki/3%EC%A3%BC%EC%B0%A8-%EB%8D%B0%EC%9D%BC%EB%A6%AC-%EC%8A%A4%ED%81%AC%EB%9F%BC)
 
+- [4주차 데일리 스크럼](https://github.com/connect-foundation/2019-07/wiki/4%EC%A3%BC%EC%B0%A8-%EB%8D%B0%EC%9D%BC%EB%A6%AC-%EC%8A%A4%ED%81%AC%EB%9F%BC)
+
 <br>
 
 ---
@@ -87,6 +89,15 @@
 <br>
 
 ## 프로젝트 소개
+
+**피**키포키는 학습을 도와줄 실시간 퀴즈 플랫폼이에요.  
+**키**즈부터 성인까지 넓은 연령대를 타겟으로 해요.  
+**포**인트(점수) 기반의 경쟁 요소로 재미를 더했어요.  
+**키**(퀴)즈의 시각화된 결과로 강의의 피드백을 제공해요!
+
+피키포키로 더 나은 학습 경험을 제공하세요 😊
+
+<br>
 
 ### 서비스 유형
 
@@ -96,7 +107,7 @@
 
 #### 기획 배경 및 필요성
 
-청중의 집중도와 참여도를 높이기 위해 발표·강의 중간중간 돌발 퀴즈 또는 게임을 진행합니다.
+발표·강의 중간중간 청중의 집중도와 참여도를 높이기 위해 돌발 퀴즈 또는 게임을 진행합니다.
 
 청중이 많을 땐 일일이 정답자를 확인하는 작업도 번거로울 때가 많습니다.
 
@@ -164,6 +175,8 @@
 | [mysql2](https://www.npmjs.com/package/mysql2)                              | MySQL client for Node.js with focus on performance. Supports prepared statements, non-utf8 encodings, binary log protocol, compression, ssl                                                                       |
 | [dotenv](https://www.npmjs.com/package/dotenv)                              | Dotenv is a zero-dependency module that loads environment variables from a .env file into process.env. Storing configuration in the environment separate from code is based on The Twelve-Factor App methodology. |
 | [create-react-app](https://www.npmjs.com/package/create-react-app)          | Create React apps with no build configuration.                                                                                                                                                                    |
+| [react-router](https://www.npmjs.com/package/react-router)                  | Declarative routing for React.                                                                                                                                                                                    |
+| [react-router-dom](https://www.npmjs.com/package/react-router-dom)          | DOM bindings for React Router                                                                                                                                                                                     |
 | [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)                  | An implementation of JSON Web Tokens. This was developed against draft-ietf-oauth-json-web-token-08. It makes use of node-jws                                                                                     |
 | [styled component](https://www.npmjs.com/package/styled-components)         | Visual primitives for the component age. Use the best bits of ES6 and CSS to style your apps without stress 💅                                                                                                    |
 | [socket.io](https://www.npmjs.com/package/socket.io)                        | Socket.IO enables real-time, bidirectional and event-based communication.                                                                                                                                         |
