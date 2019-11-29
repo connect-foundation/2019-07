@@ -14,8 +14,8 @@ const ButtonWrapper = styled.div.attrs({
 const ButtonTop = styled.button`
   position: relative;
   flex: 1;
-  background-color: ${(props) => props.backgroundColor};
-  color: ${(props) => props.fontColor};
+  background-color: ${props => props.backgroundColor};
+  color: ${props => props.fontColor};
   filter: brightness(100%);
   border-radius: 0.5rem;
   border: none;
@@ -47,7 +47,7 @@ const ButtonBottom = styled.div`
   position: absolute;
   height: 100%;
   width: 100%;
-  background-color: ${(props) => props.backgroundColor};
+  background-color: ${props => props.backgroundColor};
   filter: brightness(50%);
   border-radius: 0.5rem;
   box-shadow: 0 0.2rem 0.3rem 0.1rem gray;
@@ -92,6 +92,18 @@ function GreenButton({ children, onClick }) {
   );
 }
 
+function WhiteButton({ children, onClick }) {
+  return (
+    <Button
+      backgroundColor={colors.BACKGROUND_LIGHT_WHITE}
+      fontColor={colors.TEXT_BLACK}
+      onClick={onClick}
+    >
+      {children}
+    </Button>
+  );
+}
+
 Button.defaultProps = {
   backgroundColor: colors.BACKGROUND_DEEP_GRAY,
   fontColor: colors.TEXT_BLACK,
@@ -104,6 +116,7 @@ const customButtonDefaultProps = {
 
 GreenButton.defaultProps = customButtonDefaultProps;
 YellowButton.defaultProps = customButtonDefaultProps;
+WhiteButton.defaultProps = customButtonDefaultProps;
 
 Button.propTypes = {
   children: PropTypes.node.isRequired,
@@ -119,5 +132,6 @@ const customButtonPropTypes = {
 
 YellowButton.propTypes = customButtonPropTypes;
 GreenButton.propTypes = customButtonPropTypes;
+WhiteButton.propTypes = customButtonPropTypes;
 
-export { Button, YellowButton, GreenButton };
+export { Button, YellowButton, GreenButton, WhiteButton };

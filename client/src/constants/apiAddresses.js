@@ -1,16 +1,13 @@
-const checkRoomNumber = '/room/checkRoomNumber';
-const setNickname = 'user/setNickname';
-const setJWT = 'login/setJWT';
-const callbackPageUrl = 'callback';
-const currentHost = 'http://localhost:3000/';
-const callbackPageFullUrl = `${currentHost}${callbackPageUrl}`;
-const roomListUrl = '/host/room/detail';
+const roomApiUrl = '/room/';
+const getToken = '/login/token/';
+const callbackPageFullUrl = `${process.env.REACT_APP_HOST}/callback`;
+const roomListUrl = '/host/room/select';
+const roomApiGetQuizSet = '/quiz';
 
 export {
-  checkRoomNumber,
-  setNickname,
-  setJWT,
-  callbackPageUrl,
+  roomApiUrl,
+  getToken,
   callbackPageFullUrl,
   roomListUrl,
+  roomApiGetQuizSet,
 };

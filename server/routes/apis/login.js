@@ -1,6 +1,6 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const request = require('request');
+const rp = require('request-promise');
 
 require('dotenv').config();
 
@@ -10,46 +10,56 @@ const jwtObj = {};
 jwtObj.secret = process.env.JWT_SECRET;
 
 /**
- * @api {post} /login/setJWT 네이버 프로필 조회 후 쿠키에 jwt로 설정하는 API.
- * @apiName setJWT
- * @apiGroup Login
+ * @api {get} /login/token/:accessToken 네이버 프로필 조회 후 쿠키에 jwt로 설정하는 API.
+ * @apiName setToken
+ * @apiGroup login
  *
- * @apiParam {string} access_token 네이버 로그인 후 제공한 적근 토큰
+ * @apiParam {String} accessToken 네이버 로그인 후 제공한 접근 토큰
  */
-router.post('/setJWT', async (req, res) => {
-  const accessToken = req.body.data.access_token;
+router.get('/token/:accessToken', async (req, res) => {
+  const { accessToken } = req.params;
   const header = `Bearer ${accessToken}`; // Bearer 다음에 공백을 추가해야함
   const apiUrl = 'https://openapi.naver.com/v1/nid/me';
 
   const options = {
-    url: apiUrl,
+    method: 'GET',
+    uri: apiUrl,
     headers: { Authorization: header },
   };
   let profileObject;
-  let getNidSuccess = false;
+  let getProfileSuccess = false;
   let errorCode = 'unknown';
-  await new Promise((resolve) => {
-    request.get(options, async (error, response, body) => {
-      if (error || response.statusCode !== 200) {
-        getNidSuccess = false;
 
-        if (response != null) {
-          errorCode = `${response.statusCode}`;
-        }
+  await rp(options).then((body) => {
+    /**
+     * body의 형태
+     * resultcode: '00',
+     * message: 'success',
+     * response: {
+     *   id: '',
+     *   nickname: '',
+     *   profile_image: '',
+     *   age: '',
+     *   gender: '',
+     *   email: '',
+     *   name: '',
+     *   birthday: '',
+     * }
+     */
 
-        resolve();
-        return;
-      }
+    const { resultcode, message, response } = JSON.parse(body);
 
-      const profile = JSON.parse(body);
+    if (message !== 'success') {
+      getProfileSuccess = false;
+      errorCode = `${resultcode}`;
+      return;
+    }
 
-      profileObject = profile.response;
-      getNidSuccess = true;
-      resolve();
-    });
+    profileObject = response;
+    getProfileSuccess = true;
   });
 
-  if (!getNidSuccess) {
+  if (!getProfileSuccess) {
     res.json({
       isError: true,
       isSuccess: false,
@@ -61,6 +71,7 @@ router.post('/setJWT', async (req, res) => {
   /**
    * 여기서 프로필 조회 API에서 받아온 정보를 DB에 저장해야함.
    */
+
   /**
    * 프로필객체 예시
    * profileObject : {
@@ -86,7 +97,9 @@ router.post('/setJWT', async (req, res) => {
     },
   );
 
-  res.cookie('jwt', token);
+  res.cookie('jwt', token, {
+    maxAge: 60 * 60 * 1000, // 60분 * 60초 * 1000 ms
+  });
   res.json({
     isSuccess: true,
   });
