@@ -3,8 +3,8 @@ import styled, { keyframes } from 'styled-components';
 import PropTypes from 'prop-types';
 import * as colors from '../../constants/colors';
 
-const graphMargin = '1.5vmin';
-const countFontSize = '6vmin';
+const graphMargin = '0.75vw';
+const countFontSize = '3vw';
 const getItemColor = index =>
   index < colors.ITEM_COLOR.length ? colors.ITEM_COLOR[index] : 'salmon';
 const Container = styled.div.attrs({
@@ -30,12 +30,11 @@ const GraphWrapper = styled.div`
   overflow: hidden;
 `;
 const GraphBottom = styled.div`
-  display: flex;
+  display: inline-flex;
   flex: none;
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 4vmin;
   border-radius: 0.4rem;
   background-color: ${props => getItemColor(props.index)};
   margin-top: ${graphMargin};
@@ -44,7 +43,7 @@ const ItemTitle = styled.span`
   max-width: 100%;
   max-height: 100%;
   color: white;
-  font-size: 2.5vmin;
+  font-size: 1.5vw;
   font-weight: bold;
   overflow: hidden;
   text-overflow: ellipsis;

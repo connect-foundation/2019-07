@@ -14,7 +14,7 @@ import DESKTOP_MIN_WIDTH from '../constants/media';
 const Background = styled.div`
   position: relative;
   display: flex;
-  height: 100%;
+  height: 100vh;
   flex-direction: column;
   background-color: ${PRIMARY_LIGHT_YELLOW};
   overflow-x: hidden;
@@ -43,7 +43,6 @@ const LogoContainer = styled.div`
   flex: 2;
   flex-direction: column;
   justify-content: center;
-
   div#logo3d {
     transform: scale3d(0.4, 0.4, 0.4);
     @media (min-width: ${DESKTOP_MIN_WIDTH}) {

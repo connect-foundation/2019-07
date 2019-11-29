@@ -1,14 +1,26 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import * as colors from '../../constants/colors';
 import DESKTOP_MIN_WIDTH from '../../constants/media';
 
-const HeaderStyle = styled.header`
+const HeaderHeight = '6rem';
+
+const HeaderArea = styled.div`
   position: relative;
-  background-color: ${colors.PRIMARY_DEEP_GREEN};
+  width: 100%;
+  height: ${HeaderHeight};
+  flex: none;
+`;
+
+const HeaderStyle = styled.header`
+  position: fixed;
+  width: 100%;
+  height: ${HeaderHeight};
   box-shadow: 5px 5px 5px ${colors.BACKGROUND_DEEP_GRAY};
-  height: 6rem;
+  background-color: ${colors.PRIMARY_DEEP_GREEN};
+  z-index: 900;
 `;
 
 const ServiceLogoImage = styled.img.attrs({
@@ -22,19 +34,29 @@ const ServiceLogoImage = styled.img.attrs({
   width: 10rem;
   transform: translateX(-50%) translateY(-50%);
   top: 50%;
+  cursor: pointer;
 `;
 
 function Header({ children }) {
   return (
-    <HeaderStyle>
-      <ServiceLogoImage />
-      {children}
-    </HeaderStyle>
+    <HeaderArea>
+      <HeaderStyle>
+        <Link to="/">
+          <ServiceLogoImage />
+        </Link>
+
+        {children}
+      </HeaderStyle>
+    </HeaderArea>
   );
 }
 
+Header.defaultProps = {
+  children: '',
+};
+
 Header.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
 };
 
 export default Header;

@@ -17,11 +17,13 @@ const ButtonContainer = styled.div`
 `;
 
 const ScoreChartContainer = styled.div`
+  width: 100%;
+  height: 30%;
+
   @media (min-width: ${DESKTOP_MIN_WIDTH}) {
     width: 50%;
+    height: 38%;
   }
-  width: 100%;
-  height: 38%;
 `;
 
 function HostSubResult({ state, dispatcher }) {
