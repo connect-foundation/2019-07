@@ -20,10 +20,11 @@ const {
  * @apiSuccess {Object} quizDataSet 퀴즈 세트
  */
 router.get('/room/:roomNumber/quiz', async (req, res) => {
+  const { roomNumber } = req.params;
   let quizSet = {};
-  // 데이터 베이스 관리 객체에서 quizSet을 가져와 갱신해줌.
-  quizSet = await dao.selectQuizSet();
-
+  // inMemory서 quizSet을 가져옴.
+  quizSet = inMemory.getRoom(roomNumber).quizSet;
+  // 받아온 quizSet을 전송
   res.json({
     quizSet,
   });
