@@ -148,10 +148,15 @@
 
 ### 실행 흐름
 
+<<<<<<< HEAD
 - `src/pages/host/EditPage.js` 페이지에서 `src/components/common/Header.js`, `src/components/edit/EditBody.js` 컴포넌트 호출
 - `src/components/edit/EditBody.js` -> `src/components/edit/SideBar.js`, `src/components/edit/Template.js`
 - `src/components/edit/SideBar.js` -> `src/components/edit/Preview.js`
 - `src/components/edit/Template.js` -> `src/components/edit/TimeLimitPicker.js`, `src/components/edit/ScorePicker.js`, `src/components/edit/ItemCard.js`
+=======
+1. `src/pages/editPage.js`에서
+2. `src/components/edit/ItemCard.js`, `src/components/edit/TimeLimitPicker.js`, `src/components/edit/ScorePicker.js` 컴포넌트를 생성
+>>>>>>> d47d747bca81f4103351bae24273628a02fb8c51
 
 ### 파일 설명
 
