@@ -1,82 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import PropTypes from 'prop-types';
-import * as colors from '../../constants/colors';
-import transparencyImage from '../../assets/images/transparency.png';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import PropTypes from "prop-types";
+import * as colors from "../../constants/colors";
+import transparencyImage from "../../assets/images/transparency.png";
 
-const translates = [-6, 0, 6];
-const dragImage = new Image();
-dragImage.src = transparencyImage;
-
-const ScorePickerWrapper = styled.div`
-  z-index: 4;
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  top: 15rem;
-  width: 100%;
-  height: 10rem;
-`;
-
-const Title = styled.div`
-  position: absolute;
-  top: 0;
-  font-size: 1.5rem;
-`;
-
-const Bar = styled.div`
-  position: absolute;
-  width: 12rem;
-  height: 0.2rem;
-  background: ${colors.BORDER_DARK_GRAY};
-  cursor: pointer;
-`;
-
-const Circle = styled.div`
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transform: translateX(${props => props.x}rem);
-  width: 0.8rem;
-  height: 0.8rem;
-  border-radius: 50%;
-  background: ${colors.BORDER_DARK_GRAY};
-`;
-
-const InnerCircle = styled.div`
-  position: absolute;
-  transform: translateX(${props => props.x}rem);
-  width: 0.8rem;
-  height: 0.8rem;
-  border-radius: 50%;
-  background: ${colors.BORDER_DARK_GRAY};
-  opacity: 0.3;
-  cursor: pointer;
-  &:hover {
-    transform: scale(2);
-  }
-  transition: 0.2s;
-`;
-
-const SlideButton = styled.button`
-  z-index: 5rem;
-  position: absolute;
-  width: 6rem;
-  height: 3rem;
-  outline: none;
-  border: none;
-  border-radius: 5rem;
-  background: #ffffff;
-  box-shadow: rgba(0, 0, 0, 0.7) 0px 1px 2px 0px;
-  font-size: 1.5rem;
-  font-weight: bold;
-  cursor: pointer;
-  user-select: none;
-  color: ${colors.TEXT_BLACK};
-  transform: translateX(${props => props.translateX}px);
-`;
+// styled-components...
 
 function ScorePicker({ score, setScore }) {
   const [startX, setStartX] = useState(0);
@@ -161,7 +89,7 @@ function ScorePicker({ score, setScore }) {
 
 ScorePicker.propTypes = {
   score: PropTypes.number.isRequired,
-  setScore: PropTypes.func.isRequired,
+  setScore: PropTypes.func.isRequired
 };
 
 export default ScorePicker;
