@@ -6,7 +6,7 @@ async function selectQuizSet() {
     setTimeout(async () => {
       data = quizData;
       resolve(data);
-    }, 1000);
+    }, 10);
   });
   return data;
 }
