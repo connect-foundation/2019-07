@@ -1,8 +1,12 @@
-const roomApiUrl = '/room/';
-const getToken = '/login/token/';
+const roomApiUrl = 'room';
+const getToken = 'login/token';
 const callbackPageFullUrl = `${process.env.REACT_APP_HOST}/callback`;
 const roomListUrl = '/host/room/select';
-const roomApiGetQuizSet = '/quiz';
+const roomApiGetQuizSet = 'quiz';
+const user = 'user';
+const name = 'name';
+const quiz = 'quiz';
+const choose = 'choose';
 
 export {
   roomApiUrl,
@@ -10,4 +14,8 @@ export {
   callbackPageFullUrl,
   roomListUrl,
   roomApiGetQuizSet,
+  user,
+  name,
+  quiz,
+  choose,
 };
