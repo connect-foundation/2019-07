@@ -3,7 +3,6 @@ const express = require('express');
 const router = express.Router();
 
 const inMemory = require('../../models/rooms');
-const dao = require('../../models/dao/dao');
 
 const {
   isRoomExist,
