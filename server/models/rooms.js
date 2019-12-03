@@ -50,7 +50,7 @@ class Rooms {
 
     playingRoom.players = sortPlayers;
 
-    return sortPlayers.splice(0, 9);
+    return sortPlayers.slice(0, 9);
   }
 
   removePlayer(roomNumber, nickname) {
