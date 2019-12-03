@@ -27,7 +27,7 @@ class DatabaseManager {
   }
 }
 
-const manager = new DatabaseManager(
+const dbManager = new DatabaseManager(
   mysql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -36,4 +36,4 @@ const manager = new DatabaseManager(
   }),
 );
 
-module.exports = manager;
+module.exports = dbManager;
