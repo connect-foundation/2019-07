@@ -10,7 +10,7 @@ class User extends Table {
    */
 
   selectAllUser() {
-    return this.query('select * from user');
+    return this.query('select id, email from user');
   }
 }
 
