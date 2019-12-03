@@ -2,6 +2,8 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const rp = require('request-promise');
 
+const dbManager = require('../../models/database/dbManager');
+
 require('dotenv').config();
 
 const router = express.Router();
@@ -69,10 +71,6 @@ router.get('/token/:accessToken', async (req, res) => {
   }
 
   /**
-   * 여기서 프로필 조회 API에서 받아온 정보를 DB에 저장해야함.
-   */
-
-  /**
    * 프로필객체 예시
    * profileObject : {
    *   "email": "openapi@naver.com",
@@ -85,6 +83,17 @@ router.get('/token/:accessToken', async (req, res) => {
    *   "birthday": "10-01"
    * }
    */
+
+  /**
+   * USER 테이블에 이메일 정보가 없는 경우 INSERT하는 메소드
+   * 최초의 사용자 로그인 시만 저장하고, 이미 저장된 사용자가 로그인 시
+   * 다음과 같은 객체를 return함
+   * {
+   *   isError: true,
+   *   message: "Duplicate entry '이메일 주소' for key 'email_UNIQUE'"
+   * }
+   */
+  await dbManager.user.insertUser(profileObject);
 
   const token = jwt.sign(
     {
