@@ -4,7 +4,7 @@ require('dotenv').config();
 
 const Analysis = require('./tables/Analysis');
 const Item = require('./tables/Item');
-const QuizSet = require('./tables/QuizSet');
+const Quizset = require('./tables/Quizset');
 const Quiz = require('./tables/Quiz');
 const Room = require('./tables/Room');
 const User = require('./tables/User');
@@ -20,7 +20,7 @@ class DatabaseManager {
 
     this.analysis = new Analysis(this.pool);
     this.item = new Item(this.pool);
-    this.quizSet = new QuizSet(this.pool);
+    this.quizset = new Quizset(this.pool);
     this.quiz = new Quiz(this.pool);
     this.room = new Room(this.pool);
     this.user = new User(this.pool);
