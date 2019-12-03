@@ -1,5 +1,5 @@
 const Table = require('./Table');
-const { userTable } = require('../constants/tableName');
+const { userTable } = require('../../../constants/tableName');
 
 require('dotenv').config();
 

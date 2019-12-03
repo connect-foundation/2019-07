@@ -1,4 +1,5 @@
 const Table = require('./Table');
+const { roomTable } = require('../../../constants/tableName');
 
 class Room extends Table {
   /**
