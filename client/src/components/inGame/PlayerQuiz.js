@@ -1,5 +1,4 @@
 import React from 'react';
-import styled, { css } from 'styled-components';
 import PropTypes from 'prop-types';
 
 import * as colors from '../../constants/colors';
@@ -15,9 +14,9 @@ function Quiz({ quizSet, currentIndex }) {
       </layout.TitleContainer>
       <layout.Center>
         <layout.CenterContentContainer>
-          <layout.CenterLeftPanel></layout.CenterLeftPanel>
-          <layout.ImagePanel></layout.ImagePanel>
-          <layout.CenterRightPanel></layout.CenterRightPanel>
+          <layout.CenterLeftPanel />
+          <layout.ImagePanel />
+          <layout.CenterRightPanel />
         </layout.CenterContentContainer>
       </layout.Center>
       <layout.Bottom>
@@ -37,16 +36,6 @@ function Quiz({ quizSet, currentIndex }) {
     </layout.Background>
   );
 }
-
-FullButton.propTypes = {
-  children: PropTypes.node.isRequired,
-  backgroundColor: PropTypes.string.isRequired,
-};
-
-HalfButton.propTypes = {
-  children: PropTypes.node.isRequired,
-  backgroundColor: PropTypes.string.isRequired,
-};
 
 Quiz.propTypes = {
   quizSet: PropTypes.shape({
