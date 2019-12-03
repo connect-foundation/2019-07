@@ -38,4 +38,24 @@ function Quiz({ quizSet, currentIndex }) {
   );
 }
 
+FullButton.propTypes = {
+  children: PropTypes.node.isRequired,
+  backgroundColor: PropTypes.string.isRequired,
+};
+
+HalfButton.propTypes = {
+  children: PropTypes.node.isRequired,
+  backgroundColor: PropTypes.string.isRequired,
+};
+
+Quiz.propTypes = {
+  quizSet: PropTypes.shape({
+    items: PropTypes.shape({
+      title: PropTypes.string,
+    }),
+    title: PropTypes.string.isRequired,
+  }).isRequired,
+  currentIndex: PropTypes.number.isRequired,
+};
+
 export default Quiz;
