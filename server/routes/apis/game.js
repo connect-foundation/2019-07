@@ -65,15 +65,15 @@ router.get(
 /**
  * 퀴즈가 끝나고 특정 유저의 결과 (등수, 점수)를 알려주는 API
  * @api {get} /room/:roomNumber/user/:nickname/result
- * @apiName subResult
+ * @apiName getResult
  * @apiGroup room
  *
  * @apiParam {string} roomNumber 6글자 방 번호
  * @apiParam {string} nickname 유저의 입장 닉네임
  *
  * @apiSuccess {string} nickname 현제 유저의 닉네임 (string)
- * @apiSuccess {Integer} scores 최신 상태의 점수 (int)
- * @apiSuccess {Integer} 등수 (int)
+ * @apiSuccess {int} scores 최신 상태의 점수 (int)
+ * @apiSuccess {int} 등수 (int)
  */
 router.get(
   '/room/:roomNumber/player/:nickname/result',
@@ -85,6 +85,7 @@ router.get(
     const currentRoom = inMemory.rooms.find(
       (room) => room.roomNumber === roomNumber,
     );
+    // 게임 결과가 끝나면 점수 순으로 정렬되므로 index+1 = rank
     const rank = currentRoom.players.findIndex(
       (player) => player.nickname === nickname,
     );
@@ -93,7 +94,7 @@ router.get(
     res.json({
       nickname,
       score: currentUser.score,
-      rank,
+      rank: rank + 1,
     });
   },
 );
