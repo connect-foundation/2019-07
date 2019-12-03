@@ -10,7 +10,7 @@ const getItemColor = index =>
 const Container = styled.div.attrs({
   className: 'scoreChartContainer',
 })`
-  position: relative;
+  position: absolute;
   display: flex;
   justify-items: center;
   width: 90%;
@@ -18,7 +18,6 @@ const Container = styled.div.attrs({
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: white;
 `;
 const GraphWrapper = styled.div`
   display: flex;
