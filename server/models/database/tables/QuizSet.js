@@ -1,6 +1,6 @@
 const Table = require('./Table');
 
-class Package extends Table {
+class QuizSet extends Table {
   /**
    * 메소드 가이드라인
    *
@@ -10,4 +10,4 @@ class Package extends Table {
    */
 }
 
-module.exports = Package;
+module.exports = QuizSet;
