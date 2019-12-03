@@ -3,40 +3,15 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { GreenButton } from '../common/Buttons';
 import * as colors from '../../constants/colors';
+import * as layout from './Layout';
+import Hourglass from './Hourglass';
 
-const ButtonContainer = styled.div`
-  display: flex;
-  margin: 1rem;
-  justify-content: flex-end;
-  width: calc(100% - 2rem);
-  button {
-    font-size: 1.5rem;
-    width: 8rem;
-  }
-`;
-
-const QuizContainer = styled.div`
-  position: relative;
-  width: calc(100% - 2rem);
-  max-height: 30%;
-  min-height: 20rem;
-`;
-
-const RemainTime = styled.div`
+const RemainTime = styled.span`
   position: absolute;
-  left: 2rem;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 5rem;
-  height: 5rem;
+  margin-top: auto;
+  font-size: 2vw;
   font-weight: bold;
-  color: ${colors.TEXT_WHITE};
-  background-color: ${colors.PRIMARY_DEEP_GREEN};
-  font-size: 2rem;
-  border-radius: 3rem;
+  user-select: none;
 `;
 
 function HostPlaying({ state, dispatcher }) {
@@ -61,8 +36,8 @@ function HostPlaying({ state, dispatcher }) {
   }, [state.currentQuiz]);
 
   return (
-    <>
-      <ButtonContainer>
+    <layout.CenterContentContainer>
+      <layout.NextButtonWrapper>
         <GreenButton
           onClick={() => {
             dispatcher({ type: 'break' });
@@ -70,11 +45,19 @@ function HostPlaying({ state, dispatcher }) {
         >
           다음퀴즈
         </GreenButton>
-      </ButtonContainer>
-      <QuizContainer>
+      </layout.NextButtonWrapper>
+      <layout.CenterLeftPanel>
+        <Hourglass />
         <RemainTime>{remainTime}</RemainTime>
-      </QuizContainer>
-    </>
+      </layout.CenterLeftPanel>
+      <layout.ImagePanel></layout.ImagePanel>
+      <layout.CenterRightPanel>
+        <layout.RemainPeople>
+          <br />
+          100명이 풀이중
+        </layout.RemainPeople>
+      </layout.CenterRightPanel>
+    </layout.CenterContentContainer>
   );
 }
 
