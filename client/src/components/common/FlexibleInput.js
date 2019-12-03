@@ -8,6 +8,8 @@ import * as colors from '../../constants/colors';
 const BACKSPACE = 8;
 const COUNTER_RATE = 0.5;
 const PLACEHOLDER_RATE = 0.75;
+const A_KEY = 65;
+const DIRECTION_KEY = [37, 38, 39, 40]; // 좌, 우, 상, 하 순서
 
 const InputContainer = styled.div.attrs({
   className: 'inputContainer',
@@ -57,6 +59,7 @@ const Placeholder = styled.span`
   position: absolute;
   top: 50%;
   left: 50%;
+  width: 100%;
   transform: translate(-50%, -50%);
   font-size: calc(${props => props.mobileFontSize} * ${PLACEHOLDER_RATE});
   font-weight: bold;
@@ -87,14 +90,12 @@ function FlexibleInput({ maxLength, mobileFontSize, placeholder, callback }) {
   const warningRef = useRef(null);
 
   function handleKeyDown(event) {
-    const directionKey = [37, 38, 39, 40];
-
     if (
       event.target.textContent.length >= maxLength &&
       event.keyCode !== BACKSPACE &&
       !event.ctrlKey &&
-      !(event.ctrlKey && event.keyCode === 65) &&
-      !directionKey.includes(event.keyCode)
+      !(event.ctrlKey && event.keyCode === A_KEY) &&
+      !DIRECTION_KEY.includes(event.keyCode)
     ) {
       event.preventDefault();
     } else {
