@@ -98,4 +98,57 @@ router.get(
   },
 );
 
+/**
+ * 플레이어가 문항을 선택했을 때 정답, 오답여부를 판별해주는 API
+ * @api {get} /room/:roomNumber/user/:nickname/choose/:choose
+ * @apiName choose
+ * @apiGroup room
+ *
+ * @apiParam {string} roomNumber 6글자 방 번호
+ * @apiParam {string} nickname 유저의 입장 닉네임
+ * @apiParam {int} quizIndex 현재 문제의 index
+ * @apiParam {int} choose 유저가 선택한 번호
+ *
+ * @apiSuccess {bool} isCorrect 선택한 항목이 정답인지 여부
+ * @apiSuccess {int} score 갱신된 점수
+ */
+router.post(
+  '/room/:roomNumber/user/:nickname/quiz/:quizIndex/choose/:choose',
+  isRoomExist,
+  isNicknameExist,
+  async (req, res) => {
+    // 이 부분을 한 줄로 처리하면 prettier 설정에서 오류가 남.
+    const { roomNumber, nickname } = req.params;
+    const { quizIndex, choose } = req.params;
+
+    // console.log(roomNumber, nickname, quizIndex, choose);
+
+    const currentRoom = inMemory.rooms.find(
+      (current) => current.roomNumber === roomNumber,
+    );
+
+    const player = currentRoom.players.find(
+      (current) => current.nickname === nickname,
+    );
+
+    const quiz = currentRoom.quizSet[quizIndex];
+
+    // choose는 문자열 형태이므로, answer에 있는 정수와 타입을 맞춰주어야함
+    const result = quiz.answer.find((answer) => `${answer}` === choose);
+
+    if (result === undefined) {
+      res.json({
+        isCorrect: false,
+        score: player.score,
+      });
+      return;
+    }
+
+    res.json({
+      isCorrect: true,
+      score: (player.score += quiz.score),
+    });
+  },
+);
+
 module.exports = router;
