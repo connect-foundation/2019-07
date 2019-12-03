@@ -1,4 +1,5 @@
 const Table = require('./Table');
+const { userTable } = require('../constants/tableName');
 
 class User extends Table {
   /**
@@ -10,7 +11,7 @@ class User extends Table {
    */
 
   selectAllUser() {
-    return this.query('select id, email from user');
+    return this.query(`select id, email from ${userTable}`);
   }
 }
 
