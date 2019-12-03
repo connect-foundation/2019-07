@@ -5,8 +5,12 @@ import PropTypes from 'prop-types';
 const degrees = [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330];
 
 const Container = styled.div`
+  position: absolute;
   display: flex;
   justify-content: center;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: ${props => props.size};
   height: ${props => props.size};
 `;
