@@ -66,8 +66,7 @@ function FullButton({ children, backgroundColor }) {
 }
 
 function Quiz({ quizSet, currentIndex }) {
-  console.log('new quiz', currentIndex);
-
+  // console.log('new quiz', currentIndex);
   return (
     <>
       <PlayerHeader title={quizSet[currentIndex].title} />
@@ -98,6 +97,16 @@ FullButton.propTypes = {
 HalfButton.propTypes = {
   children: PropTypes.node.isRequired,
   backgroundColor: PropTypes.string.isRequired,
+};
+
+Quiz.propTypes = {
+  quizSet: PropTypes.shape({
+    items: PropTypes.shape({
+      title: PropTypes.string,
+    }),
+    title: PropTypes.string.isRequired,
+  }).isRequired,
+  currentIndex: PropTypes.number.isRequired,
 };
 
 export default Quiz;
