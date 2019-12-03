@@ -47,4 +47,22 @@ async function fetchQuizSet(roomNumber) {
   return response;
 }
 
-export { fetchRoomNumber, fetchNickname, fetchToken, fetchQuizSet };
+async function fetchChoose(object) {
+  const { roomNumber, nickname } = object.params;
+  const { quizIndex, choose } = object.params;
+
+  // url 양식 : /room/:roomNumber/user/:nickname/quiz/:quizIndex/choose/:choose
+  const url = `/${address.roomApiUrl}/${roomNumber}/${address.user}/${nickname}/${address.quiz}/${quizIndex}/${address.choose}/${choose}`;
+  const response = await fetchGet({
+    url,
+  });
+  return response;
+}
+
+export {
+  fetchRoomNumber,
+  fetchNickname,
+  fetchToken,
+  fetchQuizSet,
+  fetchChoose,
+};
