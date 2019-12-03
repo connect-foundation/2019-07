@@ -33,6 +33,7 @@ const ModalTitle = styled.div`
   color: ${colors.TEXT_BLACK};
   font-size: 2rem;
   font-weight: bold;
+  text-align: center;
   margin-bottom: 1rem;
   padding-bottom: 1rem;
   border-bottom: 1px solid lightgray;
@@ -64,6 +65,7 @@ const Description = styled.div`
   margin-bottom: 1rem;
   color: ${colors.TEXT_GRAY};
   word-break: keep-all;
+  text-align: center;
   @media (min-width: ${DESKTOP_MIN_WIDTH}) {
     font-size: 1.5rem;
   }
