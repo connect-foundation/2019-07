@@ -95,7 +95,6 @@ function PlayerGameRoom({ location, history }) {
           quizSet={quizSet}
           quizIndex={quizIndex}
           setChoose={setChoose}
-          choose={choose}
         />
       )}
       {isQuizStart && isLoadingOver && isCurrentQuizOver && (
