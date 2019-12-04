@@ -8,8 +8,10 @@ require('dotenv').config();
 
 const router = express.Router();
 
-const jwtObj = {};
-jwtObj.secret = process.env.JWT_SECRET;
+const jwtObj = {
+  secret: process.env.JWT_SECRET,
+};
+// jwtObj.secret = process.env.JWT_SECRET;
 
 /**
  * @api {get} /login/token/:accessToken 네이버 프로필 조회 후 쿠키에 jwt로 설정하는 API.
@@ -26,7 +28,9 @@ router.get('/token/:accessToken', async (req, res) => {
   const options = {
     method: 'GET',
     uri: apiUrl,
-    headers: { Authorization: header },
+    headers: {
+      Authorization: header,
+    },
   };
   let profileObject;
   let getProfileSuccess = false;
@@ -48,7 +52,6 @@ router.get('/token/:accessToken', async (req, res) => {
      *   birthday: '',
      * }
      */
-
     const { resultcode, message, response } = JSON.parse(body);
 
     if (message !== 'success') {
@@ -106,9 +109,16 @@ router.get('/token/:accessToken', async (req, res) => {
     },
   );
 
+  /**
+   * 쿠키에 정보 추가
+   */
+  res.cookie('email', profileObject.email, {
+    maxAge: 60 * 60 * 1000, // 60분 * 60초 * 1000 ms
+  });
   res.cookie('jwt', token, {
     maxAge: 60 * 60 * 1000, // 60분 * 60초 * 1000 ms
   });
+
   res.json({
     isSuccess: true,
   });
