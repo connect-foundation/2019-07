@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import { Prompt } from 'react-router';
 import styled from 'styled-components';
 import io from 'socket.io-client';
@@ -6,7 +6,7 @@ import HostFooter from '../../components/inGame/HostFooter';
 import HostWaitingRoom from '../../components/inGame/HostWaitingRoom';
 import HostLoading from '../../components/inGame/HostLoading';
 import HostQuizPlayingRoom from '../../components/inGame/HostQuizPlayingRoom';
-import GameResult from './GameResult';
+import GameResult from '../../components/inGame/HostResult';
 import { roomReducer, initialRoomState } from '../../reducer/hostGameReducer';
 
 const Container = styled.div`
@@ -19,6 +19,7 @@ const Container = styled.div`
 function HostGameRoom() {
   const socket = io.connect(process.env.REACT_APP_BACKEND_HOST);
   const [roomState, dispatcher] = useReducer(roomReducer, initialRoomState);
+  const [ranking, setRanking] = useState([]);
 
   useEffect(() => {
     dispatcher({ type: 'socket', socket });
@@ -52,6 +53,11 @@ function HostGameRoom() {
     dispatcher({ type: 'setSubResult', subResult });
   });
 
+  // 현재 방의 문제 세트 끝,
+  socket.on('end', orderedRanking => {
+    setRanking(orderedRanking);
+  });
+
   return (
     <Container>
       <Prompt message="페이지를 이동하면 방이 닫힐 수 있습니다. 계속 하시겠습니까?" />
@@ -64,7 +70,7 @@ function HostGameRoom() {
       {roomState.currentQuiz && !roomState.isQuizEnd && (
         <HostQuizPlayingRoom dispatcher={dispatcher} state={roomState} />
       )}
-      {roomState.isQuizEnd && <GameResult />}
+      {roomState.isQuizEnd && <GameResult ranking={ranking} />}
       <HostFooter roomNumber={roomState.roomNumber} />
     </Container>
   );
