@@ -5,7 +5,7 @@ const getToken = 'login/token';
 
 const roomListUrl = '/host/room/select';
 const roomApiGetQuizSet = 'quiz';
-const user = 'user';
+const player = 'player';
 const name = 'name';
 const quiz = 'quiz';
 const choose = 'choose';
@@ -16,7 +16,7 @@ export {
   callbackPageFullUrl,
   roomListUrl,
   roomApiGetQuizSet,
-  user,
+  player,
   name,
   quiz,
   choose,

@@ -64,7 +64,7 @@ router.get(
 
 /**
  * 퀴즈가 끝나고 특정 유저의 결과 (등수, 점수)를 알려주는 API
- * @api {get} /room/:roomNumber/user/:nickname/result
+ * @api {get} /room/:roomNumber/player/:nickname/result
  * @apiName getResult
  * @apiGroup room
  *
@@ -101,7 +101,7 @@ router.get(
 
 /**
  * 플레이어가 문항을 선택했을 때 정답, 오답여부를 판별해주는 API
- * @api {get} /room/:roomNumber/user/:nickname/choose/:choose
+ * @api {get} /room/:roomNumber/player/:nickname/choose/:choose
  * @apiName choose
  * @apiGroup room
  *
@@ -114,13 +114,11 @@ router.get(
  * @apiSuccess {int} score 갱신된 점수
  */
 router.post(
-  '/room/:roomNumber/user/:nickname/quiz/:quizIndex/choose/:choose',
+  '/room/:roomNumber/player/:nickname/quiz/:quizIndex/choose/:choose',
   isRoomExist,
   isNicknameExist,
   async (req, res) => {
     const { roomNumber, nickname, quizIndex, choose } = req.params;
-
-    // console.log(roomNumber, nickname, quizIndex, choose);
 
     const currentRoom = inMemory.rooms.find(
       (current) => current.roomNumber === roomNumber,
