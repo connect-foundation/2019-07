@@ -131,7 +131,7 @@ router.post(
     const quiz = currentRoom.quizSet[quizIndex];
 
     // choose는 문자열 형태이므로, answer에 있는 정수와 타입을 맞춰주어야함
-    const result = quiz.answer.find((answer) => `${answer}` === choose);
+    const result = quiz.answers.find((answer) => `${answer}` === choose);
 
     if (result === undefined) {
       res.json({
