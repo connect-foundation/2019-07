@@ -92,7 +92,7 @@ function Modal({
             {closeButton && <Button onClick={closeModal}>{closeButton}</Button>}
             <YellowButton
               onClick={() => {
-                if (action) action();
+                if (action && !action()) return;
                 closeModal();
               }}
             >
