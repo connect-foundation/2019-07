@@ -6,6 +6,7 @@ import DESKTOP_MIN_WIDTH from '../../constants/media';
 import * as colors from '../../constants/colors';
 
 const BACKSPACE = 8;
+const ENTER = 13;
 const COUNTER_RATE = 0.5;
 const PLACEHOLDER_RATE = 0.75;
 const A_KEY = 65;
@@ -91,6 +92,7 @@ function FlexibleInput({ maxLength, mobileFontSize, placeholder, callback }) {
   const warningRef = useRef(null);
 
   function handleKeyDown(event) {
+    if (event.keyCode === ENTER) event.preventDefault();
     if (
       event.target.textContent.length >= maxLength &&
       event.keyCode !== BACKSPACE &&
