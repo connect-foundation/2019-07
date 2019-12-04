@@ -4,9 +4,11 @@ import PropTypes from 'prop-types';
 
 import { fetchChoose } from '../../utils/fetch';
 
-const green = '#51ce66';
-const red = '#ff6b6b';
-const white = '#ffffff';
+const COLORS = {
+  GREEN: '#51ce66',
+  RED: '#ff6b6b',
+  WHITE: '#ffffff',
+};
 
 const Background = styled.div`
   width: 100%;
@@ -31,8 +33,8 @@ const Score = styled.div`
 
   padding: 2rem;
 
-  color: white;
-  background-color: green;
+  color: #ffffff;
+  background-color: #008001;
 
   transform: translateY(10rem);
 `;
@@ -61,7 +63,7 @@ function PlayerSubResultComponent({
 
   if (result.isCorrect === undefined) {
     return (
-      <Background color={white}>
+      <Background color={COLORS.WHITE}>
         <Message>정답을 확인 중 입니다.</Message>
       </Background>
     );
@@ -69,7 +71,7 @@ function PlayerSubResultComponent({
 
   if (result.isCorrect === false) {
     return (
-      <Background color={red}>
+      <Background color={COLORS.RED}>
         <Message>틀렸습니다.</Message>
       </Background>
     );
@@ -77,7 +79,7 @@ function PlayerSubResultComponent({
 
   if (result.isCorrect === true) {
     return (
-      <Background color={green}>
+      <Background color={COLORS.GREEN}>
         <Message>맞았습니다.</Message>
         <Score>+{plusScore}</Score>
       </Background>
