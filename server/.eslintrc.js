@@ -25,5 +25,11 @@ module.exports = {
         allowTemplateLiterals: true,
       },
     ],
+    'object-curly-newline': [
+      'error',
+      {
+        ObjectExpression: 'always',
+      },
+    ],
   },
 };
