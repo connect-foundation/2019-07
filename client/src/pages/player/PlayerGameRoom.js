@@ -9,12 +9,14 @@ import PlayerWaiting from '../../components/inGame/PlayerWaiting';
 import PlayerQuizLoading from '../../components/inGame/PlayerQuizLoading';
 import PlayerQuiz from '../../components/inGame/PlayerQuiz';
 import PlayerSubResult from '../../components/inGame/PlayerSubResult';
+import PlayerResult from '../../components/inGame/PlayerResult';
 
 const VIEW_STATE = {
   WAITING: 'WAITING',
   IN_QUIZ: 'INQUIZ',
   LOADING: 'LOADING',
   SUB_RESULT: 'SUBRESULT',
+  END: 'END',
 };
 
 const Container = styled.div`
@@ -36,6 +38,7 @@ function PlayerGameRoom({ location, history }) {
 
   const [choose, setChoose] = useState(-1);
   const [score, setScore] = useState(0);
+  const [ranking, setRanking] = useState([]);
 
   useEffect(() => {
     socket.emit('enterPlayer', {
@@ -68,8 +71,9 @@ function PlayerGameRoom({ location, history }) {
   });
 
   // 현재 방의 문제 세트 끝,
-  socket.on('end', () => {
-    setViewState(VIEW_STATE.LOADING);
+  socket.on('end', orderedRanking => {
+    setRanking(orderedRanking);
+    setViewState(VIEW_STATE.END);
   });
 
   socket.on('closeRoom', () => {
@@ -108,6 +112,14 @@ function PlayerGameRoom({ location, history }) {
           nickname={nickname}
           roomNumber={roomNumber}
           quizIndex={quizIndex}
+        />
+      )}
+      {viewState === VIEW_STATE.END && (
+        <PlayerResult
+          ranking={ranking}
+          roomNumber={roomNumber}
+          nickname={nickname}
+          score={score}
         />
       )}
 
