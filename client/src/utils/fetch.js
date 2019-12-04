@@ -48,8 +48,8 @@ async function fetchQuizSet(roomNumber) {
 }
 
 async function fetchChoose(roomNumber, nickname, quizIndex, choose) {
-  // url 양식 : /room/:roomNumber/user/:nickname/quiz/:quizIndex/choose/:choose
-  const url = `/${address.roomApiUrl}/${roomNumber}/${address.user}/${nickname}/${address.quiz}/${quizIndex}/${address.choose}/${choose}`;
+  // url 양식 : /room/:roomNumber/player/:nickname/quiz/:quizIndex/choose/:choose
+  const url = `/${address.roomApiUrl}/${roomNumber}/${address.player}/${nickname}/${address.quiz}/${quizIndex}/${address.choose}/${choose}`;
   const response = await fetchPost({
     url,
   });
