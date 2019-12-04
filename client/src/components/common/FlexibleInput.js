@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { InputStyle } from '../../styles/common';
@@ -8,6 +8,8 @@ import * as colors from '../../constants/colors';
 const BACKSPACE = 8;
 const COUNTER_RATE = 0.5;
 const PLACEHOLDER_RATE = 0.75;
+const A_KEY = 65;
+const DIRECTION_KEY = [37, 38, 39, 40]; // 좌, 우, 상, 하 순서
 
 const InputContainer = styled.div.attrs({
   className: 'inputContainer',
@@ -57,6 +59,7 @@ const Placeholder = styled.span`
   position: absolute;
   top: 50%;
   left: 50%;
+  width: 100%;
   transform: translate(-50%, -50%);
   font-size: calc(${props => props.mobileFontSize} * ${PLACEHOLDER_RATE});
   font-weight: bold;
@@ -70,25 +73,47 @@ const Placeholder = styled.span`
   }
 `;
 
+const Warning = styled.div`
+  background-color: #ffc6c6;
+  color: red;
+  border-radius: 5px;
+  font-weight: bold;
+  text-align: center;
+  @media (min-width: ${DESKTOP_MIN_WIDTH}) {
+    font-size: 1.5rem;
+  }
+`;
+
 function FlexibleInput({ maxLength, mobileFontSize, placeholder, callback }) {
   const [inputValue, setInputValue] = useState('');
   const [isFocus, setFocus] = useState(false);
-
-  // useEffect(() => {
-  //   setInputValue(title);
-  //   document.querySelector('.inputTitle').innerText = title;
-  // }, [title]);
+  const warningRef = useRef(null);
 
   function handleKeyDown(event) {
     if (
-      event.target.innerText.length >= maxLength &&
-      event.keyCode !== BACKSPACE
-    )
+      event.target.textContent.length >= maxLength &&
+      event.keyCode !== BACKSPACE &&
+      !event.ctrlKey &&
+      !(event.ctrlKey && event.keyCode === A_KEY) &&
+      !DIRECTION_KEY.includes(event.keyCode)
+    ) {
       event.preventDefault();
+    } else {
+      warningRef.current.textContent = '';
+    }
   }
 
   function handleInput(event) {
-    const value = event.target.innerText;
+    let value = event.target.textContent;
+
+    if (value.length >= maxLength) {
+      value = value.substring(0, maxLength);
+      if (inputValue.length === maxLength) value = inputValue;
+
+      event.target.textContent = value;
+      warningRef.current.textContent = `${maxLength}글자를 넘을 수 없습니다`;
+    }
+
     setInputValue(value);
     if (callback !== undefined) callback(value);
   }
@@ -112,6 +137,7 @@ function FlexibleInput({ maxLength, mobileFontSize, placeholder, callback }) {
       <Counter isOn={isFocus} mobileFontSize={mobileFontSize}>
         {maxLength - inputValue.length}
       </Counter>
+      <Warning ref={warningRef} />
     </InputContainer>
   );
 }
