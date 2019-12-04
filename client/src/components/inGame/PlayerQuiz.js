@@ -53,7 +53,7 @@ function Quiz({ quizSet, quizIndex, setChoose }) {
       {!choosed && (
         <Selection currentQuiz={currentQuiz} chooseAnswer={chooseAnswer} />
       )}
-      {choosed && <LoadingCircle />}
+      {choosed && <LoadingCircle color={colors.PRIMARY_DEEP_GREEN} />}
     </layout.Background>
   );
 }

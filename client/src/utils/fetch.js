@@ -56,10 +56,20 @@ async function fetchChoose(roomNumber, nickname, quizIndex, choose) {
   return response;
 }
 
+async function fetchRank(roomNumber, nickname) {
+  // url 양식 : /room/:roomNumber/player/:nickname/result
+  const url = `/${address.roomApiUrl}/${roomNumber}/${address.player}/${nickname}/${address.result}`;
+  const response = await fetchGet({
+    url,
+  });
+  return response;
+}
+
 export {
   fetchRoomNumber,
   fetchNickname,
   fetchToken,
   fetchQuizSet,
   fetchChoose,
+  fetchRank,
 };

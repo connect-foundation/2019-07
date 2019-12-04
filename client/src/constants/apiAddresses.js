@@ -9,6 +9,7 @@ const player = 'player';
 const name = 'name';
 const quiz = 'quiz';
 const choose = 'choose';
+const result = 'result';
 
 export {
   roomApiUrl,
@@ -20,4 +21,5 @@ export {
   name,
   quiz,
   choose,
+  result,
 };

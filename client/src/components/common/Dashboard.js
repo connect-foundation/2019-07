@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import styled, { keyframes } from 'styled-components';
 import DESKTOP_MIN_WIDTH from '../../constants/media';
 
@@ -114,19 +115,6 @@ const Score = styled.span`
   }
 `;
 
-const datas = [
-  { nickname: '구라재민1', score: 12345 },
-  { nickname: '구라재민2', score: 10000 },
-  { nickname: '구라재민3', score: 10020 },
-  { nickname: '구라재민4', score: 9000 },
-  { nickname: '구라재민5', score: 9000 },
-  { nickname: '구라재민6', score: 9000 },
-  { nickname: '구라재민7', score: 8000 },
-  { nickname: '구라재민8', score: 7000 },
-  { nickname: '구라재민9', score: 6000 },
-  { nickname: '구라재민10', score: 5000 },
-];
-
 function sortByHighScore(player1, player2) {
   if (player1.score < player2.score) return 1;
   if (player1.score > player2.score) return -1;
@@ -135,8 +123,9 @@ function sortByHighScore(player1, player2) {
   return 0;
 }
 
-function DashBoard() {
+function DashBoard({ ranking }) {
   const [lines, setLines] = useState([]);
+  const datas = ranking;
 
   useEffect(() => {
     datas.sort(sortByHighScore);
@@ -179,5 +168,9 @@ function DashBoard() {
     </Container>
   );
 }
+
+DashBoard.propTypes = {
+  ranking: PropTypes.arrayOf.isRequired,
+};
 
 export default DashBoard;

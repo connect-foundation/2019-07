@@ -49,7 +49,11 @@ const roomReducer = (state, action) => {
       };
     }
     case 'scoreBoard': {
-      return { ...state, isQuizEnd: true };
+      state.socket.emit('end', {
+        roomNumber: state.roomNumber,
+      });
+      // return { ...state, isQuizEnd: true };
+      return { ...state, isQuizEnd: false };
     }
     default:
       return state;
