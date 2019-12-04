@@ -1,38 +1,61 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import * as colors from '../../constants/colors';
 import { Button } from '../common/Buttons';
 import * as layout from './Layout';
 
-function Quiz({ quizSet, currentIndex }) {
-  const currentQuiz = quizSet[currentIndex];
+function Waiting({ index }) {
+  return (
+    <div>
+      waiting
+      <div>you choosed : {index}</div>
+    </div>
+  );
+}
+
+function Quiz({ quizSet, quizIndex, setChoose, choose }) {
+  const [choosed, setChoosed] = useState(false);
+
+  const currentQuiz = quizSet[quizIndex];
+  function chooseAnswer(index) {
+    setChoose(index);
+    setChoosed(true);
+    console.log('choose', index);
+  }
+
   return (
     <layout.Background>
       <layout.TitleContainer>
         <layout.Title>{currentQuiz.title}</layout.Title>
       </layout.TitleContainer>
-      <layout.Center>
-        <layout.CenterContentContainer>
-          <layout.CenterLeftPanel />
-          <layout.ImagePanel />
-          <layout.CenterRightPanel />
-        </layout.CenterContentContainer>
-      </layout.Center>
-      <layout.Bottom>
-        <layout.ItemContainer>
-          {currentQuiz.items.map((item, index) => (
-            <layout.Item key={item.title}>
-              <Button
-                backgroundColor={colors.ITEM_COLOR[index]}
-                fontColor={colors.TEXT_WHITE}
-              >
-                {item.title}
-              </Button>
-            </layout.Item>
-          ))}
-        </layout.ItemContainer>
-      </layout.Bottom>
+      {!choosed && (
+        <>
+          <layout.Center>
+            <layout.CenterContentContainer>
+              <layout.CenterLeftPanel />
+              <layout.ImagePanel />
+              <layout.CenterRightPanel />
+            </layout.CenterContentContainer>
+          </layout.Center>
+          <layout.Bottom>
+            <layout.ItemContainer>
+              {currentQuiz.items.map((item, index) => (
+                <layout.Item key={item.title}>
+                  <Button
+                    backgroundColor={colors.ITEM_COLOR[index]}
+                    fontColor={colors.TEXT_WHITE}
+                    onClick={e => chooseAnswer(index, e)}
+                  >
+                    {item.title}
+                  </Button>
+                </layout.Item>
+              ))}
+            </layout.ItemContainer>
+          </layout.Bottom>
+        </>
+      )}
+      {choosed && <Waiting index={choose} />}
     </layout.Background>
   );
 }
@@ -44,7 +67,9 @@ Quiz.propTypes = {
     }),
     title: PropTypes.string.isRequired,
   }).isRequired,
-  currentIndex: PropTypes.number.isRequired,
+  quizIndex: PropTypes.number.isRequired,
+  setChoose: PropTypes.func.isRequired,
+  choose: PropTypes.number.isRequired,
 };
 
 export default Quiz;

@@ -18,13 +18,19 @@ const Container = styled.div`
 `;
 
 function PlayerGameRoom({ location, history }) {
+  const { nickname, roomNumber } = location.state;
+
   const socket = io.connect(process.env.REACT_APP_BACKEND_HOST);
 
   const [isQuizStart, setQuizStart] = useState(false);
   const [isLoadingOver, setLoadingOver] = useState(false);
   const [isCurrentQuizOver, setCurrentQuizOver] = useState(false);
+
   const [quizSet, setQuizSet] = useState({});
-  const [currentIndex, setCurrentQuiz] = useState(-1);
+  const [quizIndex, setCurrentQuiz] = useState(-1);
+
+  const [choose, setChoose] = useState(-1);
+  const [score, setScore] = useState(0);
 
   useEffect(() => {
     socket.emit('enterPlayer', {
@@ -82,17 +88,28 @@ function PlayerGameRoom({ location, history }) {
       <Prompt message="페이지를 이동하면 방에서 나가게 됩니다. 계속 하시겠습니까?" />
       {!isQuizStart && <PlayerWaiting />}
       {isQuizStart && !isLoadingOver && (
-        <PlayerQuizLoading
-          setQuizSet={setQuizSet}
-          roomNumber={location.state.roomNumber}
-        />
+        <PlayerQuizLoading setQuizSet={setQuizSet} roomNumber={roomNumber} />
       )}
       {isQuizStart && isLoadingOver && !isCurrentQuizOver && (
-        <PlayerQuiz quizSet={quizSet} currentIndex={currentIndex} />
+        <PlayerQuiz
+          quizSet={quizSet}
+          quizIndex={quizIndex}
+          setChoose={setChoose}
+          choose={choose}
+        />
       )}
-      {isQuizStart && isLoadingOver && isCurrentQuizOver && <PlayerSubResult />}
+      {isQuizStart && isLoadingOver && isCurrentQuizOver && (
+        <PlayerSubResult
+          choose={choose}
+          score={score}
+          setScore={setScore}
+          nickname={nickname}
+          roomNumber={roomNumber}
+          quizIndex={quizIndex}
+        />
+      )}
 
-      <PlayerFooter nickname={location.state.nickname} />
+      <PlayerFooter nickname={nickname} score={score} />
     </Container>
   );
 }
