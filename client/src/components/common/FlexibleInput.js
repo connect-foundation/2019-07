@@ -63,6 +63,7 @@ const Placeholder = styled.span`
   transform: translate(-50%, -50%);
   font-size: calc(${props => props.mobileFontSize} * ${PLACEHOLDER_RATE});
   font-weight: bold;
+  text-align: center;
   color: ${colors.TEXT_GRAY};
   user-select: none;
   pointer-events: none;
