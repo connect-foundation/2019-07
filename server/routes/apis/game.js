@@ -20,9 +20,9 @@ const {
  */
 router.get('/room/:roomNumber/quiz', async (req, res) => {
   const { roomNumber } = req.params;
-  let quizSet = {};
+
   // inMemory서 quizSet을 가져옴.
-  quizSet = inMemory.getRoom(roomNumber).quizSet;
+  const { quizSet } = inMemory.getRoom(roomNumber);
   // 받아온 quizSet을 전송
   res.json({
     quizSet,
@@ -118,9 +118,7 @@ router.post(
   isRoomExist,
   isNicknameExist,
   async (req, res) => {
-    // 이 부분을 한 줄로 처리하면 prettier 설정에서 오류가 남.
-    const { roomNumber, nickname } = req.params;
-    const { quizIndex, choose } = req.params;
+    const { roomNumber, nickname, quizIndex, choose } = req.params;
 
     // console.log(roomNumber, nickname, quizIndex, choose);
 

@@ -1,17 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import * as colors from '../../constants/colors';
 import { Button } from '../common/Buttons';
 import * as layout from './Layout';
 
-function Quiz({ quizSet, currentIndex }) {
-  const currentQuiz = quizSet[currentIndex];
+import LoadingCircle from '../common/LoadingCircle';
+
+function Selection({ currentQuiz, chooseAnswer }) {
   return (
-    <layout.Background>
-      <layout.TitleContainer>
-        <layout.Title>{currentQuiz.title}</layout.Title>
-      </layout.TitleContainer>
+    <>
       <layout.Center>
         <layout.CenterContentContainer>
           <layout.CenterLeftPanel />
@@ -26,6 +24,7 @@ function Quiz({ quizSet, currentIndex }) {
               <Button
                 backgroundColor={colors.ITEM_COLOR[index]}
                 fontColor={colors.TEXT_WHITE}
+                onClick={e => chooseAnswer(index, e)}
               >
                 {item.title}
               </Button>
@@ -33,9 +32,41 @@ function Quiz({ quizSet, currentIndex }) {
           ))}
         </layout.ItemContainer>
       </layout.Bottom>
+    </>
+  );
+}
+
+function Quiz({ quizSet, quizIndex, setChoose }) {
+  const [choosed, setChoosed] = useState(false);
+
+  const currentQuiz = quizSet[quizIndex];
+  function chooseAnswer(index) {
+    setChoose(index);
+    setChoosed(true);
+  }
+
+  return (
+    <layout.Background>
+      <layout.TitleContainer>
+        <layout.Title>{currentQuiz.title}</layout.Title>
+      </layout.TitleContainer>
+      {!choosed && (
+        <Selection currentQuiz={currentQuiz} chooseAnswer={chooseAnswer} />
+      )}
+      {choosed && <LoadingCircle />}
     </layout.Background>
   );
 }
+
+Selection.propTypes = {
+  currentQuiz: PropTypes.shape({
+    items: PropTypes.shape({
+      map: PropTypes.func.isRequired,
+      title: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
+  chooseAnswer: PropTypes.func.isRequired,
+};
 
 Quiz.propTypes = {
   quizSet: PropTypes.shape({
@@ -44,7 +75,8 @@ Quiz.propTypes = {
     }),
     title: PropTypes.string.isRequired,
   }).isRequired,
-  currentIndex: PropTypes.number.isRequired,
+  quizIndex: PropTypes.number.isRequired,
+  setChoose: PropTypes.func.isRequired,
 };
 
 export default Quiz;
