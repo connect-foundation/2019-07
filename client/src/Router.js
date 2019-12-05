@@ -7,6 +7,7 @@ import EditPage from './pages/host/EditPage';
 import PlayerGameRoom from './pages/player/PlayerGameRoom';
 import CallBackPage from './pages/login/CallBackPage';
 import SelectRoom from './pages/host/SelectRoom';
+import NotFoundPage from './pages/NotFoundPage';
 
 export default function() {
   return (
@@ -22,6 +23,7 @@ export default function() {
       <Route exact path="/callback" component={CallBackPage} />
       <Route exact path="/host/room/select" component={SelectRoom} />
       <Route exact path="/host/room/detail" component={HostDetailRoom} />
+      <Route path="" component={NotFoundPage} />
     </Router>
   );
 }
