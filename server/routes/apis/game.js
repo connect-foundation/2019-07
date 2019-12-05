@@ -85,16 +85,28 @@ router.get(
     const currentRoom = inMemory.rooms.find(
       (room) => room.roomNumber === roomNumber,
     );
-    // 게임 결과가 끝나면 점수 순으로 정렬되므로 index+1 = rank
-    const rank = currentRoom.players.findIndex(
-      (player) => player.nickname === nickname,
-    );
-    const currentUser = currentRoom.players[rank];
+
+    let rank = 1;
+    let score = 0;
+
+    for (let index = 0; index < currentRoom.players.length; index += 1) {
+      const currentPlayer = currentRoom.players[index];
+      const previousPlayer = currentRoom.players[index - 1];
+
+      if (index > 0) {
+        rank = previousPlayer.score === currentPlayer.score ? rank : index + 1;
+      }
+
+      if (currentPlayer.nickname === nickname) {
+        score = currentPlayer.score;
+        break;
+      }
+    }
 
     res.json({
       nickname,
-      score: currentUser.score,
-      rank: rank + 1,
+      score,
+      rank,
     });
   },
 );
