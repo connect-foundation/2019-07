@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { GreenButton } from '../common/Buttons';
-import * as colors from '../../constants/colors';
 import * as layout from './Layout';
 import Hourglass from './Hourglass';
+import { HostGameAction } from '../../reducer/hostGameReducer';
 
 const RemainTime = styled.span`
   position: absolute;
@@ -23,7 +23,7 @@ function HostPlaying({ state, dispatcher }) {
       setRemainTime(cur => {
         if (cur === 0) {
           clearInterval(timer);
-          dispatcher({ type: 'break' });
+          dispatcher({ type: HostGameAction.REQUEST_SUB_RESULT });
           return 0;
         }
         return cur - 1;
@@ -40,7 +40,7 @@ function HostPlaying({ state, dispatcher }) {
       <layout.NextButtonWrapper>
         <GreenButton
           onClick={() => {
-            dispatcher({ type: 'break' });
+            dispatcher({ type: HostGameAction.REQUEST_SUB_RESULT });
           }}
         >
           다음퀴즈
@@ -50,7 +50,7 @@ function HostPlaying({ state, dispatcher }) {
         <Hourglass />
         <RemainTime>{remainTime}</RemainTime>
       </layout.CenterLeftPanel>
-      <layout.ImagePanel></layout.ImagePanel>
+      <layout.ImagePanel />
       <layout.CenterRightPanel>
         <layout.RemainPeople>
           <br />

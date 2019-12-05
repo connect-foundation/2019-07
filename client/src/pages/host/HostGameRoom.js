@@ -8,7 +8,11 @@ import HostWaitingRoom from '../../components/inGame/HostWaitingRoom';
 import HostLoading from '../../components/inGame/HostLoading';
 import HostQuizPlayingRoom from '../../components/inGame/HostQuizPlayingRoom';
 import GameResult from '../../components/inGame/HostResult';
-import { roomReducer, initialRoomState } from '../../reducer/hostGameReducer';
+import {
+  roomReducer,
+  initialRoomState,
+  HostGameAction,
+} from '../../reducer/hostGameReducer';
 
 const Container = styled.div`
   display: flex;
@@ -23,10 +27,10 @@ function HostGameRoom({ location }) {
   const [ranking, setRanking] = useState([]);
 
   useEffect(() => {
-    dispatcher({ type: 'socket', socket });
+    dispatcher({ type: HostGameAction.SET_SOCKET, socket });
     socket.emit('openRoom', { roomId: location.state.roomId });
     socket.on('openRoom', ({ roomNumber }) => {
-      dispatcher({ type: 'roomNumber', roomNumber });
+      dispatcher({ type: HostGameAction.SET_ROOM_NUMBER, roomNumber });
     });
 
     function blockClose(e) {
@@ -42,19 +46,19 @@ function HostGameRoom({ location }) {
   }, []);
 
   socket.on('enterPlayer', players => {
-    dispatcher({ type: 'players', players });
+    dispatcher({ type: HostGameAction.SET_PLAYERS, players });
   });
 
   socket.on('leavePlayer', players => {
-    dispatcher({ type: 'players', players });
+    dispatcher({ type: HostGameAction.SET_PLAYERS, players });
   });
 
   socket.on('next', nextQuizIndex => {
-    dispatcher({ type: 'setCurrentQuiz', index: nextQuizIndex });
+    dispatcher({ type: HostGameAction.SET_CURRENT_QUIZ, index: nextQuizIndex });
   });
 
   socket.on('subResult', subResult => {
-    dispatcher({ type: 'setSubResult', subResult });
+    dispatcher({ type: HostGameAction.SET_SUB_RESULT, subResult });
   });
 
   // 현재 방의 문제 세트 끝,
