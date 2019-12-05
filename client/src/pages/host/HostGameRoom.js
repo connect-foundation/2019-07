@@ -61,9 +61,9 @@ function HostGameRoom({ location }) {
     dispatcher({ type: HostGameAction.SET_SUB_RESULT, subResult });
   });
 
-  // 현재 방의 문제 세트 끝,
   socket.on('end', orderedRanking => {
     setRanking(orderedRanking);
+    dispatcher({ type: HostGameAction.SHOW_SCOREBOARD });
   });
 
   return (

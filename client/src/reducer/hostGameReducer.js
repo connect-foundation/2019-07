@@ -69,6 +69,9 @@ const roomReducer = (state, action) => {
 
       return state;
     }
+    case HostGameAction.SHOW_SCOREBOARD: {
+      return { ...state, isQuizEnd: true };
+    }
     default:
       return state;
   }
