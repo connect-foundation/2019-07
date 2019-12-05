@@ -8,7 +8,10 @@ import TabContents from '../../components/detailRoom/TabContents';
 import RoomInformation from '../../components/detailRoom/RoomInformation';
 
 const Background = styled.div`
-  height: 100%;
+  position: relative;
+  display: flex;
+  height: 100vh;
+  flex-direction: column;
   background-color: ${colors.BACKGROUND_LIGHT_GRAY};
 `;
 
@@ -19,25 +22,25 @@ const ButtonContainer = styled.div`
   transform: translateY(-50%);
 `;
 
-function DetailRoom({ history }) {
+function DetailRoom({ history, location }) {
   function handlePlayButton() {
-    /**
-     * 퀴즈를 시작할 것인지 확인하는 Modal 출력
-     */
     history.push({
       pathname: '/host',
+      state: {
+        roomId: location.state.roomId,
+      },
     });
   }
 
   return (
     <Background>
       <Header>
-        <RoomInformation />
+        <RoomInformation roomId={location.state.roomId} />
         <ButtonContainer>
           <YellowButton onClick={handlePlayButton}>시작하기</YellowButton>
         </ButtonContainer>
       </Header>
-      <TabContents />
+      <TabContents roomId={location.state.roomId} history={history} />
     </Background>
   );
 }
@@ -45,6 +48,9 @@ function DetailRoom({ history }) {
 DetailRoom.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
+  }).isRequired,
+  location: PropTypes.shape({
+    state: PropTypes.object,
   }).isRequired,
 };
 
