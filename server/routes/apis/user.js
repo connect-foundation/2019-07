@@ -1,4 +1,5 @@
 const express = require('express');
+const { check, validationResult } = require('express-validator');
 
 const router = express.Router();
 
@@ -10,5 +11,30 @@ router.get('/:userId/rooms', async (req, res) => {
 
   res.send(result);
 });
+
+router.post(
+  '/room',
+  [
+    check('title').exists(),
+    check('userId').exists(),
+    check('title').isLength({
+      max: 26,
+    }),
+  ],
+  async (req, res) => {
+    try {
+      validationResult(req).throw();
+      const { title, userId } = req.body;
+      const result = await dbManager.room.insertRoom(userId, title);
+
+      res.send(result);
+    } catch (err) {
+      res.send({
+        isError: true,
+        message: err.message,
+      });
+    }
+  },
+);
 
 module.exports = router;
