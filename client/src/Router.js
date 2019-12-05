@@ -14,16 +14,16 @@ export default function() {
     <Router>
       <Switch>
         <Route exact path="/" component={MainPage} />
-        <Route path="/nickname" component={MainPage} />
-        <Route path="/login" component={MainPage} />
+        <Route exact path="/nickname" component={MainPage} />
+        <Route exact path="/login" component={MainPage} />
+        <Route exact path="/host" component={HostGameRoom} />
+        <Route exact path="/player" component={PlayerGameRoom} />
+        <Route exact path="/edit" component={EditPage} />
+        <Route exact path="/callback" component={CallBackPage} />
+        <Route exact path="/host/room/select" component={SelectRoom} />
+        <Route exact path="/host/room/detail" component={HostDetailRoom} />
+        <Route component={NotFoundPage} />
       </Switch>
-      <Route exact path="/host" component={HostGameRoom} />
-      <Route exact path="/player" component={PlayerGameRoom} />
-      <Route exact path="/edit" component={EditPage} />
-      <Route exact path="/callback" component={CallBackPage} />
-      <Route exact path="/host/room/select" component={SelectRoom} />
-      <Route exact path="/host/room/detail" component={HostDetailRoom} />
-      <Route path="" component={NotFoundPage} />
     </Router>
   );
 }
