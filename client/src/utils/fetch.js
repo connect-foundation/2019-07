@@ -1,8 +1,8 @@
 import * as address from '../constants/apiAddresses';
 
-async function fetchPost({ url, data }) {
+async function fetchPost({ url, data, method = 'POST' }) {
   const response = await fetch(url, {
-    method: 'POST',
+    method,
     headers: {
       'Content-Type': 'application/json',
     },
@@ -20,6 +20,18 @@ async function addRoom({ userId, roomTitle }) {
       title: roomTitle,
       userId,
     },
+  });
+  return response;
+}
+
+async function updateRoomTitle({ roomId, title }) {
+  const response = await fetchPost({
+    url: `/user/room`,
+    data: {
+      roomId,
+      title,
+    },
+    method: 'PUT',
   });
   return response;
 }
@@ -110,4 +122,5 @@ export {
   fetchRooms,
   fetchRoomTitle,
   addRoom,
+  updateRoomTitle,
 };

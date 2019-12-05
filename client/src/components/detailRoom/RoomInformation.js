@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import * as colors from '../../constants/colors';
-import { fetchRoomTitle } from '../../utils/fetch';
+import { fetchRoomTitle, updateRoomTitle } from '../../utils/fetch';
+import Modal from '../common/Modal';
+import FlexibleInput from '../common/FlexibleInput';
+import { ModalContext } from '../common/ModalProvider';
 
 const RoomInformationContainer = styled.div`
   position: absolute;
@@ -34,6 +37,8 @@ const EditRoomNameImage = styled.img.attrs({
 
 function RoomInformation({ roomId }) {
   const [roomName, setRoomName] = useState('');
+  const [inputValue, setInputValue] = useState('');
+  const { openModal } = useContext(ModalContext);
 
   useEffect(() => {
     fetchRoomTitle({ roomId }).then(response => {
@@ -42,21 +47,36 @@ function RoomInformation({ roomId }) {
   }, []);
 
   function handleRoomName() {
-    /**
-     * 현재 방의 이름을 Modal input에 출력
-     * 유저가 입력한 값을 setRoomName로 설정하고 fetch
-     * 응답이 실패로 왔을 경우 상태를 이전으로 돌리고 유저에게 알림
-     * */
-    const currentRoomName = roomName;
-    setRoomName(currentRoomName);
+    updateRoomTitle({ roomId, title: inputValue }).then(response => {
+      if (response.isSuccess) {
+        setRoomName(inputValue);
+        return;
+      }
+      alert('오류로 인해 방의 이름을 수정할 수 없습니다');
+    });
+
+    return true;
   }
 
   return (
     <>
       <RoomInformationContainer>
         <span>{roomName}</span>
-        <EditRoomNameImage title="이름 수정하기" onClick={handleRoomName} />
+        <EditRoomNameImage title="이름 수정하기" onClick={openModal} />
       </RoomInformationContainer>
+      <Modal
+        title="방 이름 수정"
+        description="수정할 방의 이름을 입력하세요"
+        action={handleRoomName}
+        actionButton="수정"
+        closeButton="취소"
+      >
+        <FlexibleInput
+          callback={setInputValue}
+          maxLength={26}
+          placeholder="방 이름을 입력하세요"
+        />
+      </Modal>
     </>
   );
 }
