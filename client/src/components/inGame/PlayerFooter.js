@@ -23,17 +23,18 @@ const Footer = styled.footer`
   ${styles.InGameFooterStyle};
 `;
 
-function PlayerFooter({ nickname }) {
+function PlayerFooter({ nickname, score }) {
   return (
     <Footer>
       <Nickname>{nickname}</Nickname>
-      <Score>0</Score>
+      <Score>{score}</Score>
     </Footer>
   );
 }
 
 PlayerFooter.propTypes = {
   nickname: PropTypes.string.isRequired,
+  score: PropTypes.number.isRequired,
 };
 
 export default PlayerFooter;

@@ -1,7 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-import Dashboard from '../../components/common/Dashboard';
+import Dashboard from '../common/Dashboard';
 import * as colors from '../../constants/colors';
 
 const Background = styled.div`
@@ -21,13 +22,17 @@ const Title = styled.span`
   font-weight: bold;
 `;
 
-function HostGameResult() {
+function HostGameResult({ ranking }) {
   return (
     <Background>
       <Title>TOP 10</Title>
-      <Dashboard />
+      <Dashboard ranking={ranking} />
     </Background>
   );
 }
+
+HostGameResult.propTypes = {
+  ranking: PropTypes.shape.isRequired,
+};
 
 export default HostGameResult;

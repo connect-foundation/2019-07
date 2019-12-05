@@ -9,6 +9,15 @@ import PlayerWaiting from '../../components/inGame/PlayerWaiting';
 import PlayerQuizLoading from '../../components/inGame/PlayerQuizLoading';
 import PlayerQuiz from '../../components/inGame/PlayerQuiz';
 import PlayerSubResult from '../../components/inGame/PlayerSubResult';
+import PlayerResult from '../../components/inGame/PlayerResult';
+
+const VIEW_STATE = {
+  WAITING: 'WAITING',
+  IN_QUIZ: 'INQUIZ',
+  LOADING: 'LOADING',
+  SUB_RESULT: 'SUBRESULT',
+  END: 'END',
+};
 
 const Container = styled.div`
   display: flex;
@@ -18,13 +27,18 @@ const Container = styled.div`
 `;
 
 function PlayerGameRoom({ location, history }) {
+  const { nickname, roomNumber } = location.state;
+
   const socket = io.connect(process.env.REACT_APP_BACKEND_HOST);
 
-  const [isQuizStart, setQuizStart] = useState(false);
-  const [isLoadingOver, setLoadingOver] = useState(false);
-  const [isCurrentQuizOver, setCurrentQuizOver] = useState(false);
+  const [viewState, setViewState] = useState(VIEW_STATE.WAITING);
+
   const [quizSet, setQuizSet] = useState({});
-  const [currentIndex, setCurrentQuiz] = useState(-1);
+  const [quizIndex, setCurrentQuiz] = useState(-1);
+
+  const [choose, setChoose] = useState(-1);
+  const [score, setScore] = useState(0);
+  const [ranking, setRanking] = useState([]);
 
   useEffect(() => {
     socket.emit('enterPlayer', {
@@ -32,39 +46,41 @@ function PlayerGameRoom({ location, history }) {
       roomNumber: location.state.roomNumber,
     });
 
+    function blockClose(e) {
+      e.returnValue = 'warning';
+    }
+
+    window.addEventListener('beforeunload', blockClose);
+
     return () => {
-      /**
-       * react-router의 Prompt를 사용하면 페이지를 나가는 것을 막을 수 있지만
-       * 아래 closeRoom 수신 시 history.push가 정상동작하지 않는 문제가 있음.
-       */
       socket.emit('leavePlayer', {
         nickname: location.state.nickname,
         roomNumber: location.state.roomNumber,
       });
+      window.removeEventListener('beforeunload', blockClose);
     };
   }, []);
 
   socket.on('start', () => {
-    setQuizStart(true);
-    setCurrentQuizOver(false);
+    setViewState(VIEW_STATE.LOADING);
   });
 
   // 다음 문제 (새로운 문제) 시작;
   socket.on('next', nextQuizIndex => {
     setCurrentQuiz(nextQuizIndex);
 
-    setCurrentQuizOver(false);
-    setLoadingOver(true);
+    setViewState(VIEW_STATE.IN_QUIZ);
   });
 
   // 현제 문제 제한시간 끝, 중간 결과 페이지 출력
   socket.on('break', () => {
-    setCurrentQuizOver(true);
+    setViewState(VIEW_STATE.SUB_RESULT);
   });
 
-  // 현제 문제 제한시간 끝, 중간 결과 페이지 출력
-  socket.on('end', () => {
-    setCurrentQuizOver(true);
+  // 현재 방의 문제 세트 끝,
+  socket.on('end', orderedRanking => {
+    setRanking(orderedRanking);
+    setViewState(VIEW_STATE.END);
   });
 
   socket.on('closeRoom', () => {
@@ -77,22 +93,44 @@ function PlayerGameRoom({ location, history }) {
     });
   });
 
+  /**
+   * react-router의 Prompt를 사용하면 페이지를 나가는 것을 막을 수 있지만
+   * 아래 closeRoom 수신 시 history.push가 정상동작하지 않는 문제가 있음.
+   */
   return (
     <Container>
       <Prompt message="페이지를 이동하면 방에서 나가게 됩니다. 계속 하시겠습니까?" />
-      {!isQuizStart && <PlayerWaiting />}
-      {isQuizStart && !isLoadingOver && (
-        <PlayerQuizLoading
-          setQuizSet={setQuizSet}
-          roomNumber={location.state.roomNumber}
+      {viewState === VIEW_STATE.WAITING && <PlayerWaiting />}
+      {viewState === VIEW_STATE.LOADING && (
+        <PlayerQuizLoading setQuizSet={setQuizSet} roomNumber={roomNumber} />
+      )}
+      {viewState === VIEW_STATE.IN_QUIZ && (
+        <PlayerQuiz
+          quizSet={quizSet}
+          roomNumber={roomNumber}
+          quizIndex={quizIndex}
+          setChoose={setChoose}
         />
       )}
-      {isQuizStart && isLoadingOver && !isCurrentQuizOver && (
-        <PlayerQuiz quizSet={quizSet} currentIndex={currentIndex} />
+      {viewState === VIEW_STATE.SUB_RESULT && (
+        <PlayerSubResult
+          choose={choose}
+          score={score}
+          setScore={setScore}
+          nickname={nickname}
+          roomNumber={roomNumber}
+          quizIndex={quizIndex}
+        />
       )}
-      {isQuizStart && isLoadingOver && isCurrentQuizOver && <PlayerSubResult />}
+      {viewState === VIEW_STATE.END && (
+        <PlayerResult
+          ranking={ranking}
+          roomNumber={roomNumber}
+          nickname={nickname}
+        />
+      )}
 
-      <PlayerFooter nickname={location.state.nickname} />
+      <PlayerFooter nickname={nickname} score={score} />
     </Container>
   );
 }
