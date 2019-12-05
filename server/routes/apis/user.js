@@ -26,6 +26,13 @@ router.get('/:userId/rooms', async (req, res) => {
   res.send(result);
 });
 
+router.get('/room/:roomId', async (req, res) => {
+  const { roomId } = req.params;
+  const result = await dbManager.room.getRoomTitle(roomId);
+
+  res.send(result);
+});
+
 /**
  * 새로운 방을 추가하는 API
  *
@@ -52,6 +59,42 @@ router.post(
       validationResult(req).throw();
       const { title, userId } = req.body;
       const result = await dbManager.room.insertRoom(userId, title);
+
+      res.send(result);
+    } catch (err) {
+      res.send({
+        isError: true,
+        message: err.message,
+      });
+    }
+  },
+);
+
+/**
+ * 방의 이름을 수정하는 API
+ * @api {put} /user/room
+ * @apiName updateRoomTitle
+ * @apiGroup
+ *
+ * @apiParam {string} roomId 방의 ID
+ * @apiParam {string} 수정되는 방의 이름 (26글자 이내)
+ *
+ * @apiSuccess {object} DB insert 결과 (영향을 받은 column의 개수 등)
+ */
+router.put(
+  '/room',
+  [
+    check('roomId').exists(),
+    check('title').exists(),
+    check('roomId').isLength({
+      max: 26,
+    }),
+  ],
+  async (req, res) => {
+    try {
+      validationResult(req).throw();
+      const { roomId, title } = req.body;
+      const result = await dbManager.room.updateRoom(roomId, title);
 
       res.send(result);
     } catch (err) {
