@@ -1,14 +1,13 @@
 const Table = require('./Table');
-const { roomTable } = require('../../../constants/tableName');
+const { roomTable, userTable } = require('../../../constants/tableName');
 
 class Room extends Table {
-  /**
-   * 메소드 가이드라인
-   *
-   * method() {
-   *   return this.query(query, params);
-   * }
-   */
+  selectRooms(userId) {
+    return this.query(
+      `SELECT r.title, r.id FROM ${roomTable} r LEFT JOIN ${userTable} u ON r.user_id=u.id WHERE u.email=?`,
+      userId,
+    );
+  }
 }
 
 module.exports = Room;
