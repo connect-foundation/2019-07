@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 import * as colors from '../../constants/colors';
+import QuizTab from './QuizTab';
 
 const NavigationBar = styled.nav`
   display: flex;
@@ -28,7 +30,7 @@ const TabMenuButton = styled.div`
   }
 `;
 
-function TabContents() {
+function TabContents({ history }) {
   const [isQuizMenuSelected, setQuizMenuState] = useState(true);
   const [isAnalysisMenuSelected, setAnalysisMenuState] = useState(false);
 
@@ -66,11 +68,17 @@ function TabContents() {
         </TabMenuButton>
       </NavigationBar>
       <main>
-        {isQuizMenuSelected && <>퀴즈 컴포넌트</>}
-        {isAnalysisMenuSelected && <>분석 컴포넌트</>}
+        {isQuizMenuSelected && <QuizTab history={history} />}
+        {isAnalysisMenuSelected && <>ver 1.0에서 제공되지 않는 기능입니다</>}
       </main>
     </>
   );
 }
+
+TabContents.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+};
 
 export default TabContents;
