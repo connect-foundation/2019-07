@@ -4,8 +4,7 @@ import PropTypes from 'prop-types';
 import * as colors from '../../constants/colors';
 import Header from '../../components/common/Header';
 import { YellowButton } from '../../components/common/Buttons';
-
-const roomDatas = [];
+import { fetchRooms } from '../../utils/fetch';
 
 const Container = styled.div`
   position: relative;
@@ -119,39 +118,34 @@ const DoorKnob = styled.div`
   margin-right: 0.5vmin;
 `;
 
-function createRoom(title) {
-  const index = roomDatas.length;
-  const room = {
-    id: index + 1,
-    title,
-  };
-  roomDatas.push(room);
-  return room;
+async function getRooms({ userId }) {
+  const result = await fetchRooms({ userId }).then(response => {
+    if (response.isSuccess) return response.data;
+    return [];
+  });
+  return result;
 }
 
-function createTestRoom() {
-  const id = roomDatas.length + 1;
-  const title = `테스트 방${id}`;
-  return createRoom(title);
-}
-
-function handleCreateButtonClick(rooms, setRooms) {
-  setRooms([...rooms, createTestRoom()]);
-}
-
-function handleRoomClick(history) {
-  history.push('/host/room/detail');
-}
-
-for (let i = 0; i < 3; i += 1) {
-  createTestRoom();
+function parsingUserEmail() {
+  const cookies = document.cookie.split(';').map(cookie => cookie.split('='));
+  const email = cookies.find(cookie => cookie[0] === 'email');
+  return email[1].replace('%40', '@');
 }
 
 function SelectRoom({ history }) {
   const [rooms, setRooms] = useState([]);
+  const [userId, setUserId] = useState('');
+
   useEffect(() => {
-    setRooms(roomDatas);
+    setUserId(parsingUserEmail());
   }, []);
+
+  useEffect(() => {
+    if (userId)
+      getRooms({ userId }).then(result => {
+        setRooms(result);
+      });
+  }, [userId]);
 
   return (
     <Container>
