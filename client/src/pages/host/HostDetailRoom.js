@@ -19,11 +19,8 @@ const ButtonContainer = styled.div`
   transform: translateY(-50%);
 `;
 
-function DetailRoom({ history }) {
+function DetailRoom({ history, location }) {
   function handlePlayButton() {
-    /**
-     * 퀴즈를 시작할 것인지 확인하는 Modal 출력
-     */
     history.push({
       pathname: '/host',
     });
@@ -32,7 +29,7 @@ function DetailRoom({ history }) {
   return (
     <Background>
       <Header>
-        <RoomInformation />
+        <RoomInformation roomId={location.state.roomId} />
         <ButtonContainer>
           <YellowButton onClick={handlePlayButton}>시작하기</YellowButton>
         </ButtonContainer>
@@ -45,6 +42,9 @@ function DetailRoom({ history }) {
 DetailRoom.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
+  }).isRequired,
+  location: PropTypes.shape({
+    state: PropTypes.object,
   }).isRequired,
 };
 

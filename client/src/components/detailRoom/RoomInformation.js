@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 import * as colors from '../../constants/colors';
+import { fetchRoomTitle } from '../../utils/fetch';
 
 const RoomInformationContainer = styled.div`
   position: absolute;
@@ -30,19 +32,13 @@ const EditRoomNameImage = styled.img.attrs({
   }
 `;
 
-/**
- * 방 리스트 페이지에서 방 ID를 넘겨줌
- * 방 상세 페이지 루트 컴포넌트는 이 컴포넌트에 방 ID 전달
- * 방 ID를 통해서 마운트 될 때 방 이름 가져옴.
- */
-function RoomInformation() {
+function RoomInformation({ roomId }) {
   const [roomName, setRoomName] = useState('');
 
   useEffect(() => {
-    /**
-     * fetch using roomId, init roomName
-     */
-    setRoomName('방 이름');
+    fetchRoomTitle({ roomId }).then(response => {
+      setRoomName(response.data[0].title);
+    });
   }, []);
 
   function handleRoomName() {
@@ -64,5 +60,9 @@ function RoomInformation() {
     </>
   );
 }
+
+RoomInformation.propTypes = {
+  roomId: PropTypes.number.isRequired,
+};
 
 export default RoomInformation;

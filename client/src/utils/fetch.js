@@ -37,6 +37,13 @@ async function fetchRooms({ userId }) {
   return response;
 }
 
+async function fetchRoomTitle({ roomId }) {
+  const response = await fetchGet({
+    url: `/user/room/${roomId}`,
+  });
+  return response;
+}
+
 async function fetchRoomNumber(roomNumber) {
   const response = await fetchGet({
     url: `/${address.roomApiUrl}/${roomNumber}`,
@@ -101,5 +108,6 @@ export {
   fetchCheckAnswer,
   fetchRank,
   fetchRooms,
+  fetchRoomTitle,
   addRoom,
 };
