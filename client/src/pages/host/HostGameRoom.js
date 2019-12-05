@@ -2,6 +2,7 @@ import React, { useState, useEffect, useReducer } from 'react';
 import { Prompt } from 'react-router';
 import styled from 'styled-components';
 import io from 'socket.io-client';
+import PropTypes from 'prop-types';
 import HostFooter from '../../components/inGame/HostFooter';
 import HostWaitingRoom from '../../components/inGame/HostWaitingRoom';
 import HostLoading from '../../components/inGame/HostLoading';
@@ -16,14 +17,14 @@ const Container = styled.div`
   height: 100vh;
 `;
 
-function HostGameRoom() {
+function HostGameRoom({ location }) {
   const socket = io.connect(process.env.REACT_APP_BACKEND_HOST);
   const [roomState, dispatcher] = useReducer(roomReducer, initialRoomState);
   const [ranking, setRanking] = useState([]);
 
   useEffect(() => {
     dispatcher({ type: 'socket', socket });
-    socket.emit('openRoom');
+    socket.emit('openRoom', { roomId: location.state.roomId });
     socket.on('openRoom', ({ roomNumber }) => {
       dispatcher({ type: 'roomNumber', roomNumber });
     });
@@ -78,5 +79,11 @@ function HostGameRoom() {
     </Container>
   );
 }
+
+HostGameRoom.propTypes = {
+  location: PropTypes.shape({
+    state: PropTypes.object.isRequired,
+  }).isRequired,
+};
 
 export default HostGameRoom;
