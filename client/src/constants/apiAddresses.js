@@ -1,6 +1,7 @@
 const callbackPageFullUrl = `${process.env.REACT_APP_HOST}/callback`;
 
 const roomApiUrl = 'room';
+const userApiUrl = 'user';
 const getToken = 'login/token';
 
 const roomListUrl = '/host/room/select';
@@ -13,6 +14,7 @@ const result = 'result';
 
 export {
   roomApiUrl,
+  userApiUrl,
   getToken,
   callbackPageFullUrl,
   roomListUrl,
