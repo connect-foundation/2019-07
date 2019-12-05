@@ -148,4 +148,36 @@ router.post(
   },
 );
 
+/**
+ * 플레이어가 문항을 선택했을 때 카운트를 증가시키는 API
+ * @api {get} /room/:roomNumber/quiz/:quizIndex/choose/:choose
+ * @apiName choose
+ * @apiGroup room
+ *
+ * @apiParam {string} roomNumber 6글자 방 번호
+ * @apiParam {int} quizIndex 현재 문제의 index
+ * @apiParam {int} choose 유저가 선택한 번호
+ *
+ * @apiSuccess {bool} isSuccess 갱신이 성공했는지 여부
+ */
+router.post(
+  '/room/:roomNumber/quiz/:quizIndex/choose/:choose',
+  isRoomExist,
+  async (req, res) => {
+    const { roomNumber, quizIndex, choose } = req.params;
+
+    const currentRoom = inMemory.rooms.find(
+      (current) => current.roomNumber === roomNumber,
+    );
+
+    const quiz = currentRoom.quizSet[quizIndex];
+
+    quiz.items[choose].playerCount += 1;
+
+    res.json({
+      isSuccess: true,
+    });
+  },
+);
+
 module.exports = router;

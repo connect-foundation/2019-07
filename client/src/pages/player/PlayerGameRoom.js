@@ -100,6 +100,7 @@ function PlayerGameRoom({ location, history }) {
       {viewState === VIEW_STATE.IN_QUIZ && (
         <PlayerQuiz
           quizSet={quizSet}
+          roomNumber={roomNumber}
           quizIndex={quizIndex}
           setChoose={setChoose}
         />

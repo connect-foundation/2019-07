@@ -6,8 +6,14 @@ import { Button } from '../common/Buttons';
 import * as layout from './Layout';
 
 import LoadingCircle from '../common/LoadingCircle';
+import { fetchChoose } from '../../utils/fetch';
 
-function Selection({ currentQuiz, chooseAnswer }) {
+function Selection({ currentQuiz, roomNumber, quizIndex, chooseAnswer }) {
+  function choose(index) {
+    chooseAnswer(index);
+    fetchChoose(roomNumber, quizIndex, index);
+  }
+
   return (
     <>
       <layout.Center>
@@ -24,7 +30,7 @@ function Selection({ currentQuiz, chooseAnswer }) {
               <Button
                 backgroundColor={colors.ITEM_COLOR[index]}
                 fontColor={colors.TEXT_WHITE}
-                onClick={e => chooseAnswer(index, e)}
+                onClick={e => choose(index, e)}
               >
                 {item.title}
               </Button>
@@ -36,7 +42,7 @@ function Selection({ currentQuiz, chooseAnswer }) {
   );
 }
 
-function Quiz({ quizSet, quizIndex, setChoose }) {
+function Quiz({ quizSet, roomNumber, quizIndex, setChoose }) {
   const [choosed, setChoosed] = useState(false);
 
   const currentQuiz = quizSet[quizIndex];
@@ -51,7 +57,12 @@ function Quiz({ quizSet, quizIndex, setChoose }) {
         <layout.Title>{currentQuiz.title}</layout.Title>
       </layout.TitleContainer>
       {!choosed && (
-        <Selection currentQuiz={currentQuiz} chooseAnswer={chooseAnswer} />
+        <Selection
+          currentQuiz={currentQuiz}
+          roomNumber={roomNumber}
+          chooseAnswer={chooseAnswer}
+          quizIndex={quizIndex}
+        />
       )}
       {choosed && <LoadingCircle color={colors.PRIMARY_DEEP_GREEN} />}
     </layout.Background>
@@ -65,6 +76,8 @@ Selection.propTypes = {
       title: PropTypes.string.isRequired,
     }).isRequired,
   }).isRequired,
+  quizIndex: PropTypes.number.isRequired,
+  roomNumber: PropTypes.string.isRequired,
   chooseAnswer: PropTypes.func.isRequired,
 };
 
@@ -75,6 +88,7 @@ Quiz.propTypes = {
     }),
     title: PropTypes.string.isRequired,
   }).isRequired,
+  roomNumber: PropTypes.string.isRequired,
   quizIndex: PropTypes.number.isRequired,
   setChoose: PropTypes.func.isRequired,
 };
