@@ -54,7 +54,7 @@ function HostPlaying({ state, dispatcher }) {
       <layout.CenterRightPanel>
         <layout.RemainPeople>
           <br />
-          100명이 풀이중
+          {state.players.length}명이 풀이중
         </layout.RemainPeople>
       </layout.CenterRightPanel>
     </layout.CenterContentContainer>
@@ -64,6 +64,7 @@ function HostPlaying({ state, dispatcher }) {
 HostPlaying.propTypes = {
   state: PropTypes.shape({
     currentQuiz: PropTypes.object.isRequired,
+    players: PropTypes.array.isRequired,
   }).isRequired,
   dispatcher: PropTypes.func.isRequired,
 };
