@@ -127,7 +127,6 @@ function PlayerGameRoom({ location, history }) {
           ranking={ranking}
           roomNumber={roomNumber}
           nickname={nickname}
-          score={score}
         />
       )}
 
