@@ -28,12 +28,15 @@ function HostGameRoom() {
       dispatcher({ type: 'roomNumber', roomNumber });
     });
 
-    window.addEventListener('beforeunload', e => {
+    function blockClose(e) {
       e.returnValue = 'warning';
-    });
+    }
+
+    window.addEventListener('beforeunload', blockClose);
 
     return () => {
       socket.emit('closeRoom');
+      window.removeEventListener('beforeunload', blockClose);
     };
   }, []);
 

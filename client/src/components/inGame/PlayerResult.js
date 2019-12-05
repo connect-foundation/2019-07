@@ -36,7 +36,7 @@ const RankSection = styled.div`
   align-items: center;
   flex-direction: column;
 
-  margin: 1vmin 0;
+  margin: 3vmin 0;
 `;
 
 const Rank = styled.div`
@@ -58,18 +58,7 @@ const Medal = styled.div`
   ${props => `background-image: url(${medalImages[props.rank - 1]})`};
 `;
 
-const Information = styled.div`
-  height: 15vim;
-
-  display: flex;
-  align-content: center;
-
-  font-size: 5vmin;
-  color: #000;
-  margin: 1rem;
-`;
-
-function PlayerGameResult({ ranking, roomNumber, nickname, score }) {
+function PlayerGameResult({ ranking, roomNumber, nickname }) {
   const [rank, setRank] = useState(0);
 
   useEffect(() => {
@@ -88,11 +77,8 @@ function PlayerGameResult({ ranking, roomNumber, nickname, score }) {
     return (
       <Background>
         <RankSection>
-          {rank < 3 && <Medal rank={rank} />}
-          {rank >= 3 && <Rank>{rank}등</Rank>}
-          <Information>
-            {nickname}님의 총 점수는 {score}점입니다.
-          </Information>
+          {rank <= 3 && <Medal rank={rank} />}
+          {rank > 3 && <Rank>{rank}등</Rank>}
         </RankSection>
         <Title>TOP 10</Title>
         <Dashboard ranking={ranking} />
@@ -105,7 +91,6 @@ PlayerGameResult.propTypes = {
   ranking: PropTypes.shape.isRequired,
   roomNumber: PropTypes.string.isRequired,
   nickname: PropTypes.string.isRequired,
-  score: PropTypes.number.isRequired,
 };
 
 export default PlayerGameResult;

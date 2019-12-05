@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
-import { fetchChoose } from '../../utils/fetch';
+import { fetchCheckAnswer } from '../../utils/fetch';
 
 const COLORS = {
   GREEN: '#51ce66',
@@ -51,7 +51,7 @@ function PlayerSubResultComponent({
   const [plusScore, setPlus] = useState(0);
 
   useEffect(() => {
-    fetchChoose(roomNumber, nickname, quizIndex, choose).then(response => {
+    fetchCheckAnswer(roomNumber, nickname, quizIndex, choose).then(response => {
       setResult(response);
 
       if (response.isCorrect) {

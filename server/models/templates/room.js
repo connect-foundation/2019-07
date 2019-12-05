@@ -9,19 +9,19 @@ const roomTemplate = () => ({
       items: [
         {
           title: '밥',
-          playerCount: 10,
+          playerCount: 0,
         },
         {
           title: '라면',
-          playerCount: 2,
+          playerCount: 0,
         },
         {
           title: '만두',
-          playerCount: 5,
+          playerCount: 0,
         },
         {
           title: '찐빵',
-          playerCount: 3,
+          playerCount: 0,
         },
       ],
       answers: [0],
@@ -34,7 +34,7 @@ const roomTemplate = () => ({
       items: [
         {
           title: '리그오브레전드',
-          playerCount: 20,
+          playerCount: 0,
         },
         {
           title: '크레이지아케이드',
@@ -42,11 +42,11 @@ const roomTemplate = () => ({
         },
         {
           title: '오버워치',
-          playerCount: 100,
+          playerCount: 0,
         },
         {
           title: '서든어택',
-          playerCount: 50,
+          playerCount: 0,
         },
       ],
       answers: [2],
@@ -59,11 +59,11 @@ const roomTemplate = () => ({
       items: [
         {
           title: '예',
-          playerCount: 13,
+          playerCount: 0,
         },
         {
           title: '아니오',
-          playerCount: 20,
+          playerCount: 0,
         },
         {
           title: '예',

@@ -85,16 +85,28 @@ router.get(
     const currentRoom = inMemory.rooms.find(
       (room) => room.roomNumber === roomNumber,
     );
-    // 게임 결과가 끝나면 점수 순으로 정렬되므로 index+1 = rank
-    const rank = currentRoom.players.findIndex(
-      (player) => player.nickname === nickname,
-    );
-    const currentUser = currentRoom.players[rank];
+
+    let rank = 1;
+    let score = 0;
+
+    for (let index = 0; index < currentRoom.players.length; index += 1) {
+      const currentPlayer = currentRoom.players[index];
+      const previousPlayer = currentRoom.players[index - 1];
+
+      if (index > 0) {
+        rank = previousPlayer.score === currentPlayer.score ? rank : index + 1;
+      }
+
+      if (currentPlayer.nickname === nickname) {
+        score = currentPlayer.score;
+        break;
+      }
+    }
 
     res.json({
       nickname,
-      score: currentUser.score,
-      rank: rank + 1,
+      score,
+      rank,
     });
   },
 );
@@ -144,6 +156,38 @@ router.post(
     res.json({
       isCorrect: true,
       score: (player.score += quiz.score),
+    });
+  },
+);
+
+/**
+ * 플레이어가 문항을 선택했을 때 카운트를 증가시키는 API
+ * @api {get} /room/:roomNumber/quiz/:quizIndex/choose/:choose
+ * @apiName choose
+ * @apiGroup room
+ *
+ * @apiParam {string} roomNumber 6글자 방 번호
+ * @apiParam {int} quizIndex 현재 문제의 index
+ * @apiParam {int} choose 유저가 선택한 번호
+ *
+ * @apiSuccess {bool} isSuccess 갱신이 성공했는지 여부
+ */
+router.post(
+  '/room/:roomNumber/quiz/:quizIndex/choose/:choose',
+  isRoomExist,
+  async (req, res) => {
+    const { roomNumber, quizIndex, choose } = req.params;
+
+    const currentRoom = inMemory.rooms.find(
+      (current) => current.roomNumber === roomNumber,
+    );
+
+    const quiz = currentRoom.quizSet[quizIndex];
+
+    quiz.items[choose].playerCount += 1;
+
+    res.json({
+      isSuccess: true,
     });
   },
 );
