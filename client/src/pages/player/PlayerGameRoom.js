@@ -58,6 +58,12 @@ function PlayerGameRoom({ location }) {
     });
 
     window.addEventListener('beforeunload', blockClose);
+    window.addEventListener('unload', () => {
+      socket.emit('leavePlayer', {
+        nickname: location.state.nickname,
+        roomNumber: location.state.roomNumber,
+      });
+    });
 
     return () => {
       socket.emit('leavePlayer', {
