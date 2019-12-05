@@ -44,4 +44,29 @@ router.post(
   },
 );
 
+router.put(
+  '/room',
+  [
+    check('roomId').exists(),
+    check('title').exists(),
+    check('roomId').isLength({
+      max: 26,
+    }),
+  ],
+  async (req, res) => {
+    try {
+      validationResult(req).throw();
+      const { roomId, title } = req.body;
+      const result = await dbManager.room.updateRoom(roomId, title);
+
+      res.send(result);
+    } catch (err) {
+      res.send({
+        isError: true,
+        message: err.message,
+      });
+    }
+  },
+);
+
 module.exports = router;
