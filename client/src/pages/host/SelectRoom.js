@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import * as colors from '../../constants/colors';
 import Header from '../../components/common/Header';
 import { YellowButton } from '../../components/common/Buttons';
-import { fetchRooms } from '../../utils/fetch';
+import Modal from '../../components/common/Modal';
+import { ModalContext } from '../../components/common/ModalProvider';
+import FlexibleInput from '../../components/common/FlexibleInput';
+import { fetchRooms, addRoom } from '../../utils/fetch';
 
 const Container = styled.div`
   position: relative;
@@ -135,6 +138,8 @@ function parsingUserEmail() {
 function SelectRoom({ history }) {
   const [rooms, setRooms] = useState([]);
   const [userId, setUserId] = useState('');
+  const [inputValue, setInputValue] = useState('');
+  const { openModal } = useContext(ModalContext);
 
   useEffect(() => {
     setUserId(parsingUserEmail());
@@ -147,21 +152,46 @@ function SelectRoom({ history }) {
       });
   }, [userId]);
 
+  function handleCreateButtonClick() {
+    if (rooms.find(room => room.title === inputValue)) {
+      alert('방의 이름은 중복될 수 없습니다');
+      return false;
+    }
+
+    addRoom({ userId, roomTitle: inputValue }).then(response => {
+      if (response.isSuccess) {
+        setRooms([...rooms, { id: response.data.insertId, title: inputValue }]);
+        return;
+      }
+      alert('방이 오류로 인해 추가되지 못했습니다');
+    });
+
+    return true;
+  }
+
+  function handleRoomClick(e) {
+    const roomTitle = e.target.textContent;
+    const roomId = rooms.find(room => room.title === roomTitle).id;
+
+    history.push({
+      pathname: '/host/room/detail',
+      state: {
+        roomId,
+      },
+    });
+  }
+
   return (
     <Container>
       <Header />
       <Main>
         <ListHeader>
           <RoomCounter>{`방 ${rooms.length}개`}</RoomCounter>
-          <YellowButton
-            onClick={() => handleCreateButtonClick(rooms, setRooms)}
-          >
-            방 만들기
-          </YellowButton>
+          <YellowButton onClick={openModal}>방 만들기</YellowButton>
         </ListHeader>
         <RoomContainer>
           {rooms.map(room => (
-            <RoomWrapper key={room.id} onClick={() => handleRoomClick(history)}>
+            <RoomWrapper key={room.id} onClick={handleRoomClick}>
               <RoomFrame>
                 <RoomDoor>
                   <DoorKnob />
@@ -172,6 +202,19 @@ function SelectRoom({ history }) {
           ))}
         </RoomContainer>
       </Main>
+      <Modal
+        title="새로운 방 추가"
+        description="새로 추가할 방의 이름을 입력하세요"
+        closeButton="취소"
+        actionButton="만들기"
+        action={handleCreateButtonClick}
+      >
+        <FlexibleInput
+          placeholder="방 이름을 입력하세요"
+          maxLength={26}
+          callback={setInputValue}
+        />
+      </Modal>
     </Container>
   );
 }

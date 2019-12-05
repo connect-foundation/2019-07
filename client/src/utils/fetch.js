@@ -13,6 +13,17 @@ async function fetchPost({ url, data }) {
   return responseJson;
 }
 
+async function addRoom({ userId, roomTitle }) {
+  const response = await fetchPost({
+    url: `/user/room`,
+    data: {
+      title: roomTitle,
+      userId,
+    },
+  });
+  return response;
+}
+
 async function fetchGet({ url }) {
   const response = await fetch(url);
   const responseJson = await response.json();
@@ -90,4 +101,5 @@ export {
   fetchCheckAnswer,
   fetchRank,
   fetchRooms,
+  addRoom,
 };
