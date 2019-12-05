@@ -27,6 +27,14 @@ const Container = styled.div`
 `;
 
 function PlayerGameRoom({ location, history }) {
+  /**
+   * Cannot read property 에러의 경우 state가 없는 경우이므로
+   * state가 undefined인지 검사해주면 된다.
+   * 검사 후 문제가 있는 경우 메인페이지로 강제 이동시킴
+   */
+  if (!location.state) {
+    window.location.href = '/';
+  }
   const { nickname, roomNumber } = location.state;
 
   const socket = io.connect(process.env.REACT_APP_BACKEND_HOST);
