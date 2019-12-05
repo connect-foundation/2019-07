@@ -16,6 +16,11 @@ class Room extends Table {
       userId,
     );
   }
+
+  getRoomTitle(roomId) {
+    return this.query(`SELECT title FROM ${roomTable} WHERE id=?`, roomId);
+  }
+
 }
 
 module.exports = Room;

@@ -12,6 +12,13 @@ router.get('/:userId/rooms', async (req, res) => {
   res.send(result);
 });
 
+router.get('/room/:roomId', async (req, res) => {
+  const { roomId } = req.params;
+  const result = await dbManager.room.getRoomTitle(roomId);
+
+  res.send(result);
+});
+
 router.post(
   '/room',
   [
