@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { GreenButton } from '../common/Buttons';
 import ScoreChart from '../common/ScoreChart';
 import * as layout from './Layout';
+import { HostGameAction } from '../../reducer/hostGameReducer';
 
 function HostSubResult({ state, dispatcher }) {
   const itemDatas = state.quizSubResult.map((cur, index) => {
@@ -19,10 +20,10 @@ function HostSubResult({ state, dispatcher }) {
         <GreenButton
           onClick={() => {
             if (state.currentQuiz.index === state.totalQuizCount - 1) {
-              dispatcher({ type: 'scoreBoard' });
+              dispatcher({ type: HostGameAction.REQUEST_QUIZ_END });
               return;
             }
-            dispatcher({ type: 'next' });
+            dispatcher({ type: HostGameAction.REQUEST_NEXT_QUIZ });
           }}
         >
           다음퀴즈

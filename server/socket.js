@@ -3,7 +3,7 @@ const inMemory = require('./models/rooms');
 const roomTemplate = require('./models/templates/room');
 const playerTemplate = require('./models/templates/player');
 
-async function handleOpenRoom() {
+async function handleOpenRoom({ roomId }) {
   const roomNumber = inMemory.getNewRoomNumber();
   const newRoom = roomTemplate();
 
@@ -11,13 +11,7 @@ async function handleOpenRoom() {
   newRoom.roomNumber = roomNumber;
 
   inMemory.pushRoom(newRoom);
-
-  /**
-   * 퀴즈세트를 db에서 받아오고 가공후에 roomNumber인 방에 세팅함
-   * 방의 quizSet을 갱신하기 때문에 dummy로 넣어놓은 데이터 수정할 필요 없음
-   */
-
-  await inMemory.setQuizset(roomNumber, 15);
+  await inMemory.setQuizset(roomNumber, roomId);
 
   this.join(roomNumber, () => {
     io.to(newRoom.hostId).emit('openRoom', {
