@@ -26,6 +26,9 @@ function DetailRoom({ history, location }) {
   function handlePlayButton() {
     history.push({
       pathname: '/host',
+      state: {
+        roomId: location.state.roomId,
+      },
     });
   }
 
