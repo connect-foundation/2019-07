@@ -8,7 +8,10 @@ import TabContents from '../../components/detailRoom/TabContents';
 import RoomInformation from '../../components/detailRoom/RoomInformation';
 
 const Background = styled.div`
-  height: 100%;
+  position: relative;
+  display: flex;
+  height: 100vh;
+  flex-direction: column;
   background-color: ${colors.BACKGROUND_LIGHT_GRAY};
 `;
 
@@ -34,7 +37,7 @@ function DetailRoom({ history, location }) {
           <YellowButton onClick={handlePlayButton}>시작하기</YellowButton>
         </ButtonContainer>
       </Header>
-      <TabContents />
+      <TabContents roomId={location.state.roomId} history={history} />
     </Background>
   );
 }
