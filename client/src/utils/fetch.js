@@ -13,10 +13,28 @@ async function fetchPost({ url, data }) {
   return responseJson;
 }
 
+async function addRoom({ userId, roomTitle }) {
+  const response = await fetchPost({
+    url: `/${address.userApiUrl}/room`,
+    data: {
+      title: roomTitle,
+      userId,
+    },
+  });
+  return response;
+}
+
 async function fetchGet({ url }) {
   const response = await fetch(url);
   const responseJson = await response.json();
   return responseJson;
+}
+
+async function fetchRooms({ userId }) {
+  const response = await fetchGet({
+    url: `/${address.userApiUrl}/${userId}/rooms`,
+  });
+  return response;
 }
 
 async function fetchRoomNumber(roomNumber) {
@@ -82,4 +100,6 @@ export {
   fetchChoose,
   fetchCheckAnswer,
   fetchRank,
+  fetchRooms,
+  addRoom,
 };
