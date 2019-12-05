@@ -46,11 +46,18 @@ function PlayerGameRoom({ location, history }) {
       roomNumber: location.state.roomNumber,
     });
 
+    function blockClose(e) {
+      e.returnValue = 'warning';
+    }
+
+    window.addEventListener('beforeunload', blockClose);
+
     return () => {
       socket.emit('leavePlayer', {
         nickname: location.state.nickname,
         roomNumber: location.state.roomNumber,
       });
+      window.removeEventListener('beforeunload', blockClose);
     };
   }, []);
 
