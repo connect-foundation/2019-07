@@ -38,7 +38,7 @@ function HostGameRoom({ location }) {
     }
 
     window.addEventListener('beforeunload', blockClose);
-
+    window.addEventListener('unload', () => socket.emit('closeRoom'));
     return () => {
       socket.emit('closeRoom');
       window.removeEventListener('beforeunload', blockClose);
