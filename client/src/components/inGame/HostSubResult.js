@@ -1,5 +1,4 @@
 import React from 'react';
-import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { GreenButton } from '../common/Buttons';
 import ScoreChart from '../common/ScoreChart';
@@ -7,7 +6,7 @@ import * as layout from './Layout';
 
 function HostSubResult({ state, dispatcher }) {
   const itemDatas = state.quizSubResult.map((cur, index) => {
-    if (state.currentQuiz.answer.includes(index)) {
+    if (state.currentQuiz.answers.includes(index)) {
       return { ...cur, isAnswer: true };
     }
 
@@ -29,11 +28,11 @@ function HostSubResult({ state, dispatcher }) {
           다음퀴즈
         </GreenButton>
       </layout.NextButtonWrapper>
-      <layout.CenterLeftPanel></layout.CenterLeftPanel>
+      <layout.CenterLeftPanel />
       <layout.ImagePanel>
         <ScoreChart itemDatas={itemDatas} />
       </layout.ImagePanel>
-      <layout.CenterRightPanel></layout.CenterRightPanel>
+      <layout.CenterRightPanel />
     </layout.CenterContentContainer>
   );
 }
