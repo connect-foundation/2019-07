@@ -15,7 +15,7 @@ async function fetchPost({ url, data, method = 'POST' }) {
 
 async function addRoom({ userId, roomTitle }) {
   const response = await fetchPost({
-    url: `/user/room`,
+    url: `/${address.userApiUrl}/room`,
     data: {
       title: roomTitle,
       userId,
@@ -44,7 +44,7 @@ async function fetchGet({ url }) {
 
 async function fetchRooms({ userId }) {
   const response = await fetchGet({
-    url: `/user/${userId}/rooms`,
+    url: `/${address.userApiUrl}/${userId}/rooms`,
   });
   return response;
 }

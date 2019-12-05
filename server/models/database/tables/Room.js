@@ -12,7 +12,7 @@ class Room extends Table {
 
   selectRooms(userId) {
     return this.query(
-      `SELECT r.title, r.id FROM ${roomTable} r LEFT JOIN ${userTable} u ON r.user_id=u.id WHERE u.email=?`,
+      `SELECT R.title, R.id FROM ${roomTable} R LEFT JOIN ${userTable} U ON R.user_id=U.id WHERE U.email=?`,
       userId,
     );
   }
