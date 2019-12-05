@@ -70,6 +70,17 @@ router.post(
   },
 );
 
+/**
+ * 방의 이름을 수정하는 API
+ * @api {put} /user/room
+ * @apiName updateRoomTitle
+ * @apiGroup
+ *
+ * @apiParam {string} roomId 방의 ID
+ * @apiParam {string} 수정되는 방의 이름 (26글자 이내)
+ *
+ * @apiSuccess {object} DB insert 결과 (영향을 받은 column의 개수 등)
+ */
 router.put(
   '/room',
   [
