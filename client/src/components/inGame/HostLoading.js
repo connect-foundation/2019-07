@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import * as colors from '../../constants/colors';
 import ProgressBar from './ProgressBar';
 import { fetchQuizSet } from '../../utils/fetch';
+import { HostGameAction } from '../../reducer/hostGameReducer';
 
 const Container = styled.div`
   display: flex;
@@ -36,7 +37,7 @@ function HostLoading({ state, dispatcher }) {
   useEffect(() => {
     fetchQuizSet(state.roomNumber).then(response => {
       dispatcher({
-        type: 'setFullQuiz',
+        type: HostGameAction.SET_ENTIRE_QUIZ,
         data: response.quizSet,
       });
     });

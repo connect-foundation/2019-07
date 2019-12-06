@@ -3,14 +3,17 @@ import * as colors from '../constants/colors';
 
 const InGameFooterStyle = css`
   position: relative;
+  flex: none;
   justify-self: flex-end;
-  height: 4rem;
+  height: 5vmin;
   border-top: 1px solid ${colors.BORDER_LIGHT_GRAY};
+  box-sizing: border-box;
+  background-color: ${colors.BACKGROUND_LIGHT_WHITE};
 `;
 
 const InGameFooterTextStyle = css`
   position: absolute;
-  font-size: 2rem;
+  font-size: 2.5vmin;
   font-weight: bold;
   top: 50%;
   transform: translateY(-50%);
@@ -25,8 +28,4 @@ const InputStyle = css`
   border: 1px solid ${colors.BORDER_DARK_GRAY};
 `;
 
-export {
-  InGameFooterStyle,
-  InGameFooterTextStyle,
-  InputStyle,
-};
+export { InGameFooterStyle, InGameFooterTextStyle, InputStyle };

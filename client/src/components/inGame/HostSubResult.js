@@ -1,58 +1,40 @@
 import React from 'react';
-import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { GreenButton } from '../common/Buttons';
 import ScoreChart from '../common/ScoreChart';
-import DESKTOP_MIN_WIDTH from '../../constants/media';
-
-const ButtonContainer = styled.div`
-  display: flex;
-  margin: 1rem;
-  justify-content: flex-end;
-  width: calc(100% - 2rem);
-  button {
-    font-size: 1.5rem;
-    width: 8rem;
-  }
-`;
-
-const ScoreChartContainer = styled.div`
-  width: 100%;
-  height: 30%;
-
-  @media (min-width: ${DESKTOP_MIN_WIDTH}) {
-    width: 50%;
-    height: 38%;
-  }
-`;
+import * as layout from './Layout';
+import { HostGameAction } from '../../reducer/hostGameReducer';
 
 function HostSubResult({ state, dispatcher }) {
   const itemDatas = state.quizSubResult.map((cur, index) => {
-    if (state.currentQuiz.answer.includes(index)) {
+    if (state.currentQuiz.answers.includes(index)) {
       return { ...cur, isAnswer: true };
     }
 
     return { ...cur, isAnswer: false };
   });
+
   return (
-    <>
-      <ButtonContainer>
+    <layout.CenterContentContainer>
+      <layout.NextButtonWrapper>
         <GreenButton
           onClick={() => {
             if (state.currentQuiz.index === state.totalQuizCount - 1) {
-              dispatcher({ type: 'scoreBoard' });
+              dispatcher({ type: HostGameAction.REQUEST_QUIZ_END });
               return;
             }
-            dispatcher({ type: 'next' });
+            dispatcher({ type: HostGameAction.REQUEST_NEXT_QUIZ });
           }}
         >
           다음퀴즈
         </GreenButton>
-      </ButtonContainer>
-      <ScoreChartContainer>
+      </layout.NextButtonWrapper>
+      <layout.CenterLeftPanel />
+      <layout.ImagePanel>
         <ScoreChart itemDatas={itemDatas} />
-      </ScoreChartContainer>
-    </>
+      </layout.ImagePanel>
+      <layout.CenterRightPanel />
+    </layout.CenterContentContainer>
   );
 }
 

@@ -1,19 +1,33 @@
+const HostGameAction = {
+  SET_SOCKET: 'SET_SOCKET',
+  SET_ROOM_NUMBER: 'SET_ROOM_NUMBER',
+  SET_PLAYERS: 'SET_PLAYERS',
+  GAME_START: 'GAME_START',
+  SET_CURRENT_QUIZ: 'SET_CURRENT_QUIZ',
+  REQUEST_NEXT_QUIZ: 'REQUEST_NEXT_QUIZ',
+  REQUEST_SUB_RESULT: 'REQUEST_SUB_RESULT',
+  SET_SUB_RESULT: 'SET_SUB_RESULT',
+  SET_ENTIRE_QUIZ: 'SET_ENTIRE_QUIZ',
+  REQUEST_QUIZ_END: 'REQUEST_QUIZ_END',
+  SHOW_SCOREBOARD: 'SHOW_SCOREBOARD',
+};
+
 const roomReducer = (state, action) => {
   switch (action.type) {
-    case 'socket': {
+    case HostGameAction.SET_SOCKET: {
       return { ...state, socket: action.socket };
     }
-    case 'roomNumber': {
+    case HostGameAction.SET_ROOM_NUMBER: {
       return { ...state, roomNumber: action.roomNumber };
     }
-    case 'players': {
+    case HostGameAction.SET_PLAYERS: {
       return { ...state, players: action.players };
     }
-    case 'start': {
+    case HostGameAction.GAME_START: {
       state.socket.emit('start', { roomNumber: state.roomNumber });
       return { ...state, isQuizStart: true };
     }
-    case 'setCurrentQuiz': {
+    case HostGameAction.SET_CURRENT_QUIZ: {
       return {
         ...state,
         currentQuiz: {
@@ -22,7 +36,7 @@ const roomReducer = (state, action) => {
         },
       };
     }
-    case 'next': {
+    case HostGameAction.REQUEST_NEXT_QUIZ: {
       state.socket.emit('next', {
         roomNumber: state.roomNumber,
         nextQuizIndex: state.currentQuiz.index + 1,
@@ -30,7 +44,7 @@ const roomReducer = (state, action) => {
 
       return state;
     }
-    case 'break': {
+    case HostGameAction.REQUEST_SUB_RESULT: {
       state.socket.emit('break', {
         roomNumber: state.roomNumber,
         quizIndex: state.currentQuiz.index,
@@ -38,17 +52,24 @@ const roomReducer = (state, action) => {
 
       return state;
     }
-    case 'setSubResult': {
+    case HostGameAction.SET_SUB_RESULT: {
       return { ...state, quizSubResult: action.subResult };
     }
-    case 'setFullQuiz': {
+    case HostGameAction.SET_ENTIRE_QUIZ: {
       return {
         ...state,
         fullQuizData: action.data,
         totalQuizCount: action.data.length,
       };
     }
-    case 'scoreBoard': {
+    case HostGameAction.REQUEST_QUIZ_END: {
+      state.socket.emit('end', {
+        roomNumber: state.roomNumber,
+      });
+
+      return state;
+    }
+    case HostGameAction.SHOW_SCOREBOARD: {
       return { ...state, isQuizEnd: true };
     }
     default:
@@ -68,4 +89,4 @@ const initialRoomState = {
   quizSubResult: null,
 };
 
-export { initialRoomState, roomReducer };
+export { initialRoomState, roomReducer, HostGameAction };

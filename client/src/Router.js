@@ -7,21 +7,23 @@ import EditPage from './pages/host/EditPage';
 import PlayerGameRoom from './pages/player/PlayerGameRoom';
 import CallBackPage from './pages/login/CallBackPage';
 import SelectRoom from './pages/host/SelectRoom';
+import GameOver from './pages/Gameover';
 
 export default function() {
   return (
     <Router>
       <Switch>
         <Route exact path="/" component={MainPage} />
-        <Route path="/nickname" component={MainPage} />
-        <Route path="/login" component={MainPage} />
+        <Route exact path="/nickname" component={MainPage} />
+        <Route exact path="/login" component={MainPage} />
+        <Route exact path="/host" component={HostGameRoom} />
+        <Route exact path="/player" component={PlayerGameRoom} />
+        <Route exact path="/edit" component={EditPage} />
+        <Route exact path="/callback" component={CallBackPage} />
+        <Route exact path="/host/room/select" component={SelectRoom} />
+        <Route exact path="/host/room/detail" component={HostDetailRoom} />
+        <Route component={GameOver} />
       </Switch>
-      <Route exact path="/host" component={HostGameRoom} />
-      <Route exact path="/player" component={PlayerGameRoom} />
-      <Route exact path="/edit" component={EditPage} />
-      <Route exact path="/callback" component={CallBackPage} />
-      <Route exact path="/host/room/select" component={SelectRoom} />
-      <Route exact path="/host/room/detail" component={HostDetailRoom} />
     </Router>
   );
 }

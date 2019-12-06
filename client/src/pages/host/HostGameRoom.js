@@ -1,13 +1,18 @@
-import React, { useEffect, useReducer } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import { Prompt } from 'react-router';
 import styled from 'styled-components';
 import io from 'socket.io-client';
+import PropTypes from 'prop-types';
 import HostFooter from '../../components/inGame/HostFooter';
 import HostWaitingRoom from '../../components/inGame/HostWaitingRoom';
 import HostLoading from '../../components/inGame/HostLoading';
 import HostQuizPlayingRoom from '../../components/inGame/HostQuizPlayingRoom';
-import GameResult from './GameResult';
-import { roomReducer, initialRoomState } from '../../reducer/hostGameReducer';
+import GameResult from '../../components/inGame/HostResult';
+import {
+  roomReducer,
+  initialRoomState,
+  HostGameAction,
+} from '../../reducer/hostGameReducer';
 
 const Container = styled.div`
   display: flex;
@@ -16,40 +21,53 @@ const Container = styled.div`
   height: 100vh;
 `;
 
-function HostGameRoom() {
+function HostGameRoom({ location }) {
+  if (!location.state) {
+    window.location.href = '/host/room/select';
+  }
+
   const socket = io.connect(process.env.REACT_APP_BACKEND_HOST);
   const [roomState, dispatcher] = useReducer(roomReducer, initialRoomState);
+  const [ranking, setRanking] = useState([]);
 
   useEffect(() => {
-    dispatcher({ type: 'socket', socket });
-    socket.emit('openRoom');
+    dispatcher({ type: HostGameAction.SET_SOCKET, socket });
+    socket.emit('openRoom', { roomId: location.state.roomId });
     socket.on('openRoom', ({ roomNumber }) => {
-      dispatcher({ type: 'roomNumber', roomNumber });
+      dispatcher({ type: HostGameAction.SET_ROOM_NUMBER, roomNumber });
     });
 
-    window.addEventListener('beforeunload', e => {
+    function blockClose(e) {
       e.returnValue = 'warning';
-    });
+    }
 
+    window.addEventListener('beforeunload', blockClose);
+    window.addEventListener('unload', () => socket.emit('closeRoom'));
     return () => {
       socket.emit('closeRoom');
+      window.removeEventListener('beforeunload', blockClose);
     };
   }, []);
 
   socket.on('enterPlayer', players => {
-    dispatcher({ type: 'players', players });
+    dispatcher({ type: HostGameAction.SET_PLAYERS, players });
   });
 
   socket.on('leavePlayer', players => {
-    dispatcher({ type: 'players', players });
+    dispatcher({ type: HostGameAction.SET_PLAYERS, players });
   });
 
   socket.on('next', nextQuizIndex => {
-    dispatcher({ type: 'setCurrentQuiz', index: nextQuizIndex });
+    dispatcher({ type: HostGameAction.SET_CURRENT_QUIZ, index: nextQuizIndex });
   });
 
   socket.on('subResult', subResult => {
-    dispatcher({ type: 'setSubResult', subResult });
+    dispatcher({ type: HostGameAction.SET_SUB_RESULT, subResult });
+  });
+
+  socket.on('end', orderedRanking => {
+    setRanking(orderedRanking);
+    dispatcher({ type: HostGameAction.SHOW_SCOREBOARD });
   });
 
   return (
@@ -64,10 +82,16 @@ function HostGameRoom() {
       {roomState.currentQuiz && !roomState.isQuizEnd && (
         <HostQuizPlayingRoom dispatcher={dispatcher} state={roomState} />
       )}
-      {roomState.isQuizEnd && <GameResult />}
+      {roomState.isQuizEnd && <GameResult ranking={ranking} />}
       <HostFooter roomNumber={roomState.roomNumber} />
     </Container>
   );
 }
+
+HostGameRoom.propTypes = {
+  location: PropTypes.shape({
+    state: PropTypes.object.isRequired,
+  }).isRequired,
+};
 
 export default HostGameRoom;

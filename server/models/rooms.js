@@ -1,3 +1,6 @@
+const dbManager = require('./database/dbManager');
+const { quizTemplate, itemTemplate } = require('./templates/quiz');
+
 class Rooms {
   constructor() {
     this.rooms = [];
@@ -50,7 +53,7 @@ class Rooms {
 
     playingRoom.players = sortPlayers;
 
-    return sortPlayers.splice(0, 9);
+    return sortPlayers.slice(0, 9);
   }
 
   removePlayer(roomNumber, nickname) {
@@ -74,9 +77,7 @@ class Rooms {
     return roomNumber;
   }
 
-  UpdatePlayerScore({
-    roomNumber, nickname, quizIndex, selectItemIndex,
-  }) {
+  UpdatePlayerScore({ roomNumber, nickname, quizIndex, selectItemIndex }) {
     const playingRoom = this.getRoom(roomNumber);
     const player = this.getPlayer(roomNumber, nickname);
     const playingQuiz = playingRoom.quizSet[quizIndex];
@@ -86,6 +87,36 @@ class Rooms {
     if (playingQuiz.answer === selectItemIndex) {
       player.score += playingQuiz.score;
     }
+  }
+
+  /**
+   * dbManager에서 quizset를 받아와, 현재 방의 quizset을 갱신
+   */
+  async setQuizset(roomNumber, roomId) {
+    const { data } = await dbManager.quizset.getQuizset(roomId);
+    const quizset = [];
+
+    let quizIndex = -1;
+    data.forEach((currentValue, index) => {
+      if (index % 4 === 0) {
+        quizIndex += 1;
+        const currentQuiz = quizTemplate();
+        currentQuiz.title = currentValue.quizTitle;
+        currentQuiz.score = currentValue.score;
+        currentQuiz.timeLimit = currentValue.time_limit;
+        currentQuiz.image = currentValue.image;
+
+        quizset.push(currentQuiz);
+      }
+      const currentItem = itemTemplate();
+      currentItem.title = currentValue.itemTitle;
+      quizset[quizIndex].items.push(currentItem);
+      if (currentValue.is_answer === 1) {
+        quizset[quizIndex].answers.push(currentValue.order);
+      }
+    });
+
+    this.getRoom(roomNumber).quizSet = quizset;
   }
 }
 

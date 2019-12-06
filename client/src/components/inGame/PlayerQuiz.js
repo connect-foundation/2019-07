@@ -1,103 +1,96 @@
-import React from 'react';
-import styled, { css } from 'styled-components';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import * as colors from '../../constants/colors';
-import PlayerHeader from './PlayerHeader';
 import { Button } from '../common/Buttons';
+import * as layout from './Layout';
 
-const ItemCardsPanel = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  margin: 0 0 1rem 0;
-`;
+import LoadingCircle from '../common/LoadingCircle';
+import { fetchChoose } from '../../utils/fetch';
 
-const ButtonDefault = css`
-  position: relative;
-  padding: 0.5rem;
-  border: none;
-  outline: none;
-  button {
-    height: 8rem;
-    color: #ffffff;
-    font-size: 2rem;
+function Selection({ currentQuiz, roomNumber, quizIndex, chooseAnswer }) {
+  function choose(index) {
+    chooseAnswer(index);
+    fetchChoose(roomNumber, quizIndex, index);
   }
-  @media (min-width: 1000px) {
-    button {
-      height: 12rem;
-    }
-    font-size: 3rem;
-  }
-`;
-
-const Main = styled.main`
-  display: flex;
-  flex-direction: column;
-  background-color: ${colors.BACKGROUND_LIGHT_GRAY};
-  flex: 1;
-  padding: 3rem;
-  align-items: center;
-`;
-
-function HalfButton({ children, backgroundColor }) {
-  const HalfSizeButton = styled.div`
-    ${ButtonDefault}
-    width: calc(50% - 1rem);
-  `;
-  return (
-    <HalfSizeButton>
-      <Button backgroundColor={backgroundColor}>{children}</Button>
-    </HalfSizeButton>
-  );
-}
-
-function FullButton({ children, backgroundColor }) {
-  const FullSizeButton = styled.div`
-    ${ButtonDefault}
-    width: 100%;
-  `;
-  return (
-    <FullSizeButton>
-      <Button backgroundColor={backgroundColor}>{children}</Button>
-    </FullSizeButton>
-  );
-}
-
-function Quiz({ quizSet, currentIndex }) {
-  console.log('new quiz', currentIndex);
 
   return (
     <>
-      <PlayerHeader title={quizSet[currentIndex].title} />
-      <Main />
-      <ItemCardsPanel>
-        <HalfButton backgroundColor={colors.ITEM_COLOR[0]}>
-          {quizSet[currentIndex].items[0].title}
-        </HalfButton>
-        <HalfButton backgroundColor={colors.ITEM_COLOR[1]}>
-          {quizSet[currentIndex].items[1].title}
-        </HalfButton>
-        <HalfButton backgroundColor={colors.ITEM_COLOR[2]}>
-          {quizSet[currentIndex].items[2].title}
-        </HalfButton>
-        <HalfButton backgroundColor={colors.ITEM_COLOR[3]}>
-          {quizSet[currentIndex].items[3].title}
-        </HalfButton>
-      </ItemCardsPanel>
+      <layout.Center>
+        <layout.CenterContentContainer>
+          <layout.CenterLeftPanel />
+          <layout.ImagePanel />
+          <layout.CenterRightPanel />
+        </layout.CenterContentContainer>
+      </layout.Center>
+      <layout.Bottom>
+        <layout.ItemContainer>
+          {currentQuiz.items.map((item, index) => (
+            <layout.Item key={item.title}>
+              <Button
+                backgroundColor={colors.ITEM_COLOR[index]}
+                fontColor={colors.TEXT_WHITE}
+                onClick={e => choose(index, e)}
+              >
+                {item.title}
+              </Button>
+            </layout.Item>
+          ))}
+        </layout.ItemContainer>
+      </layout.Bottom>
     </>
   );
 }
 
-FullButton.propTypes = {
-  children: PropTypes.node.isRequired,
-  backgroundColor: PropTypes.string.isRequired,
+function Quiz({ quizSet, roomNumber, quizIndex, setChoose }) {
+  const [choosed, setChoosed] = useState(false);
+
+  const currentQuiz = quizSet[quizIndex];
+  function chooseAnswer(index) {
+    setChoose(index);
+    setChoosed(true);
+  }
+
+  return (
+    <layout.Background>
+      <layout.TitleContainer>
+        <layout.Title>{currentQuiz.title}</layout.Title>
+      </layout.TitleContainer>
+      {!choosed && (
+        <Selection
+          currentQuiz={currentQuiz}
+          roomNumber={roomNumber}
+          chooseAnswer={chooseAnswer}
+          quizIndex={quizIndex}
+        />
+      )}
+      {choosed && <LoadingCircle color={colors.PRIMARY_DEEP_GREEN} />}
+    </layout.Background>
+  );
+}
+
+Selection.propTypes = {
+  currentQuiz: PropTypes.shape({
+    items: PropTypes.shape({
+      map: PropTypes.func.isRequired,
+      title: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
+  quizIndex: PropTypes.number.isRequired,
+  roomNumber: PropTypes.string.isRequired,
+  chooseAnswer: PropTypes.func.isRequired,
 };
 
-HalfButton.propTypes = {
-  children: PropTypes.node.isRequired,
-  backgroundColor: PropTypes.string.isRequired,
+Quiz.propTypes = {
+  quizSet: PropTypes.shape({
+    items: PropTypes.shape({
+      title: PropTypes.string,
+    }),
+    title: PropTypes.string.isRequired,
+  }).isRequired,
+  roomNumber: PropTypes.string.isRequired,
+  quizIndex: PropTypes.number.isRequired,
+  setChoose: PropTypes.func.isRequired,
 };
 
 export default Quiz;

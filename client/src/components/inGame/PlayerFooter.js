@@ -15,25 +15,26 @@ const Score = styled.span`
   right: 0.5rem;
   color: ${colors.TEXT_WHITE};
   background-color: ${colors.TEXT_BLACK};
-  padding: 0.3rem 1rem;
+  padding: 0.3vmin 1.25vmin;
   border-radius: 0.5rem;
 `;
 
 const Footer = styled.footer`
-  ${styles.InGameFooterStyle}
+  ${styles.InGameFooterStyle};
 `;
 
-function PlayerFooter({ nickname }) {
+function PlayerFooter({ nickname, score }) {
   return (
     <Footer>
       <Nickname>{nickname}</Nickname>
-      <Score>0</Score>
+      <Score>{score}</Score>
     </Footer>
   );
 }
 
 PlayerFooter.propTypes = {
   nickname: PropTypes.string.isRequired,
+  score: PropTypes.number.isRequired,
 };
 
 export default PlayerFooter;

@@ -5,9 +5,11 @@ import PropTypes from 'prop-types';
 import * as colors from '../../constants/colors';
 import DESKTOP_MIN_WIDTH from '../../constants/media';
 
-const HeaderHeight = '6rem';
+const HeaderHeight = '8vmin';
 
-const HeaderArea = styled.div`
+const HeaderArea = styled.div.attrs({
+  className: 'headerArea',
+})`
   position: relative;
   width: 100%;
   height: ${HeaderHeight};
@@ -44,7 +46,6 @@ function Header({ children }) {
         <Link to="/">
           <ServiceLogoImage />
         </Link>
-
         {children}
       </HeaderStyle>
     </HeaderArea>

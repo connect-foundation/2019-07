@@ -1,24 +1,27 @@
 const io = require('socket.io')();
-const rooms = require('./models/rooms');
+const inMemory = require('./models/rooms');
 const roomTemplate = require('./models/templates/room');
 const playerTemplate = require('./models/templates/player');
 
-function handleOpenRoom() {
-  const roomNumber = rooms.getNewRoomNumber();
+async function handleOpenRoom({ roomId }) {
+  const roomNumber = inMemory.getNewRoomNumber();
   const newRoom = roomTemplate();
 
   newRoom.hostId = this.id;
   newRoom.roomNumber = roomNumber;
 
-  rooms.pushRoom(newRoom);
+  inMemory.pushRoom(newRoom);
+  await inMemory.setQuizset(roomNumber, roomId);
 
   this.join(roomNumber, () => {
-    io.to(newRoom.hostId).emit('openRoom', { roomNumber });
+    io.to(newRoom.hostId).emit('openRoom', {
+      roomNumber,
+    });
   });
 }
 
 function isRoomExist(roomNumber) {
-  return rooms.getRoom(roomNumber);
+  return inMemory.getRoom(roomNumber);
 }
 
 function handleStartQuiz({ roomNumber }) {
@@ -45,7 +48,7 @@ function handlePlayerChoose({
 }) {
   if (!isRoomExist(roomNumber)) return;
 
-  rooms.UpdatePlayerScore({
+  inMemory.UpdatePlayerScore({
     roomNumber,
     nickname,
     quizIndex,
@@ -57,7 +60,10 @@ function handleBreakQuiz({ roomNumber, quizIndex }) {
   if (!isRoomExist(roomNumber)) return;
 
   this.join(roomNumber, () => {
-    io.to(this.id).emit('subResult', rooms.getSubResult(roomNumber, quizIndex));
+    io.to(this.id).emit(
+      'subResult',
+      inMemory.getSubResult(roomNumber, quizIndex),
+    );
   });
 
   io.to(roomNumber).emit('break');
@@ -66,17 +72,17 @@ function handleBreakQuiz({ roomNumber, quizIndex }) {
 function handleEndQuiz({ roomNumber }) {
   if (!isRoomExist(roomNumber)) return;
 
-  io.to(roomNumber).emit('end', rooms.getFinalResult(roomNumber));
+  io.to(roomNumber).emit('end', inMemory.getFinalResult(roomNumber));
 }
 
 function handleEnterPlayer({ roomNumber, nickname }) {
   if (!isRoomExist(roomNumber)) return;
 
-  const currentRoom = rooms.getRoom(roomNumber);
+  const currentRoom = inMemory.getRoom(roomNumber);
   const newPlayer = playerTemplate();
   newPlayer.nickname = nickname;
 
-  rooms.pushPlayer(roomNumber, newPlayer);
+  inMemory.pushPlayer(roomNumber, newPlayer);
 
   this.join(roomNumber, () => {
     io.to(currentRoom.hostId).emit('enterPlayer', currentRoom.players);
@@ -85,7 +91,7 @@ function handleEnterPlayer({ roomNumber, nickname }) {
 
 function handleLeavePlayer({ roomNumber, nickname }) {
   if (!isRoomExist(roomNumber)) return;
-  const playerRoom = rooms.removePlayer(roomNumber, nickname);
+  const playerRoom = inMemory.removePlayer(roomNumber, nickname);
 
   this.join(roomNumber, () => {
     io.to(playerRoom.hostId).emit('leavePlayer', playerRoom.players);
@@ -93,7 +99,7 @@ function handleLeavePlayer({ roomNumber, nickname }) {
 }
 
 function handleCloseRoom() {
-  const roomNumber = rooms.removeRoom(this.id);
+  const roomNumber = inMemory.removeRoom(this.id);
   io.to(roomNumber).emit('closeRoom');
 }
 
