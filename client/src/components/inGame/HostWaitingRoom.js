@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import * as colors from '../../constants/colors';
 import Header from '../common/Header';
 import { YellowButton } from '../common/Buttons';
+import { HostGameAction } from '../../reducer/hostGameReducer';
 
 const ButtonContainer = styled.div`
   position: absolute;
@@ -59,7 +60,7 @@ const PlayerList = styled.ul`
 
 function HostWaitingRoom({ state, dispatcher }) {
   function startQuiz() {
-    dispatcher({ type: 'start' });
+    dispatcher({ type: HostGameAction.GAME_START });
   }
 
   return (

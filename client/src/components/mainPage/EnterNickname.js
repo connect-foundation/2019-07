@@ -17,6 +17,10 @@ const Input = styled.input`
 `;
 
 function EnterNickname({ history }) {
+  if (!history.location.state) {
+    window.location.href = '/';
+  }
+
   const { roomNumber } = history.location.state;
   const [nickname, setNickname] = useState('');
   const { onToast, offToast } = useContext(ToastContext);

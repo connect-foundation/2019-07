@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import io from 'socket.io-client';
 import PropTypes from 'prop-types';
 import { Prompt } from 'react-router';
-
 import PlayerFooter from '../../components/inGame/PlayerFooter';
 import PlayerWaiting from '../../components/inGame/PlayerWaiting';
 import PlayerQuizLoading from '../../components/inGame/PlayerQuizLoading';
@@ -26,7 +25,7 @@ const Container = styled.div`
   height: 100vh;
 `;
 
-function PlayerGameRoom({ location, history }) {
+function PlayerGameRoom({ location }) {
   /**
    * Cannot read property 에러의 경우 state가 없는 경우이므로
    * state가 undefined인지 검사해주면 된다.
@@ -48,17 +47,23 @@ function PlayerGameRoom({ location, history }) {
   const [score, setScore] = useState(0);
   const [ranking, setRanking] = useState([]);
 
+  function blockClose(e) {
+    e.returnValue = 'warning';
+  }
+
   useEffect(() => {
     socket.emit('enterPlayer', {
       nickname: location.state.nickname,
       roomNumber: location.state.roomNumber,
     });
 
-    function blockClose(e) {
-      e.returnValue = 'warning';
-    }
-
     window.addEventListener('beforeunload', blockClose);
+    window.addEventListener('unload', () => {
+      socket.emit('leavePlayer', {
+        nickname: location.state.nickname,
+        roomNumber: location.state.roomNumber,
+      });
+    });
 
     return () => {
       socket.emit('leavePlayer', {
@@ -80,7 +85,7 @@ function PlayerGameRoom({ location, history }) {
     setViewState(VIEW_STATE.IN_QUIZ);
   });
 
-  // 현제 문제 제한시간 끝, 중간 결과 페이지 출력
+  // 현재 문제 제한시간 끝, 중간 결과 페이지 출력
   socket.on('break', () => {
     setViewState(VIEW_STATE.SUB_RESULT);
   });
@@ -92,19 +97,10 @@ function PlayerGameRoom({ location, history }) {
   });
 
   socket.on('closeRoom', () => {
-    /**
-     * 사용자에게 Modal로 방이 닫혔음을 알림
-     * 사용자가 어떤 형태로든 창을 닫으면 경로를 바꾼다.
-     */
-    history.push({
-      pathname: '/',
-    });
+    window.removeEventListener('beforeunload', blockClose);
+    window.location.href = '/';
   });
 
-  /**
-   * react-router의 Prompt를 사용하면 페이지를 나가는 것을 막을 수 있지만
-   * 아래 closeRoom 수신 시 history.push가 정상동작하지 않는 문제가 있음.
-   */
   return (
     <Container>
       <Prompt message="페이지를 이동하면 방에서 나가게 됩니다. 계속 하시겠습니까?" />

@@ -23,6 +23,10 @@ const ButtonContainer = styled.div`
 `;
 
 function DetailRoom({ history, location }) {
+  if (!location.state) {
+    window.location.href = '/host/room/select';
+  }
+
   function handlePlayButton() {
     history.push({
       pathname: '/host',
