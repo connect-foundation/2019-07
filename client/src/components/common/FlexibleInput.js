@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { InputStyle } from '../../styles/common';
@@ -86,10 +86,28 @@ const Warning = styled.div`
   }
 `;
 
-function FlexibleInput({ maxLength, mobileFontSize, placeholder, callback }) {
+function FlexibleInput({
+  maxLength,
+  mobileFontSize,
+  placeholder,
+  callback,
+  title,
+}) {
   const [inputValue, setInputValue] = useState('');
   const [isFocus, setFocus] = useState(false);
   const warningRef = useRef(null);
+  const inputRef = useRef();
+
+  useEffect(() => {
+    if (title === undefined) return;
+    inputRef.current.textContent = title;
+    setInputValue(title);
+    if (title.length < maxLength) {
+      warningRef.current.textContent = '';
+      return;
+    }
+    warningRef.current.textContent = `${maxLength}글자를 넘을 수 없습니다`;
+  }, [title]);
 
   function handleKeyDown(event) {
     if (event.keyCode === ENTER) event.preventDefault();
@@ -124,6 +142,7 @@ function FlexibleInput({ maxLength, mobileFontSize, placeholder, callback }) {
   return (
     <InputContainer>
       <Input
+        ref={inputRef}
         onKeyDown={handleKeyDown}
         onInput={handleInput}
         onFocus={() => setFocus(true)}
@@ -149,6 +168,7 @@ FlexibleInput.defaultProps = {
   placeholder: 'placeholder',
   mobileFontSize: '1.5rem',
   callback: undefined,
+  title: '',
 };
 
 FlexibleInput.propTypes = {
@@ -156,6 +176,7 @@ FlexibleInput.propTypes = {
   mobileFontSize: PropTypes.string,
   placeholder: PropTypes.string,
   callback: PropTypes.func,
+  title: PropTypes.string,
 };
 
 export default FlexibleInput;
