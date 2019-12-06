@@ -22,6 +22,10 @@ const Container = styled.div`
 `;
 
 function HostGameRoom({ location }) {
+  if (!location.state) {
+    window.location.href = '/host/room/select';
+  }
+
   const socket = io.connect(process.env.REACT_APP_BACKEND_HOST);
   const [roomState, dispatcher] = useReducer(roomReducer, initialRoomState);
   const [ranking, setRanking] = useState([]);

@@ -142,7 +142,11 @@ function SelectRoom({ history }) {
   const { openModal } = useContext(ModalContext);
 
   useEffect(() => {
-    setUserId(parsingUserEmail());
+    try {
+      setUserId(parsingUserEmail());
+    } catch (err) {
+      window.location.href = '/';
+    }
   }, []);
 
   useEffect(() => {
