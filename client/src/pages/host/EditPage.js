@@ -1,151 +1,98 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import * as colors from '../../constants/colors';
 import Header from '../../components/common/Header';
-import { YellowButton } from '../../components/common/Buttons';
-import EditBody from '../../components/edit/EditBody';
+import SideBar from '../../components/edit/SideBar';
+import ImageField from '../../components/edit/ImageField';
+import * as ingameLayout from '../../components/inGame/Layout';
+import EditContextProvider from '../../components/edit/EditContextProvider';
+import Title from '../../components/edit/Title';
+import ItemContainer from '../../components/edit/ItemContainer';
 
-const quizSetTemplate = [
-  {
-    title: '',
-    image: '',
-    items: [
-      {
-        title: '',
-      },
-      {
-        title: '',
-      },
-      {
-        title: '',
-      },
-      {
-        title: '',
-      },
-    ],
-    answers: [],
-    timeLimit: 30,
-    score: 1000,
-  },
-];
+const MAIN_PADDING = '3vmin';
 
-const quizSetData = [
-  {
-    title: '오늘 점심은 무엇을 먹었을까요',
-    image: '',
-    items: [
-      {
-        title: '밥',
-      },
-      {
-        title: '라면',
-      },
-      {
-        title: '만두',
-      },
-      {
-        title: '찐빵',
-      },
-    ],
-    answers: [0],
-    timeLimit: 30,
-    score: 1000,
-  },
-  {
-    title: '제일 좋아하는 게임은 무엇일까요',
-    image: '',
-    items: [
-      {
-        title: '리그오브레전드',
-      },
-      {
-        title: '크레이지아케이드',
-      },
-      {
-        title: '오버워치',
-      },
-      {
-        title: '서든어택',
-      },
-    ],
-    answers: [2],
-    timeLimit: 10,
-    score: 0,
-  },
-  {
-    title: '카훗은 만들기 쉽다',
-    image: 'https://files.slack.com/files-pri/TP94WHR34-FQQ2ZAN4X/k-035.png',
-    items: [
-      {
-        title: '예',
-      },
-      {
-        title: '아니오',
-      },
-      {
-        title: '',
-      },
-      {
-        title: '',
-      },
-    ],
-    answers: [1],
-    timeLimit: 60,
-    score: 2000,
-  },
-];
-
-const Container = styled.div`
+const Background = styled.div`
+  position: relative;
   display: flex;
+  flex: 1;
   flex-direction: column;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
+  background-color: ${colors.BACKGROUND_DEEP_GRAY};
 `;
 
-const ButtonContainer = styled.div`
-  position: absolute;
-  right: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
+const HeaderWrapper = styled.div`
+  div.headerArea {
+    height: 8vmin;
+  }
+  header {
+    height: 8vmin;
+  }
 `;
 
 const Section = styled.section`
-  flex: 1;
+  position: relative;
   display: flex;
-  color: ${colors.TEXT_BLACK};
-  background-color: ${colors.BACKGROUND_DEEP_GRAY};
   flex-direction: column-reverse;
-  overflow: hidden;
+  flex: 1;
 
-  @media (min-width: 1000px) {
-    flex-direction: row;
-  }
-
-  @media (min-width: 1300px) {
+  @media (orientation: landscape) {
     flex-direction: row;
   }
 `;
 
-function EditPage() {
-  const [quizSet, setQuizSet] = useState(quizSetTemplate);
+const Main = styled.main`
+  position: relative;
+  flex: 1;
+`;
+
+const MainContentContainer = styled.div`
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  top: ${MAIN_PADDING};
+  bottom: ${MAIN_PADDING};
+  left: ${MAIN_PADDING};
+  right: ${MAIN_PADDING};
+  background-color: blue;
+`;
+
+function NewEditPage() {
   return (
-    <Container>
-      <Header>
-        <ButtonContainer>
-          <YellowButton
-            onClick={() => {
-              console.log(quizSet);
-            }}
-          >
-            저장
-          </YellowButton>
-        </ButtonContainer>
-      </Header>
-      <Section>
-        <EditBody quizSet={quizSet} setQuizSet={setQuizSet} />
-      </Section>
-    </Container>
+    <EditContextProvider>
+      <Background>
+        <HeaderWrapper>
+          <Header />
+        </HeaderWrapper>
+        <Section>
+          <SideBar />
+          <Main>
+            <MainContentContainer>
+              <ingameLayout.Background>
+                <ingameLayout.TitleContainer>
+                  <Title />
+                </ingameLayout.TitleContainer>
+                <ingameLayout.Center>
+                  <ingameLayout.CenterContentContainer>
+                    <ingameLayout.CenterLeftPanel />
+                    <ingameLayout.ImagePanel>
+                      <ImageField />
+                    </ingameLayout.ImagePanel>
+                    <ingameLayout.CenterRightPanel />
+                  </ingameLayout.CenterContentContainer>
+                </ingameLayout.Center>
+                <ingameLayout.Bottom>
+                  <ingameLayout.ItemContainer>
+                    <ItemContainer />
+                  </ingameLayout.ItemContainer>
+                </ingameLayout.Bottom>
+              </ingameLayout.Background>
+            </MainContentContainer>
+          </Main>
+        </Section>
+      </Background>
+    </EditContextProvider>
   );
 }
 
-export default EditPage;
+export default NewEditPage;

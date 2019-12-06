@@ -1,116 +1,128 @@
-import React, { useState } from 'react';
+import React, { useEffect, useContext, useRef } from 'react';
+import styled, { css } from 'styled-components';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import * as colors from '../../constants/colors';
 import { YellowButton } from '../common/Buttons';
-import Preview from './Preview';
+import { EditContext } from './EditContextProvider';
+import Thumbnail from './Thumbnail';
 
-const quizDefaultTemplate = {
-  title: '',
-  image: '',
-  items: [
-    {
-      title: '',
-    },
-    {
-      title: '',
-    },
-    {
-      title: '',
-    },
-    {
-      title: '',
-    },
-  ],
-  answers: [],
-  timeLimit: 30,
-  score: 1000,
-};
+const SIDE_BAR_SIZE = '20vmin';
+const BUTTON_PADDING = '1vmin';
+const BUTTON_FONT_SIZE = '2vmin';
 
-const SideBarWrapper = styled.aside`
+const FlexStyle = css`
   display: flex;
+  flex-direction: column;
+
+  @media (orientation: portrait) {
+    flex-direction: row;
+  }
+`;
+
+const Background = styled.aside`
+  position: relative;
+  flex: none;
+  width: ${SIDE_BAR_SIZE};
+  height: 100%;
   background-color: ${colors.BACKGROUND_LIGHT_WHITE};
   box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px;
-  flex-direction: row;
-  width: 100%;
-  height: 10rem;
 
-  @media (min-width: 1000px) {
-    flex-direction: column;
-    width: 20rem;
+  @media (orientation: portrait) {
+    width: 100%;
+    height: ${SIDE_BAR_SIZE};
+  }
+`;
+
+const Container = styled.div`
+  ${FlexStyle};
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+`;
+
+const ThumbnailContainer = styled.div`
+  ${FlexStyle};
+  overflow-y: auto;
+  overflow-x: hidden;
+  @media (orientation: portrait) {
+    overflow-x: auto;
+    overflow-y: hidden;
     height: 100%;
   }
-
-  @media (min-width: 1300px) {
-    flex-direction: column;
-    width: 25rem;
-    height: 100%;
-  }
 `;
 
-const ButtonContainer = styled.div`
-  position: relative;
-  height: 8rem;
-`;
+function AddQuizButton({ onClick }) {
+  const ButtonWrapper = styled.div`
+    position: relative;
+    flex: none;
+    width: ${SIDE_BAR_SIZE};
+    height: calc(${SIDE_BAR_SIZE} / 2);
 
-const AddTemplateButtonContainer = styled.div`
-  position: relative;
-  top: 1.7rem;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 85%;
-`;
+    @media (orientation: portrait) {
+      width: calc(${SIDE_BAR_SIZE} / 2);
+      height: ${SIDE_BAR_SIZE};
+    }
 
-const PreviewContainer = styled.div`
-  position: relative;
-  flex: 1;
-  overflow: scroll;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-`;
+    div.buttonWrapper {
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
 
-function SideBar({ quizSet, setQuizSet, setQuizFocusedIndex }) {
-  const [focusedIndex, setFocusedIndex] = useState(0);
+      width: 80%;
+      height: calc(${BUTTON_PADDING} * 2 + ${BUTTON_FONT_SIZE});
 
-  function handleAddTemplateClick() {
-    const newQuizSet = JSON.parse(JSON.stringify(quizSet));
-    newQuizSet.push(quizDefaultTemplate);
-    setQuizSet(newQuizSet);
-  }
-  function handlePreviewClick(index) {
-    setFocusedIndex(index);
-    setQuizFocusedIndex(index);
-  }
+      @media (orientation: portrait) {
+        width: calc(${BUTTON_PADDING} * 2 + ${BUTTON_FONT_SIZE});
+        height: 80%;
+      }
+    }
+
+    button {
+      padding: ${BUTTON_PADDING};
+      font-size: ${BUTTON_FONT_SIZE};
+    }
+  `;
 
   return (
-    <SideBarWrapper>
-      <ButtonContainer>
-        <AddTemplateButtonContainer>
-          <YellowButton onClick={handleAddTemplateClick}>
-            새 템플릿 추가하기
-          </YellowButton>
-        </AddTemplateButtonContainer>
-      </ButtonContainer>
-      <PreviewContainer>
-        {quizSet.map((quiz, index) => (
-          <Preview
-            key={index}
-            quiz={quiz}
-            index={index}
-            isFocused={focusedIndex === index}
-            handlePreviewClick={handlePreviewClick}
-          />
-        ))}
-      </PreviewContainer>
-    </SideBarWrapper>
+    <ButtonWrapper>
+      <YellowButton onClick={onClick}>퀴즈 생성</YellowButton>
+    </ButtonWrapper>
   );
 }
 
-SideBar.propTypes = {
-  quizSet: PropTypes.arrayOf(Object).isRequired,
-  setQuizSet: PropTypes.func.isRequired,
-  setQuizFocusedIndex: PropTypes.func.isRequired,
+AddQuizButton.propTypes = {
+  onClick: PropTypes.func.isRequired,
 };
+
+function SideBar() {
+  const { quizsetState, dispatch, actionTypes } = useContext(EditContext);
+  const { quizset } = quizsetState;
+  const thumbnailContainerRef = useRef();
+
+  function addQuiz() {
+    dispatch({ type: actionTypes.ADD_QUIZ });
+  }
+
+  useEffect(() => {
+    const thumbContainer = thumbnailContainerRef.current;
+    thumbContainer.scrollLeft = thumbContainer.scrollWidth;
+    thumbContainer.scrollTop = thumbContainer.offsetHeight;
+  }, [quizset.length]);
+
+  return (
+    <Background>
+      <Container>
+        <ThumbnailContainer ref={thumbnailContainerRef}>
+          {quizset.map((thumbnail, index) => (
+            <Thumbnail key={index} index={index} />
+          ))}
+        </ThumbnailContainer>
+        <AddQuizButton onClick={addQuiz} />
+      </Container>
+    </Background>
+  );
+}
 
 export default SideBar;
