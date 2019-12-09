@@ -112,7 +112,7 @@ class Rooms {
       currentItem.title = currentValue.itemTitle;
       quizset[quizIndex].items.push(currentItem);
       if (currentValue.is_answer === 1) {
-        quizset[quizIndex].answers.push(currentValue.order);
+        quizset[quizIndex].answers.push(currentValue.item_order);
       }
     });
 
