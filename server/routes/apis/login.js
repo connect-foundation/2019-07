@@ -35,7 +35,7 @@ router.get('/token/:accessToken', async (req, res) => {
   let getProfileSuccess = false;
   let errorCode = 'unknown';
 
-  await rp(options).then(body => {
+  await rp(options).then((body) => {
     /**
      * body의 형태
      * resultcode: '00',
@@ -92,7 +92,6 @@ router.get('/token/:accessToken', async (req, res) => {
   const token = jwt.sign(
     {
       naverId: profileObject.id,
-      name: profileObject.name,
     },
     jwtObj.secret,
     {
@@ -112,6 +111,33 @@ router.get('/token/:accessToken', async (req, res) => {
 
   res.json({
     isSuccess: true,
+  });
+});
+
+/**
+ * @api {get} /login/token/check 설정된 jwt가 유효한지 검사하는 API
+ * @apiName checkJWT
+ * @apiGroup login
+ *
+ * @apiParam {String} accessToken 네이버 로그인 후 제공한 접근 토큰
+ */
+router.get('/check/token', async (req, res) => {
+  const { cookies } = req;
+
+  let decodedJWT;
+  try {
+    decodedJWT = jwt.verify(cookies.jwt, jwtObj.secret);
+  } catch (error) {
+    res.json({
+      isSuccess: false,
+      message: error.message,
+    });
+    return;
+  }
+
+  res.json({
+    isSuccess: true,
+    naverId: decodedJWT.naverId,
   });
 });
 
