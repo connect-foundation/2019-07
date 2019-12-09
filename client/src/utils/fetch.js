@@ -85,19 +85,27 @@ async function fetchQuizSet(roomNumber) {
 }
 
 async function fetchChoose(roomNumber, quizIndex, choose) {
-  // url 양식 : /room/:roomNumber/quiz/:quizIndex/choose/:choose
-  const url = `/${address.roomApiUrl}/${roomNumber}/${address.quiz}/${quizIndex}/${address.choose}/${choose}`;
+  // url 양식 : /room/:roomNumber/quiz
+  const url = `/${address.roomApiUrl}/${roomNumber}/${address.quiz}`;
   const response = await fetchPost({
     url,
+    data: {
+      quizIndex,
+      choose,
+    },
   });
   return response;
 }
 
 async function fetchCheckAnswer(roomNumber, nickname, quizIndex, choose) {
-  // url 양식 : /room/:roomNumber/player/:nickname/quiz/:quizIndex/choose/:choose
-  const url = `/${address.roomApiUrl}/${roomNumber}/${address.player}/${nickname}/${address.quiz}/${quizIndex}/${address.choose}/${choose}`;
+  // url 양식 : /room/:roomNumber/player/:nickname/choose
+  const url = `/${address.roomApiUrl}/${roomNumber}/${address.player}/${nickname}/${address.choose}`;
   const response = await fetchPost({
     url,
+    data: {
+      quizIndex,
+      choose,
+    },
   });
   return response;
 }

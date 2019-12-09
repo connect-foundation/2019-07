@@ -1,5 +1,5 @@
 const { check, validationResult } = require('express-validator');
-const rooms = require('../models/rooms');
+const inMemory = require('../models/inMemory');
 
 /**
  * 방 번호를 입력 받아서 값이 유효한지 확인함. (6자리 체크, 숫자가 아닌지 체크)
@@ -50,8 +50,7 @@ async function isRoomNumberValid(req, res, next) {
  */
 function isRoomExist(req, res, next) {
   const { roomNumber } = req.params;
-
-  if (!rooms.getRoom(roomNumber)) {
+  if (!inMemory.room.isRoomExist(roomNumber)) {
     res.json({
       isSuccess: false,
       message: '존재하지 않는 방입니다. 방 번호를 다시 입력해주세요.',
@@ -79,9 +78,12 @@ function isRoomExist(req, res, next) {
 async function isValidNickname(req, res, next) {
   await check('nickname')
     .trim()
-    .isLength({ min: 3, max: 20 })
+    .isLength({
+      min: 2,
+      max: 20,
+    })
     .bail()
-    .custom((value) => /[가-힣\w]+/g.exec(value)[0] === value)
+    .custom((value) => /[ㄱ-힣\w]+/g.exec(value)[0] === value)
     .run(req);
 
   if (!validationResult(req).isEmpty()) {
@@ -112,10 +114,7 @@ async function isValidNickname(req, res, next) {
 function isNicknameOverlap(req, res, next) {
   const { nickname, roomNumber } = req.params;
 
-  const room = rooms.getRoom(roomNumber);
-  const isAlreadyExist = !!room.players.find(
-    (player) => player.nickname === nickname,
-  );
+  const isAlreadyExist = inMemory.room.isPlayerExist(roomNumber, nickname);
 
   if (isAlreadyExist) {
     res.json({
@@ -145,10 +144,7 @@ function isNicknameOverlap(req, res, next) {
 function isNicknameExist(req, res, next) {
   const { nickname, roomNumber } = req.params;
 
-  const room = rooms.getRoom(roomNumber);
-  const isAlreadyExist = !!room.players.find(
-    (player) => player.nickname === nickname,
-  );
+  const isAlreadyExist = inMemory.room.isPlayerExist(roomNumber, nickname);
 
   if (!isAlreadyExist) {
     res.json({
