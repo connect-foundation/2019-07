@@ -11,7 +11,6 @@ const router = express.Router();
 const jwtObj = {
   secret: process.env.JWT_SECRET,
 };
-// jwtObj.secret = process.env.JWT_SECRET;
 
 /**
  * @api {get} /login/token/:accessToken 네이버 프로필 조회 후 쿠키에 jwt로 설정하는 API.
@@ -36,20 +35,13 @@ router.get('/token/:accessToken', async (req, res) => {
   let getProfileSuccess = false;
   let errorCode = 'unknown';
 
-  await rp(options).then((body) => {
+  await rp(options).then(body => {
     /**
      * body의 형태
      * resultcode: '00',
      * message: 'success',
      * response: {
      *   id: '',
-     *   nickname: '',
-     *   profile_image: '',
-     *   age: '',
-     *   gender: '',
-     *   email: '',
-     *   name: '',
-     *   birthday: '',
      * }
      */
     const { resultcode, message, response } = JSON.parse(body);
@@ -88,19 +80,18 @@ router.get('/token/:accessToken', async (req, res) => {
    */
 
   /**
-   * USER 테이블에 이메일 정보가 없는 경우 INSERT하는 메소드
-   * 최초의 사용자 로그인 시만 저장하고, 이미 저장된 사용자가 로그인 시
-   * 다음과 같은 객체를 return함
+   * 최초의 사용자 로그인 시 프로필객체의 id를 저장하고,
+   * 이미 저장된 사용자가 로그인 시 다음과 같은 객체를 return함
    * {
    *   isError: true,
-   *   message: "Duplicate entry '이메일 주소' for key 'email_UNIQUE'"
+   *   message: "Duplicate entry '프로필객체의 숫자 id' for key 'naver_id_UNIQUE'"
    * }
    */
   await dbManager.user.insertUser(profileObject);
 
   const token = jwt.sign(
     {
-      email: profileObject.email,
+      naverId: profileObject.id,
       name: profileObject.name,
     },
     jwtObj.secret,
@@ -112,7 +103,7 @@ router.get('/token/:accessToken', async (req, res) => {
   /**
    * 쿠키에 정보 추가
    */
-  res.cookie('email', profileObject.email, {
+  res.cookie('naverId', profileObject.id, {
     maxAge: 60 * 60 * 1000, // 60분 * 60초 * 1000 ms
   });
   res.cookie('jwt', token, {
