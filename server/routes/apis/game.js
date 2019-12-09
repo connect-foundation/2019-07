@@ -1,8 +1,7 @@
 const express = require('express');
 
 const router = express.Router();
-
-const inMemory = require('../../models/rooms');
+const inMemory = require('../../models/inMemory');
 
 const {
   isRoomExist,
@@ -22,7 +21,8 @@ router.get('/room/:roomNumber/quiz', async (req, res) => {
   const { roomNumber } = req.params;
 
   // inMemory서 quizSet을 가져옴.
-  const { quizSet } = inMemory.getRoom(roomNumber);
+  const quizSet = inMemory.room.getQuizSet(roomNumber);
+
   // 받아온 quizSet을 전송
   res.json({
     quizSet,
@@ -48,16 +48,11 @@ router.get(
   async (req, res) => {
     const { roomNumber, nickname } = req.params;
 
-    const currentRoom = inMemory.rooms.find(
-      (room) => room.roomNumber === roomNumber,
-    );
-    const currentUser = currentRoom.players.find(
-      (player) => player.nickname === nickname,
-    );
+    const score = inMemory.room.getPlayerScore(roomNumber, nickname);
 
     res.json({
       nickname,
-      score: currentUser.score,
+      score,
     });
   },
 );
@@ -82,23 +77,20 @@ router.get(
   async (req, res) => {
     const { roomNumber, nickname } = req.params;
 
-    const currentRoom = inMemory.rooms.find(
-      (room) => room.roomNumber === roomNumber,
-    );
-
     let rank = 1;
-    let score = 0;
+    const score = inMemory.room.getPlayerScore(roomNumber, nickname);
 
-    for (let index = 0; index < currentRoom.players.length; index += 1) {
-      const currentPlayer = currentRoom.players[index];
-      const previousPlayer = currentRoom.players[index - 1];
+    const players = inMemory.room.getPlayers(roomNumber);
+
+    for (let index = 0; index < players.length; index += 1) {
+      const currentPlayer = players[index];
+      const previousPlayer = players[index - 1];
 
       if (index > 0) {
         rank = previousPlayer.score === currentPlayer.score ? rank : index + 1;
       }
 
       if (currentPlayer.nickname === nickname) {
-        score = currentPlayer.score;
         break;
       }
     }
@@ -133,30 +125,16 @@ router.post(
     const { roomNumber, nickname } = req.params;
     const { quizIndex, choose } = req.body;
 
-    const currentRoom = inMemory.rooms.find(
-      (current) => current.roomNumber === roomNumber,
-    );
-
-    const player = currentRoom.players.find(
-      (current) => current.nickname === nickname,
-    );
-
-    const quiz = currentRoom.quizSet[quizIndex];
-
-    // choose는 문자열 형태이므로, answer에 있는 정수와 타입을 맞춰주어야함
-    const result = quiz.answers.find((answer) => `${answer}` === choose);
-
-    if (result === undefined) {
-      res.json({
-        isCorrect: false,
-        score: player.score,
-      });
-      return;
-    }
+    const [result, score] = inMemory.room.updatePlayerScore({
+      roomNumber,
+      quizIndex,
+      nickname,
+      choose,
+    });
 
     res.json({
-      isCorrect: true,
-      score: (player.score += quiz.score),
+      isCorrect: result,
+      score,
     });
   },
 );
@@ -177,12 +155,15 @@ router.post('/room/:roomNumber/quiz', isRoomExist, async (req, res) => {
   const { roomNumber } = req.params;
   const { quizIndex, choose } = req.body;
 
-    quiz.items[choose].playerCount += 1;
+  inMemory.room.updateQuizCount({
+    roomNumber,
+    quizIndex,
+    choose,
+  });
 
-    res.json({
-      isSuccess: true,
-    });
-  },
-);
+  res.json({
+    isSuccess: true,
+  });
+});
 
 module.exports = router;
