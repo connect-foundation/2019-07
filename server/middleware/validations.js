@@ -79,9 +79,12 @@ function isRoomExist(req, res, next) {
 async function isValidNickname(req, res, next) {
   await check('nickname')
     .trim()
-    .isLength({ min: 3, max: 20 })
+    .isLength({
+      min: 2,
+      max: 20,
+    })
     .bail()
-    .custom((value) => /[가-힣\w]+/g.exec(value)[0] === value)
+    .custom((value) => /[ㄱ-힣\w]+/g.exec(value)[0] === value)
     .run(req);
 
   if (!validationResult(req).isEmpty()) {
