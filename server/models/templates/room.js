@@ -1,8 +1,9 @@
 const roomTemplate = () => ({
-  roomNumber: '',
-  players: [],
+  players: new Map(),
   hostId: '',
   quizSet: [],
 });
 
-module.exports = roomTemplate;
+module.exports = {
+  roomTemplate,
+};
