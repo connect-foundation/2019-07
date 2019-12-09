@@ -141,7 +141,7 @@ router.post(
 
 /**
  * 플레이어가 문항을 선택했을 때 카운트를 증가시키는 API
- * @api {post} /room/:roomNumber/quiz/:quizIndex/choose/:choose
+ * @api {post} /room/:roomNumber/quiz
  * @apiName choose
  * @apiGroup room
  *
