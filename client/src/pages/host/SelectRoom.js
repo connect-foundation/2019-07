@@ -129,10 +129,10 @@ async function getRooms({ userId }) {
   return result;
 }
 
-function parsingUserEmail() {
+function parsingUserNaverId() {
   const cookies = document.cookie.split(';').map(cookie => cookie.split('='));
-  const email = cookies.find(cookie => cookie[0] === 'email');
-  return email[1].replace('%40', '@');
+  const naverId = cookies.find(cookie => cookie[0] === 'naverId');
+  return naverId[1];
 }
 
 function SelectRoom({ history }) {
@@ -143,7 +143,7 @@ function SelectRoom({ history }) {
 
   useEffect(() => {
     try {
-      setUserId(parsingUserEmail());
+      setUserId(parsingUserNaverId());
     } catch (err) {
       window.location.href = '/';
     }

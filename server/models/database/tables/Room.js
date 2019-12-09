@@ -2,18 +2,18 @@ const Table = require('./Table');
 const { roomTable, userTable } = require('../../../constants/tableName');
 
 class Room extends Table {
-  insertRoom(userId, title) {
+  insertRoom(naverId, title) {
     return this.query(
-      `INSERT INTO ${roomTable} (title, user_id) VALUES (?, (SELECT id FROM ${userTable} WHERE email=?))`,
+      `INSERT INTO ${roomTable} (title, user_id) VALUES (?, (SELECT id FROM ${userTable} WHERE naver_id=?))`,
       title,
-      userId,
+      naverId,
     );
   }
 
-  selectRooms(userId) {
+  selectRooms(naverId) {
     return this.query(
-      `SELECT R.title, R.id FROM ${roomTable} R LEFT JOIN ${userTable} U ON R.user_id=U.id WHERE U.email=?`,
-      userId,
+      `SELECT R.title, R.id FROM ${roomTable} R LEFT JOIN ${userTable} U ON R.user_id=U.id WHERE U.naver_id=?`,
+      naverId,
     );
   }
 
