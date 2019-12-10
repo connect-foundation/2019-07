@@ -42,10 +42,10 @@ function PlayerGameRoom({ location }) {
 
   const [quizSet, setQuizSet] = useState({});
   const [quizIndex, setCurrentQuiz] = useState(-1);
-
-  const [choose, setChoose] = useState(-1);
   const [score, setScore] = useState(0);
   const [ranking, setRanking] = useState([]);
+  const [isAnswer, setIsAnswer] = useState(false);
+  const [plus, setPlus] = useState(0);
 
   function blockClose(e) {
     e.returnValue = 'warning';
@@ -92,8 +92,10 @@ function PlayerGameRoom({ location }) {
 
   // 현재 방의 문제 세트 끝,
   socket.on('end', orderedRanking => {
-    setRanking(orderedRanking);
+    window.removeEventListener('beforeunload', blockClose);
     setViewState(VIEW_STATE.END);
+    setRanking(orderedRanking);
+    socket.close();
   });
 
   socket.on('closeRoom', () => {
@@ -103,7 +105,9 @@ function PlayerGameRoom({ location }) {
 
   return (
     <Container>
-      <Prompt message="페이지를 이동하면 방에서 나가게 됩니다. 계속 하시겠습니까?" />
+      {viewState !== VIEW_STATE.END && (
+        <Prompt message="페이지를 이동하면 방에서 나가게 됩니다. 계속 하시겠습니까?" />
+      )}
       {viewState === VIEW_STATE.WAITING && <PlayerWaiting />}
       {viewState === VIEW_STATE.LOADING && (
         <PlayerQuizLoading setQuizSet={setQuizSet} roomNumber={roomNumber} />
@@ -113,17 +117,17 @@ function PlayerGameRoom({ location }) {
           quizSet={quizSet}
           roomNumber={roomNumber}
           quizIndex={quizIndex}
-          setChoose={setChoose}
+          setIsAnswer={setIsAnswer}
+          nickname={nickname}
+          setPlus={setPlus}
         />
       )}
       {viewState === VIEW_STATE.SUB_RESULT && (
         <PlayerSubResult
-          choose={choose}
+          plus={plus}
           score={score}
           setScore={setScore}
-          nickname={nickname}
-          roomNumber={roomNumber}
-          quizIndex={quizIndex}
+          isAnswer={isAnswer}
         />
       )}
       {viewState === VIEW_STATE.END && (

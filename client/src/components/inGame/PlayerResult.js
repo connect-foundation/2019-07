@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import Dashboard from '../common/Dashboard';
 import * as colors from '../../constants/colors';
-import { fetchRank } from '../../utils/fetch';
+import { readRank } from '../../utils/fetch';
 
 import LoadingCircle from '../common/LoadingCircle';
 import goldMedalImage from '../../assets/images/goldMedal.png';
@@ -62,7 +62,7 @@ function PlayerGameResult({ ranking, roomNumber, nickname }) {
   const [rank, setRank] = useState(0);
 
   useEffect(() => {
-    fetchRank(roomNumber, nickname).then(response => {
+    readRank(roomNumber, nickname).then(response => {
       setRank(response.rank);
     });
   }, []);

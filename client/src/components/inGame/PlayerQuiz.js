@@ -6,13 +6,11 @@ import { Button } from '../common/Buttons';
 import * as layout from './Layout';
 
 import LoadingCircle from '../common/LoadingCircle';
-import { fetchChoose } from '../../utils/fetch';
+import { readAnswer } from '../../utils/fetch';
 
-function Selection({ currentQuiz, roomNumber, quizIndex, chooseAnswer }) {
-  function choose(index) {
-    chooseAnswer(index);
-    fetchChoose(roomNumber, quizIndex, index);
-  }
+function Selection({ currentQuiz, chooseAnswer, setIsAnswer }) {
+  // 새로운 문제이므로, 이전의 정답결과를 초기화
+  setIsAnswer(false);
 
   return (
     <>
@@ -30,7 +28,7 @@ function Selection({ currentQuiz, roomNumber, quizIndex, chooseAnswer }) {
               <Button
                 backgroundColor={colors.ITEM_COLOR[index]}
                 fontColor={colors.TEXT_WHITE}
-                onClick={e => choose(index, e)}
+                onClick={e => chooseAnswer(index, e)}
               >
                 {item.title}
               </Button>
@@ -42,13 +40,28 @@ function Selection({ currentQuiz, roomNumber, quizIndex, chooseAnswer }) {
   );
 }
 
-function Quiz({ quizSet, roomNumber, quizIndex, setChoose }) {
+function Quiz({
+  quizSet,
+  roomNumber,
+  quizIndex,
+  setIsAnswer,
+  nickname,
+  setPlus,
+}) {
   const [choosed, setChoosed] = useState(false);
 
   const currentQuiz = quizSet[quizIndex];
-  function chooseAnswer(index) {
-    setChoose(index);
+  async function chooseAnswer(itemIndex) {
     setChoosed(true);
+    readAnswer(roomNumber, nickname, quizIndex, itemIndex).then(response => {
+      if (response.isCorrect) {
+        setIsAnswer(true);
+        setPlus(response.plusScore);
+      } else {
+        setIsAnswer(false);
+        setPlus(0);
+      }
+    });
   }
 
   return (
@@ -59,9 +72,8 @@ function Quiz({ quizSet, roomNumber, quizIndex, setChoose }) {
       {!choosed && (
         <Selection
           currentQuiz={currentQuiz}
-          roomNumber={roomNumber}
           chooseAnswer={chooseAnswer}
-          quizIndex={quizIndex}
+          setIsAnswer={setIsAnswer}
         />
       )}
       {choosed && <LoadingCircle color={colors.PRIMARY_DEEP_GREEN} />}
@@ -76,9 +88,8 @@ Selection.propTypes = {
       title: PropTypes.string.isRequired,
     }).isRequired,
   }).isRequired,
-  quizIndex: PropTypes.number.isRequired,
-  roomNumber: PropTypes.string.isRequired,
   chooseAnswer: PropTypes.func.isRequired,
+  setIsAnswer: PropTypes.func.isRequired,
 };
 
 Quiz.propTypes = {
@@ -90,7 +101,9 @@ Quiz.propTypes = {
   }).isRequired,
   roomNumber: PropTypes.string.isRequired,
   quizIndex: PropTypes.number.isRequired,
-  setChoose: PropTypes.func.isRequired,
+  setIsAnswer: PropTypes.func.isRequired,
+  nickname: PropTypes.string.isRequired,
+  setPlus: PropTypes.func.isRequired,
 };
 
 export default Quiz;
