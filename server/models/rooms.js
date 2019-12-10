@@ -49,11 +49,9 @@ class Rooms {
   }
 
   getRoomHostId(roomNumber) {
-    if (this.isRoomExist(roomNumber)) {
-      return this.getRoom(roomNumber).hostId;
-    }
-
-    return '';
+    return this.isRoomExist(roomNumber)
+      ? this.getRoom(roomNumber).hostId
+      : null;
   }
 
   async setQuizSet(roomNumber, roomId) {
