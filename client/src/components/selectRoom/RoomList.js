@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import * as colors from '../../constants/colors';
 import { deleteRoom } from '../../utils/fetch';
+import deleteButtonImage from '../../assets/images/deleteButton.png';
 
 const RoomWrapper = styled.div`
   position: relative;
@@ -65,24 +66,17 @@ const RoomTitle = styled.span`
   font-size: 4vmin;
 `;
 
-const DeleteRoomButton = styled.button`
+const DeleteRoomButton = styled.img.attrs({
+  src: deleteButtonImage,
+})`
   position: absolute;
-  right: 1rem;
-  width: 4rem;
+  right: 2rem;
+  width: 2rem;
   height: 2rem;
   opacity: 0.2;
-  border-radius: 2rem;
-  border: none;
-  background-color: red;
-  color: ${colors.TEXT_WHITE};
-  font-size: 1rem;
-  cursor: pointer;
 
   &:hover {
-    opacity: 0.7;
-  }
-  &:focus {
-    outline: none;
+    opacity: 1;
   }
 `;
 
@@ -124,7 +118,7 @@ function RoomList({ rooms, history, setRooms }) {
         </RoomDoor>
       </RoomFrame>
       <RoomTitle>{room.title}</RoomTitle>
-      <DeleteRoomButton onClick={handleDeleteRoomClick}>삭제</DeleteRoomButton>
+      <DeleteRoomButton onClick={handleDeleteRoomClick} />
     </RoomWrapper>
   ));
 }
