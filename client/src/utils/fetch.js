@@ -40,6 +40,17 @@ async function updateRoomTitle({ roomId, title }) {
   return response;
 }
 
+async function deleteRoom({ roomId }) {
+  const response = await fetchPost({
+    url: `/user/room`,
+    data: {
+      roomId,
+    },
+    method: 'DELETE',
+  });
+  return response;
+}
+
 async function fetchRooms({ userId }) {
   const response = await fetchGet({
     url: `/user/${userId}/rooms`,
@@ -50,6 +61,20 @@ async function fetchRooms({ userId }) {
 async function fetchRoomTitle({ roomId }) {
   const response = await fetchGet({
     url: `/user/room/${roomId}`,
+  });
+  return response;
+}
+
+async function readAnswer(roomNumber, nickname, quizIndex, choose) {
+  const url = `/room/player/choose/check`;
+  const response = await fetchPost({
+    url,
+    data: {
+      roomNumber,
+      nickname,
+      quizIndex,
+      choose,
+    },
   });
   return response;
 }
@@ -75,34 +100,7 @@ async function fetchQuizSet(roomNumber) {
   return response;
 }
 
-async function fetchChoose(roomNumber, quizIndex, choose) {
-  const url = `/room/player/choose`;
-  const response = await fetchPost({
-    url,
-    data: {
-      roomNumber,
-      quizIndex,
-      choose,
-    },
-  });
-  return response;
-}
-
-async function fetchCheckAnswer(roomNumber, nickname, quizIndex, choose) {
-  const url = `/room/player/choose/check`;
-  const response = await fetchPost({
-    url,
-    data: {
-      roomNumber,
-      nickname,
-      quizIndex,
-      choose,
-    },
-  });
-  return response;
-}
-
-async function fetchRank(roomNumber, nickname) {
+async function readRank(roomNumber, nickname) {
   const url = `/room/${roomNumber}/player/${nickname}/result`;
   const response = await fetchGet({
     url,
@@ -110,7 +108,7 @@ async function fetchRank(roomNumber, nickname) {
   return response;
 }
 
-async function fetchToken(data) {
+async function getToken(data) {
   const response = await fetchGet({
     url: `/login/token/${data.access_token}`,
   });
@@ -120,13 +118,13 @@ async function fetchToken(data) {
 export {
   fetchRoomNumber,
   fetchNickname,
-  fetchToken,
+  getToken,
   fetchQuizSet,
-  fetchChoose,
-  fetchCheckAnswer,
-  fetchRank,
+  readAnswer,
+  readRank,
   fetchRooms,
   fetchRoomTitle,
   addRoom,
   updateRoomTitle,
+  deleteRoom,
 };

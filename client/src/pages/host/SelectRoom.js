@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+
 import * as colors from '../../constants/colors';
 import Header from '../../components/common/Header';
 import { YellowButton } from '../../components/common/Buttons';
@@ -8,6 +9,7 @@ import Modal from '../../components/common/Modal';
 import { ModalContext } from '../../components/common/ModalProvider';
 import FlexibleInput from '../../components/common/FlexibleInput';
 import { fetchRooms, addRoom } from '../../utils/fetch';
+import RoomList from '../../components/selectRoom/RoomList';
 
 const Container = styled.div`
   position: relative;
@@ -60,67 +62,6 @@ const RoomContainer = styled.div`
   width: 100%;
 `;
 
-const RoomWrapper = styled.div`
-  position: relative;
-  display: flex;
-  align-items: center;
-  width: 100%;
-  height: 12.5vmin;
-  margin-top: 2vmin;
-  box-sizing: border-box;
-  padding: 1vmin;
-  background-color: white;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
-  user-select: none;
-  border-radius: 0.4rem;
-  cursor: pointer;
-
-  &:hover {
-    div.door {
-      transform: rotateY(-45deg);
-    }
-  }
-`;
-
-const RoomTitle = styled.span`
-  font-size: 4vmin;
-`;
-
-const RoomFrame = styled.div`
-  position: relative;
-  width: 7vmin;
-  height: 100%;
-  margin: 0 2vmin 0 1vmin;
-  border: 0.4vmin solid black;
-  box-sizing: border-box;
-  perspective: 100px;
-  transform-style: preserve-3d;
-`;
-
-const RoomDoor = styled.div.attrs({
-  className: 'door',
-})`
-  position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  width: 100%;
-  height: 100%;
-  background-color: brown;
-  transform-origin: 0% 50%;
-  transition: 0.5s;
-`;
-
-const DoorKnob = styled.div`
-  width: 1vmin;
-  height: 1vmin;
-  box-sizing: border-box;
-  background-color: ${colors.PRIMARY_DEEP_YELLOW};
-  border-radius: 50%;
-  border: 1px solid black;
-  margin-right: 0.5vmin;
-`;
-
 async function getRooms({ userId }) {
   const result = await fetchRooms({ userId }).then(response => {
     if (response.isSuccess) return response.data;
@@ -151,38 +92,31 @@ function SelectRoom({ history }) {
 
   useEffect(() => {
     if (userId)
-      getRooms({ userId }).then(result => {
-        setRooms(result);
+      getRooms({ userId }).then(roomList => {
+        setRooms(roomList);
       });
   }, [userId]);
 
   function handleCreateButtonClick() {
+    if (!inputValue.trim()) {
+      alert('방의 이름을 입력하세요');
+      return false;
+    }
+
     if (rooms.find(room => room.title === inputValue)) {
       alert('방의 이름은 중복될 수 없습니다');
       return false;
     }
 
-    addRoom({ userId, roomTitle: inputValue }).then(response => {
-      if (response.isSuccess) {
-        setRooms([...rooms, { id: response.data.insertId, title: inputValue }]);
+    addRoom({ userId, roomTitle: inputValue.trim() }).then(response => {
+      if (response.isError) {
+        alert('방이 오류로 인해 추가되지 못했습니다');
         return;
       }
-      alert('방이 오류로 인해 추가되지 못했습니다');
+      setRooms([...rooms, { id: response.data.insertId, title: inputValue }]);
     });
 
     return true;
-  }
-
-  function handleRoomClick(e) {
-    const roomTitle = e.target.textContent;
-    const roomId = rooms.find(room => room.title === roomTitle).id;
-
-    history.push({
-      pathname: '/host/room/detail',
-      state: {
-        roomId,
-      },
-    });
   }
 
   return (
@@ -194,16 +128,7 @@ function SelectRoom({ history }) {
           <YellowButton onClick={openModal}>방 만들기</YellowButton>
         </ListHeader>
         <RoomContainer>
-          {rooms.map(room => (
-            <RoomWrapper key={room.id} onClick={handleRoomClick}>
-              <RoomFrame>
-                <RoomDoor>
-                  <DoorKnob />
-                </RoomDoor>
-              </RoomFrame>
-              <RoomTitle>{room.title}</RoomTitle>
-            </RoomWrapper>
-          ))}
+          <RoomList rooms={rooms} history={history} setRooms={setRooms} />
         </RoomContainer>
       </Main>
       <Modal

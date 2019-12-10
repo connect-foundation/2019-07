@@ -37,10 +37,11 @@ class Rooms {
 
   getFinalResult(roomNumber) {
     const currentRoom = this.getRoom(roomNumber);
+    const SCORE = 1;
 
     currentRoom.players = new Map(
       [...currentRoom.players.entries()].sort(
-        ([player1, player1Score], [player2, player2Score]) => player2Score - player1Score,
+        (player1, player2) => player2[SCORE] - player1[SCORE],
       ),
     );
 
@@ -57,23 +58,27 @@ class Rooms {
     const { data } = await dbManager.quizset.getQuizset(roomId);
     const quizset = [];
 
-    let quizIndex = -1;
-    data.forEach((currentValue, index) => {
-      if (index % 4 === 0) {
-        quizIndex += 1;
+    data.forEach((currentValue) => {
+      let target = quizset.find(
+        (object) => object.title === currentValue.quizTitle,
+      );
+
+      if (target === undefined) {
         const currentQuiz = quizTemplate();
         currentQuiz.title = currentValue.quizTitle;
         currentQuiz.score = currentValue.score;
         currentQuiz.timeLimit = currentValue.time_limit;
         currentQuiz.image = currentValue.image;
-
         quizset.push(currentQuiz);
+
+        target = quizset[quizset.length - 1];
       }
       const currentItem = itemTemplate();
       currentItem.title = currentValue.itemTitle;
-      quizset[quizIndex].items.push(currentItem);
+      target.items.push(currentItem);
+
       if (currentValue.is_answer === 1) {
-        quizset[quizIndex].answers.push(currentValue.item_order);
+        target.answers.push(currentValue.item_order);
       }
     });
 
@@ -110,9 +115,9 @@ class Rooms {
   updatePlayerScore({ roomNumber, quizIndex, choose, nickname }) {
     const currentQuiz = this.getRoom(roomNumber).quizSet[quizIndex];
 
-    const result = currentQuiz.answers.includes(choose);
+    const isCorrect = currentQuiz.answers.includes(choose);
 
-    if (result) {
+    if (isCorrect) {
       const currentScore = this.getRoom(roomNumber).players.get(nickname);
       this.rooms
         .get(roomNumber)
@@ -121,7 +126,7 @@ class Rooms {
 
     const score = this.getRoom(roomNumber).players.get(nickname);
 
-    return [result, score];
+    return [isCorrect, score];
   }
 
   deletePlayer(roomNumber, nickname) {
@@ -134,6 +139,7 @@ class Rooms {
         const result = this.rooms.delete(roomNumber);
         return result ? roomNumber : false;
       }
+      return false;
     });
   }
 

@@ -21,24 +21,7 @@ const NoStyleButton = styled.button`
   background-size: contain;
 `;
 
-function checkValidToken(cookie) {
-  const [key] = cookie.split('=');
-
-  if (key === 'jwt') {
-    return true;
-  }
-  return false;
-}
-
-function LoginPage({ history }) {
-  const { cookie } = document;
-
-  if (checkValidToken(cookie)) {
-    history.push({
-      pathname: '/host/room/select',
-    });
-  }
-
+function LoginPage() {
   return (
     <NaverLogin
       clientId={clientId}
@@ -49,6 +32,7 @@ function LoginPage({ history }) {
 }
 
 LoginPage.propTypes = {
+  onClick: PropTypes.func.isRequired,
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
     location: PropTypes.shape({

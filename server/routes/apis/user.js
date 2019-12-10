@@ -48,11 +48,14 @@ router.get('/room/:roomId', async (req, res) => {
 router.post(
   '/room',
   [
-    check('title').exists(),
     check('userId').exists(),
-    check('title').isLength({
-      max: 26,
-    }),
+    check('title')
+      .exists()
+      .bail()
+      .isLength({
+        min: 1,
+        max: 26,
+      }),
   ],
   async (req, res) => {
     try {
@@ -85,10 +88,13 @@ router.put(
   '/room',
   [
     check('roomId').exists(),
-    check('title').exists(),
-    check('roomId').isLength({
-      max: 26,
-    }),
+    check('title')
+      .exists()
+      .bail()
+      .isLength({
+        min: 1,
+        max: 26,
+      }),
   ],
   async (req, res) => {
     try {
@@ -105,5 +111,20 @@ router.put(
     }
   },
 );
+
+router.delete('/room', [check('roomId').exists()], async (req, res) => {
+  try {
+    validationResult(req).throw();
+    const { roomId } = req.body;
+    const result = await dbManager.room.deleteRoom(roomId);
+
+    res.send(result);
+  } catch (err) {
+    res.send({
+      isError: true,
+      message: err.message,
+    });
+  }
+});
 
 module.exports = router;
