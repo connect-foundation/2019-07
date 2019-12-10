@@ -49,7 +49,7 @@ async function isRoomNumberValid(req, res, next) {
  *  next middleware
  */
 function isRoomExist(req, res, next) {
-  const { roomNumber } = req.params;
+  const { roomNumber } = req.params || req.body;
   if (!inMemory.room.isRoomExist(roomNumber)) {
     res.json({
       isSuccess: false,
@@ -142,7 +142,7 @@ function isNicknameOverlap(req, res, next) {
  *  next middleware
  */
 function isNicknameExist(req, res, next) {
-  const { nickname, roomNumber } = req.params;
+  const { nickname, roomNumber } = req.params || req.body;
 
   const isAlreadyExist = inMemory.room.isPlayerExist(roomNumber, nickname);
 

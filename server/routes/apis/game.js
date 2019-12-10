@@ -105,7 +105,7 @@ router.get(
 
 /**
  * 플레이어가 문항을 선택했을 때 정답, 오답여부를 판별해주는 API
- * @api {post} /room/:roomNumber/player/:nickname/choose
+ * @api {post} /room/player/choose/check
  * @apiName choose
  * @apiGroup room
  *
@@ -118,12 +118,11 @@ router.get(
  * @apiSuccess {int} score 갱신된 점수
  */
 router.post(
-  '/room/:roomNumber/player/:nickname/choose',
+  '/room/player/choose/check',
   isRoomExist,
   isNicknameExist,
   async (req, res) => {
-    const { roomNumber, nickname } = req.params;
-    const { quizIndex, choose } = req.body;
+    const { quizIndex, choose, roomNumber, nickname } = req.body;
 
     const [result, score] = inMemory.room.updatePlayerScore({
       roomNumber,
@@ -141,7 +140,7 @@ router.post(
 
 /**
  * 플레이어가 문항을 선택했을 때 카운트를 증가시키는 API
- * @api {post} /room/:roomNumber/quiz
+ * @api {post} /room/player/choose
  * @apiName choose
  * @apiGroup room
  *
@@ -151,9 +150,8 @@ router.post(
  *
  * @apiSuccess {bool} isSuccess 갱신이 성공했는지 여부
  */
-router.post('/room/:roomNumber/quiz', isRoomExist, async (req, res) => {
-  const { roomNumber } = req.params;
-  const { quizIndex, choose } = req.body;
+router.post('/room/player/choose', isRoomExist, async (req, res) => {
+  const { quizIndex, choose, roomNumber } = req.body;
 
   inMemory.room.updateQuizCount({
     roomNumber,

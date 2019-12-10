@@ -7,9 +7,13 @@ class Rooms {
     this.rooms = new Map();
   }
 
+  getRoom(roomNumber) {
+    return this.rooms.get(roomNumber);
+  }
+
   getPlayers(roomNumber) {
     const players = [];
-    this.rooms.get(roomNumber).players.forEach((score, nickname) => {
+    this.getRoom(roomNumber).players.forEach((score, nickname) => {
       players.push({
         score,
         nickname,
@@ -20,19 +24,19 @@ class Rooms {
   }
 
   getPlayerScore(roomNumber, nickname) {
-    return this.rooms.get(roomNumber).players.get(nickname);
+    return this.getRoom(roomNumber).players.get(nickname);
   }
 
   getQuizSet(roomNumber) {
-    return this.rooms.get(roomNumber).quizSet;
+    return this.getRoom(roomNumber).quizSet;
   }
 
   getSubResult(roomNumber, quizIndex) {
-    return this.rooms.get(roomNumber).quizSet[quizIndex].items;
+    return this.getRoom(roomNumber).quizSet[quizIndex].items;
   }
 
   getFinalResult(roomNumber) {
-    const currentRoom = this.rooms.get(roomNumber);
+    const currentRoom = this.getRoom(roomNumber);
     const SCORE = 1;
 
     currentRoom.players = new Map(
@@ -45,11 +49,9 @@ class Rooms {
   }
 
   getRoomHostId(roomNumber) {
-    if (this.isRoomExist(roomNumber)) {
-      return this.rooms.get(roomNumber).hostId;
-    }
-
-    return '';
+    return this.isRoomExist(roomNumber)
+      ? this.getRoom(roomNumber).hostId
+      : null;
   }
 
   async setQuizSet(roomNumber, roomId) {
@@ -76,18 +78,18 @@ class Rooms {
       }
     });
 
-    this.rooms.get(roomNumber).quizSet = quizset;
+    this.getRoom(roomNumber).quizSet = quizset;
   }
 
   setNewRoom(hostId) {
-    let isExist = true;
-    let newRoomNumber;
+    const findIdleRoomNumber = () => {
+      const roomNumber = Math.floor(Math.random() * 899999 + 100000);
+      return this.isRoomExist(String(roomNumber))
+        ? findIdleRoomNumber()
+        : roomNumber;
+    };
 
-    while (isExist) {
-      newRoomNumber = Math.floor(Math.random() * 899999 + 100000);
-      isExist = this.isRoomExist(String(newRoomNumber));
-    }
-
+    const newRoomNumber = findIdleRoomNumber();
     const newRoom = roomTemplate();
     newRoom.hostId = hostId;
 
@@ -96,35 +98,35 @@ class Rooms {
   }
 
   setNewPlayer(roomNumber, nickname) {
-    this.rooms.get(roomNumber).players.set(nickname, 0);
+    this.getRoom(roomNumber).players.set(nickname, 0);
 
     return this.getPlayers(roomNumber);
   }
 
   updateQuizCount({ roomNumber, quizIndex, choose }) {
-    const currentQuiz = this.rooms.get(roomNumber).quizSet[quizIndex];
+    const currentQuiz = this.getRoom(roomNumber).quizSet[quizIndex];
     currentQuiz.items[choose].playerCount += 1;
   }
 
   updatePlayerScore({ roomNumber, quizIndex, choose, nickname }) {
-    const currentQuiz = this.rooms.get(roomNumber).quizSet[quizIndex];
+    const currentQuiz = this.getRoom(roomNumber).quizSet[quizIndex];
 
     const result = currentQuiz.answers.includes(choose);
 
     if (result) {
-      const currentScore = this.rooms.get(roomNumber).players.get(nickname);
+      const currentScore = this.getRoom(roomNumber).players.get(nickname);
       this.rooms
         .get(roomNumber)
         .players.set(nickname, currentScore + currentQuiz.score);
     }
 
-    const score = this.rooms.get(roomNumber).players.get(nickname);
+    const score = this.getRoom(roomNumber).players.get(nickname);
 
     return [result, score];
   }
 
   deletePlayer(roomNumber, nickname) {
-    return this.rooms.get(roomNumber).players.delete(nickname);
+    return this.getRoom(roomNumber).players.delete(nickname);
   }
 
   deleteRoom(hostId) {
@@ -141,7 +143,7 @@ class Rooms {
   }
 
   isPlayerExist(roomNumber, nickname) {
-    return this.rooms.get(roomNumber).players.has(nickname);
+    return this.getRoom(roomNumber).players.has(nickname);
   }
 }
 
