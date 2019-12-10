@@ -109,11 +109,11 @@ function SelectRoom({ history }) {
     }
 
     addRoom({ userId, roomTitle: inputValue.trim() }).then(response => {
-      if (response.isSuccess) {
-        setRooms([...rooms, { id: response.data.insertId, title: inputValue }]);
+      if (response.isError) {
+        alert('방이 오류로 인해 추가되지 못했습니다');
         return;
       }
-      alert('방이 오류로 인해 추가되지 못했습니다');
+      setRooms([...rooms, { id: response.data.insertId, title: inputValue }]);
     });
 
     return true;
