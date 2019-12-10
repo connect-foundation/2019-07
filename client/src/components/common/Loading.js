@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 import LoadingCircle from './LoadingCircle';
 
@@ -32,13 +33,21 @@ const LoadingText = styled.span`
   transform: translateY(-100%);
 `;
 
-function Loading() {
+function Loading({ message }) {
   return (
     <LoadingContainer>
       <LoadingCircle color="white" />
-      <LoadingText>데이터를 불러오는 중입니다</LoadingText>
+      <LoadingText>{message}</LoadingText>
     </LoadingContainer>
   );
 }
+
+Loading.defaultProps = {
+  message: '로딩 중입니다',
+};
+
+Loading.propTypes = {
+  message: PropTypes.string,
+};
 
 export default Loading;
