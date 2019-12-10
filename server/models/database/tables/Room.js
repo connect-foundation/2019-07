@@ -3,8 +3,13 @@ const { roomTable, userTable } = require('../../../constants/tableName');
 
 class Room extends Table {
   insertRoom(naverId, title) {
+    const currentDate = new Date()
+      .toISOString()
+      .slice(0, 19)
+      .replace('T', ' ');
+
     return this.query(
-      `INSERT INTO ${roomTable} (title, user_id) VALUES (?, (SELECT id FROM ${userTable} WHERE naver_id=?))`,
+      `INSERT INTO ${roomTable} (title, user_id, created_at) VALUES (?, (SELECT id FROM ${userTable} WHERE naver_id=?), '${currentDate}')`,
       title,
       naverId,
     );
