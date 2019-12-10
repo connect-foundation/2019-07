@@ -1,9 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { fetchToken } from '../../utils/fetch';
-import * as address from '../../constants/apiAddresses';
 
-const { roomListUrl } = address;
 const loginPageUrl = '/login';
 
 function splitHash(rawHash) {
@@ -29,7 +27,7 @@ function LoginPage({ history }) {
   fetchToken(tokenObject).then(response => {
     if (response.isSuccess) {
       history.push({
-        pathname: roomListUrl,
+        pathname: '/host/room/select',
       });
     } else {
       history.push({

@@ -3,10 +3,8 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import NaverLogin from '../../utils/naverLoginSdk';
 import loginImage from '../../assets/images/naverLoginButton_long.PNG';
-import * as apiAddresses from '../../constants/apiAddresses';
 
-const { callbackPageFullUrl } = apiAddresses;
-const { roomListUrl } = apiAddresses;
+const callbackPageFullUrl = `${process.env.REACT_APP_HOST}/callback`;
 const clientId = process.env.REACT_APP_NAVER_LOGIN_API_CLIENT_ID;
 
 const NoStyleButton = styled.button`
@@ -37,7 +35,7 @@ function LoginPage({ history }) {
 
   if (checkValidToken(cookie)) {
     history.push({
-      pathname: roomListUrl,
+      pathname: '/host/room/select',
     });
   }
 
