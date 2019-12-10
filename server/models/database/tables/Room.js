@@ -28,6 +28,10 @@ class Room extends Table {
       roomId,
     );
   }
+
+  deleteRoom(roomId) {
+    return this.query(`DELETE FROM ${roomTable} WHERE id=?`, roomId);
+  }
 }
 
 module.exports = Room;

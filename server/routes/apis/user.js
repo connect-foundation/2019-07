@@ -112,4 +112,19 @@ router.put(
   },
 );
 
+router.delete('/room', [check('roomId').exists()], async (req, res) => {
+  try {
+    validationResult(req).throw();
+    const { roomId } = req.body;
+    const result = await dbManager.room.deleteRoom(roomId);
+
+    res.send(result);
+  } catch (err) {
+    res.send({
+      isError: true,
+      message: err.message,
+    });
+  }
+});
+
 module.exports = router;
