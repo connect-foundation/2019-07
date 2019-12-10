@@ -82,14 +82,14 @@ class Rooms {
   }
 
   setNewRoom(hostId) {
-    let isExist = true;
-    let newRoomNumber;
+    const findIdleRoomNumber = () => {
+      const roomNumber = Math.floor(Math.random() * 899999 + 100000);
+      return this.isRoomExist(String(roomNumber))
+        ? findIdleRoomNumber()
+        : roomNumber;
+    };
 
-    while (isExist) {
-      newRoomNumber = Math.floor(Math.random() * 899999 + 100000);
-      isExist = this.isRoomExist(String(newRoomNumber));
-    }
-
+    const newRoomNumber = findIdleRoomNumber();
     const newRoom = roomTemplate();
     newRoom.hostId = hostId;
 
