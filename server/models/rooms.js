@@ -57,23 +57,27 @@ class Rooms {
     const { data } = await dbManager.quizset.getQuizset(roomId);
     const quizset = [];
 
-    let quizIndex = -1;
-    data.forEach((currentValue, index) => {
-      if (index % 4 === 0) {
-        quizIndex += 1;
+    data.forEach((currentValue) => {
+      let target = quizset.find(
+        (object) => object.title === currentValue.quizTitle,
+      );
+
+      if (target === undefined) {
         const currentQuiz = quizTemplate();
         currentQuiz.title = currentValue.quizTitle;
         currentQuiz.score = currentValue.score;
         currentQuiz.timeLimit = currentValue.time_limit;
         currentQuiz.image = currentValue.image;
-
         quizset.push(currentQuiz);
+
+        target = quizset[quizset.length - 1];
       }
       const currentItem = itemTemplate();
       currentItem.title = currentValue.itemTitle;
-      quizset[quizIndex].items.push(currentItem);
+      target.items.push(currentItem);
+
       if (currentValue.is_answer === 1) {
-        quizset[quizIndex].answers.push(currentValue.item_order);
+        target.answers.push(currentValue.item_order);
       }
     });
 
