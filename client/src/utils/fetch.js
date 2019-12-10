@@ -76,10 +76,11 @@ async function fetchQuizSet(roomNumber) {
 }
 
 async function fetchChoose(roomNumber, quizIndex, choose) {
-  const url = `/room/${roomNumber}/quiz`;
+  const url = `/room/player/choose`;
   const response = await fetchPost({
     url,
     data: {
+      roomNumber,
       quizIndex,
       choose,
     },
@@ -88,10 +89,12 @@ async function fetchChoose(roomNumber, quizIndex, choose) {
 }
 
 async function fetchCheckAnswer(roomNumber, nickname, quizIndex, choose) {
-  const url = `/room/${roomNumber}/player/${nickname}/choose`;
+  const url = `/room/player/choose/check`;
   const response = await fetchPost({
     url,
     data: {
+      roomNumber,
+      nickname,
       quizIndex,
       choose,
     },
