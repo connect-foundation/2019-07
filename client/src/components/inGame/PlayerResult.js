@@ -58,7 +58,7 @@ const Medal = styled.div`
   ${props => `background-image: url(${medalImages[props.rank - 1]})`};
 `;
 
-function PlayerGameResult({ ranking, roomNumber, nickname }) {
+function PlayerResult({ ranking, roomNumber, nickname }) {
   const [rank, setRank] = useState(0);
 
   useEffect(() => {
@@ -87,10 +87,10 @@ function PlayerGameResult({ ranking, roomNumber, nickname }) {
   }
 }
 
-PlayerGameResult.propTypes = {
+PlayerResult.propTypes = {
   ranking: PropTypes.shape.isRequired,
   roomNumber: PropTypes.string.isRequired,
   nickname: PropTypes.string.isRequired,
 };
 
-export default PlayerGameResult;
+export default PlayerResult;

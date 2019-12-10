@@ -123,22 +123,21 @@ router.get('/token/:accessToken', async (req, res) => {
  */
 router.get('/check/token', async (req, res) => {
   const { cookies } = req;
-
   let decodedJWT;
+
   try {
     decodedJWT = jwt.verify(cookies.jwt, jwtObj.secret);
+    res.json({
+      isSuccess: true,
+      naverId: decodedJWT.naverId,
+    });
+    return;
   } catch (error) {
     res.json({
       isSuccess: false,
       message: error.message,
     });
-    return;
   }
-
-  res.json({
-    isSuccess: true,
-    naverId: decodedJWT.naverId,
-  });
 });
 
 module.exports = router;

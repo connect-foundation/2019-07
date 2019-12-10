@@ -26,13 +26,13 @@ function LoginPage() {
     <NaverLogin
       clientId={clientId}
       callbackUrl={callbackPageFullUrl}
-      // eslint-disable-next-line react/prop-types
       render={props => <NoStyleButton onClick={props.onClick} type="button" />}
     />
   );
 }
 
 LoginPage.propTypes = {
+  onClick: PropTypes.func.isRequired,
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
     location: PropTypes.shape({

@@ -122,7 +122,7 @@ router.post(
   async (req, res) => {
     const { quizIndex, choose, roomNumber, nickname } = req.body;
 
-    const [result, score, plusScore] = inMemory.room.updatePlayerScore({
+    const [isCorrect, score] = inMemory.room.updatePlayerScore({
       roomNumber,
       quizIndex,
       nickname,
@@ -136,9 +136,8 @@ router.post(
     });
 
     res.json({
-      isCorrect: result,
+      isCorrect,
       score,
-      plusScore,
     });
   },
 );
