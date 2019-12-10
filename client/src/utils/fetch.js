@@ -40,6 +40,17 @@ async function updateRoomTitle({ roomId, title }) {
   return response;
 }
 
+async function deleteRoom({ roomId }) {
+  const response = await fetchPost({
+    url: `/user/room`,
+    data: {
+      roomId,
+    },
+    method: 'DELETE',
+  });
+  return response;
+}
+
 async function fetchRooms({ userId }) {
   const response = await fetchGet({
     url: `/user/${userId}/rooms`,
@@ -129,4 +140,5 @@ export {
   fetchRoomTitle,
   addRoom,
   updateRoomTitle,
+  deleteRoom,
 };

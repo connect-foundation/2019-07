@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import * as colors from '../../constants/colors';
+import { deleteRoom } from '../../utils/fetch';
 
 const RoomWrapper = styled.div`
   position: relative;
@@ -64,8 +65,31 @@ const RoomTitle = styled.span`
   font-size: 4vmin;
 `;
 
-function RoomList({ rooms, history }) {
+const DeleteRoomButton = styled.button`
+  position: absolute;
+  right: 1rem;
+  width: 4rem;
+  height: 2rem;
+  opacity: 0.2;
+  border-radius: 2rem;
+  border: none;
+  background-color: red;
+  color: ${colors.TEXT_WHITE};
+  font-size: 1rem;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.7;
+  }
+  &:focus {
+    outline: none;
+  }
+`;
+
+function RoomList({ rooms, history, setRooms }) {
   function handleRoomClick(e) {
+    if (e.defaultPrevented) return;
+
     const roomTitle = e.target.textContent;
     const roomId = rooms.find(room => room.title === roomTitle).id;
 
@@ -77,6 +101,21 @@ function RoomList({ rooms, history }) {
     });
   }
 
+  function handleDeleteRoomClick(e) {
+    const roomTitle = e.target.previousElementSibling.textContent;
+    const roomId = rooms.find(room => room.title === roomTitle).id;
+
+    deleteRoom({ roomId }).then(response => {
+      if (response.isError) {
+        alert('오류로 인해 방이 삭제되지 않았습니다');
+        return;
+      }
+      setRooms(rooms.filter(room => room.id !== roomId));
+    });
+
+    e.preventDefault();
+  }
+
   return rooms.map(room => (
     <RoomWrapper key={room.id} onClick={handleRoomClick}>
       <RoomFrame>
@@ -85,6 +124,7 @@ function RoomList({ rooms, history }) {
         </RoomDoor>
       </RoomFrame>
       <RoomTitle>{room.title}</RoomTitle>
+      <DeleteRoomButton onClick={handleDeleteRoomClick}>삭제</DeleteRoomButton>
     </RoomWrapper>
   ));
 }

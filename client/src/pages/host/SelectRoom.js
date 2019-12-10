@@ -92,8 +92,8 @@ function SelectRoom({ history }) {
 
   useEffect(() => {
     if (userId)
-      getRooms({ userId }).then(result => {
-        setRooms(result);
+      getRooms({ userId }).then(roomList => {
+        setRooms(roomList);
       });
   }, [userId]);
 
@@ -128,7 +128,7 @@ function SelectRoom({ history }) {
           <YellowButton onClick={openModal}>방 만들기</YellowButton>
         </ListHeader>
         <RoomContainer>
-          <RoomList rooms={rooms} history={history} />
+          <RoomList rooms={rooms} history={history} setRooms={setRooms} />
         </RoomContainer>
       </Main>
       <Modal
