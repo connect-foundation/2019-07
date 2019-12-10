@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 import * as colors from '../../constants/colors';
 import ProgressBar from './ProgressBar';
@@ -48,5 +49,10 @@ function PlayerQuizLoading({ setQuizSet, roomNumber }) {
     </Container>
   );
 }
+
+PlayerQuizLoading.propTypes = {
+  setQuizSet: PropTypes.func.isRequired,
+  roomNumber: PropTypes.string.isRequired,
+};
 
 export default PlayerQuizLoading;

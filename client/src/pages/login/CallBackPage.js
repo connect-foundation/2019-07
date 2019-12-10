@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { fetchToken } from '../../utils/fetch';
+import { getToken } from '../../utils/fetch';
 
 const loginPageUrl = '/login';
 
@@ -24,7 +24,7 @@ function LoginPage({ history }) {
 
   const tokenObject = splitHash(hash);
 
-  fetchToken(tokenObject).then(response => {
+  getToken(tokenObject).then(response => {
     if (response.isSuccess) {
       history.push({
         pathname: '/host/room/select',
