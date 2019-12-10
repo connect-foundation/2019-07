@@ -1,98 +1,59 @@
 const dbManager = require('./database/dbManager');
 const { quizTemplate, itemTemplate } = require('./templates/quiz');
+const { roomTemplate } = require('./templates/room');
 
 class Rooms {
   constructor() {
-    this.rooms = [];
-  }
-
-  pushRoom(room) {
-    this.rooms.push(room);
-    const index = this.rooms.length;
-
-    return index;
-  }
-
-  pushPlayer(roomNumber, player) {
-    const room = this.getRoom(roomNumber);
-    room.players.push(player);
-    return true;
+    this.rooms = new Map();
   }
 
   getRoom(roomNumber) {
-    return this.rooms.find((room) => room.roomNumber === roomNumber);
+    return this.rooms.get(roomNumber);
   }
 
-  getNewRoomNumber() {
-    let newRoomNumber = 111111;
+  getPlayers(roomNumber) {
+    const players = [];
+    this.getRoom(roomNumber).players.forEach((score, nickname) => {
+      players.push({
+        score,
+        nickname,
+      });
+    });
 
-    while (this.getRoom(String(newRoomNumber))) {
-      newRoomNumber = Math.floor(Math.random() * 899999 + 100000);
-    }
-
-    return String(newRoomNumber);
+    return players;
   }
 
-  getPlayer(roomNumber, nickname) {
-    const playingRoom = this.getRoom(roomNumber);
+  getPlayerScore(roomNumber, nickname) {
+    return this.getRoom(roomNumber).players.get(nickname);
+  }
 
-    return playingRoom.players.find((player) => player.nickname === nickname);
+  getQuizSet(roomNumber) {
+    return this.getRoom(roomNumber).quizSet;
   }
 
   getSubResult(roomNumber, quizIndex) {
-    const playingRoom = this.getRoom(roomNumber);
-
-    return playingRoom.quizSet[quizIndex].items;
+    return this.getRoom(roomNumber).quizSet[quizIndex].items;
   }
 
   getFinalResult(roomNumber) {
-    const playingRoom = this.getRoom(roomNumber);
-    const sortPlayers = playingRoom.players.sort(
-      (player1, player2) => player2.score - player1.score,
+    const currentRoom = this.getRoom(roomNumber);
+
+    currentRoom.players = new Map(
+      [...currentRoom.players.entries()].sort(
+        ([player1, player1Score], [player2, player2Score]) => player2Score - player1Score,
+      ),
     );
 
-    playingRoom.players = sortPlayers;
-
-    return sortPlayers.slice(0, 9);
+    return this.getPlayers(roomNumber).slice(0, 9);
   }
 
-  removePlayer(roomNumber, nickname) {
-    const playersRoom = this.getRoom(roomNumber);
-    const playerIndex = playersRoom.players.findIndex(
-      (player) => player.nickname === nickname,
-    );
-    playersRoom.players.splice(playerIndex, 1);
-
-    return playersRoom;
+  getRoomHostId(roomNumber) {
+    return this.isRoomExist(roomNumber)
+      ? this.getRoom(roomNumber).hostId
+      : null;
   }
 
-  removeRoom(hostId) {
-    const roomIndex = this.rooms.findIndex((room) => room.hostId === hostId);
-
-    if (roomIndex < 0) return false;
-
-    const { roomNumber } = this.rooms[roomIndex];
-
-    this.rooms.splice(roomIndex, 1);
-    return roomNumber;
-  }
-
-  UpdatePlayerScore({ roomNumber, nickname, quizIndex, selectItemIndex }) {
-    const playingRoom = this.getRoom(roomNumber);
-    const player = this.getPlayer(roomNumber, nickname);
-    const playingQuiz = playingRoom.quizSet[quizIndex];
-
-    playingQuiz.itmes[selectItemIndex].playerCount += 1;
-
-    if (playingQuiz.answer === selectItemIndex) {
-      player.score += playingQuiz.score;
-    }
-  }
-
-  /**
-   * dbManager에서 quizset를 받아와, 현재 방의 quizset을 갱신
-   */
-  async setQuizset(roomNumber, roomId) {
+  async setQuizSet(roomNumber, roomId) {
     const { data } = await dbManager.quizset.getQuizset(roomId);
     const quizset = [];
 
@@ -118,8 +79,71 @@ class Rooms {
 
     this.getRoom(roomNumber).quizSet = quizset;
   }
+
+  setNewRoom(hostId) {
+    const findIdleRoomNumber = () => {
+      const roomNumber = Math.floor(Math.random() * 899999 + 100000);
+      return this.isRoomExist(String(roomNumber))
+        ? findIdleRoomNumber()
+        : roomNumber;
+    };
+
+    const newRoomNumber = findIdleRoomNumber();
+    const newRoom = roomTemplate();
+    newRoom.hostId = hostId;
+
+    this.rooms.set(String(newRoomNumber), newRoom);
+    return String(newRoomNumber);
+  }
+
+  setNewPlayer(roomNumber, nickname) {
+    this.getRoom(roomNumber).players.set(nickname, 0);
+
+    return this.getPlayers(roomNumber);
+  }
+
+  updateQuizCount({ roomNumber, quizIndex, choose }) {
+    const currentQuiz = this.getRoom(roomNumber).quizSet[quizIndex];
+    currentQuiz.items[choose].playerCount += 1;
+  }
+
+  updatePlayerScore({ roomNumber, quizIndex, choose, nickname }) {
+    const currentQuiz = this.getRoom(roomNumber).quizSet[quizIndex];
+
+    const result = currentQuiz.answers.includes(choose);
+
+    if (result) {
+      const currentScore = this.getRoom(roomNumber).players.get(nickname);
+      this.rooms
+        .get(roomNumber)
+        .players.set(nickname, currentScore + currentQuiz.score);
+    }
+
+    const score = this.getRoom(roomNumber).players.get(nickname);
+
+    return [result, score];
+  }
+
+  deletePlayer(roomNumber, nickname) {
+    return this.getRoom(roomNumber).players.delete(nickname);
+  }
+
+  deleteRoom(hostId) {
+    this.rooms.forEach((room, roomNumber) => {
+      if (room.hostId === hostId) {
+        const result = this.rooms.delete(roomNumber);
+        return result ? roomNumber : false;
+      }
+    });
+  }
+
+  isRoomExist(roomNumber) {
+    return this.rooms.has(roomNumber);
+  }
+
+  isPlayerExist(roomNumber, nickname) {
+    return this.getRoom(roomNumber).players.has(nickname);
+  }
 }
 
-const rooms = new Rooms();
-
-module.exports = rooms;
+module.exports = Rooms;
