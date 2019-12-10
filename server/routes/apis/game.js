@@ -79,20 +79,17 @@ router.get(
 
     let rank = 1;
     const score = inMemory.room.getPlayerScore(roomNumber, nickname);
-
     const players = inMemory.room.getPlayers(roomNumber);
 
     for (let index = 0; index < players.length; index += 1) {
       const currentPlayer = players[index];
       const previousPlayer = players[index - 1];
 
-      if (index > 0) {
+      if (previousPlayer) {
         rank = previousPlayer.score === currentPlayer.score ? rank : index + 1;
       }
 
-      if (currentPlayer.nickname === nickname) {
-        break;
-      }
+      if (currentPlayer.nickname === nickname) break;
     }
 
     res.json({

@@ -49,7 +49,9 @@ async function isRoomNumberValid(req, res, next) {
  *  next middleware
  */
 function isRoomExist(req, res, next) {
-  const { roomNumber } = req.params || req.body;
+  let { roomNumber } = req.params;
+  if (!roomNumber) roomNumber = req.body.roomNumber;
+
   if (!inMemory.room.isRoomExist(roomNumber)) {
     res.json({
       isSuccess: false,
@@ -142,11 +144,16 @@ function isNicknameOverlap(req, res, next) {
  *  next middleware
  */
 function isNicknameExist(req, res, next) {
-  const { nickname, roomNumber } = req.params || req.body;
+  let { nickname, roomNumber } = req.params;
 
-  const isAlreadyExist = inMemory.room.isPlayerExist(roomNumber, nickname);
+  if (!nickname && !roomNumber) {
+    nickname = req.body.nickname;
+    roomNumber = req.body.roomNumber;
+  }
 
-  if (!isAlreadyExist) {
+  const isExist = inMemory.room.isPlayerExist(roomNumber, nickname);
+
+  if (!isExist) {
     res.json({
       isSuccess: false,
       message: '존재하지 않는 닉네임입니다.',
