@@ -111,17 +111,19 @@ class Rooms {
     const currentQuiz = this.getRoom(roomNumber).quizSet[quizIndex];
 
     const result = currentQuiz.answers.includes(choose);
+    let plusScore = 0;
 
     if (result) {
       const currentScore = this.getRoom(roomNumber).players.get(nickname);
       this.rooms
         .get(roomNumber)
         .players.set(nickname, currentScore + currentQuiz.score);
+      plusScore = currentQuiz.score;
     }
 
     const score = this.getRoom(roomNumber).players.get(nickname);
 
-    return [result, score];
+    return [result, score, plusScore];
   }
 
   deletePlayer(roomNumber, nickname) {

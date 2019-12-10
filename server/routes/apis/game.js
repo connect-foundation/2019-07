@@ -101,7 +101,8 @@ router.get(
 );
 
 /**
- * 플레이어가 문항을 선택했을 때 정답, 오답여부를 판별해주는 API
+ * 플레이어가 문항을 선택했을 때 카운트를 증가시키고,
+ * 정답, 오답여부를 판별해주는 API
  * @api {post} /room/player/choose/check
  * @apiName choose
  * @apiGroup room
@@ -121,44 +122,25 @@ router.post(
   async (req, res) => {
     const { quizIndex, choose, roomNumber, nickname } = req.body;
 
-    const [result, score] = inMemory.room.updatePlayerScore({
+    const [result, score, plusScore] = inMemory.room.updatePlayerScore({
       roomNumber,
       quizIndex,
       nickname,
       choose,
     });
 
+    inMemory.room.updateQuizCount({
+      roomNumber,
+      quizIndex,
+      choose,
+    });
+
     res.json({
       isCorrect: result,
       score,
+      plusScore,
     });
   },
 );
-
-/**
- * 플레이어가 문항을 선택했을 때 카운트를 증가시키는 API
- * @api {post} /room/player/choose
- * @apiName choose
- * @apiGroup room
- *
- * @apiParam {string} roomNumber 6글자 방 번호
- * @apiParam {int} quizIndex 현재 문제의 index
- * @apiParam {int} choose 유저가 선택한 번호
- *
- * @apiSuccess {bool} isSuccess 갱신이 성공했는지 여부
- */
-router.post('/room/player/choose', isRoomExist, async (req, res) => {
-  const { quizIndex, choose, roomNumber } = req.body;
-
-  inMemory.room.updateQuizCount({
-    roomNumber,
-    quizIndex,
-    choose,
-  });
-
-  res.json({
-    isSuccess: true,
-  });
-});
 
 module.exports = router;
