@@ -54,6 +54,20 @@ async function fetchRoomTitle({ roomId }) {
   return response;
 }
 
+async function readAnswer(roomNumber, nickname, quizIndex, choose) {
+  const url = `/room/player/choose/check`;
+  const response = await fetchPost({
+    url,
+    data: {
+      roomNumber,
+      nickname,
+      quizIndex,
+      choose,
+    },
+  });
+  return response;
+}
+
 async function fetchRoomNumber(roomNumber) {
   const response = await fetchGet({
     url: `/room/${roomNumber}`,
@@ -75,34 +89,7 @@ async function fetchQuizSet(roomNumber) {
   return response;
 }
 
-async function fetchChoose(roomNumber, quizIndex, choose) {
-  const url = `/room/player/choose`;
-  const response = await fetchPost({
-    url,
-    data: {
-      roomNumber,
-      quizIndex,
-      choose,
-    },
-  });
-  return response;
-}
-
-async function fetchCheckAnswer(roomNumber, nickname, quizIndex, choose) {
-  const url = `/room/player/choose/check`;
-  const response = await fetchPost({
-    url,
-    data: {
-      roomNumber,
-      nickname,
-      quizIndex,
-      choose,
-    },
-  });
-  return response;
-}
-
-async function fetchRank(roomNumber, nickname) {
+async function readRank(roomNumber, nickname) {
   const url = `/room/${roomNumber}/player/${nickname}/result`;
   const response = await fetchGet({
     url,
@@ -110,7 +97,7 @@ async function fetchRank(roomNumber, nickname) {
   return response;
 }
 
-async function fetchToken(data) {
+async function getToken(data) {
   const response = await fetchGet({
     url: `/login/token/${data.access_token}`,
   });
@@ -120,11 +107,10 @@ async function fetchToken(data) {
 export {
   fetchRoomNumber,
   fetchNickname,
-  fetchToken,
+  getToken,
   fetchQuizSet,
-  fetchChoose,
-  fetchCheckAnswer,
-  fetchRank,
+  readAnswer,
+  readRank,
   fetchRooms,
   fetchRoomTitle,
   addRoom,
