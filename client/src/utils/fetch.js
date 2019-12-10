@@ -97,7 +97,7 @@ async function readRank(roomNumber, nickname) {
   return response;
 }
 
-async function readJWT(data) {
+async function getToken(data) {
   const response = await fetchGet({
     url: `/login/token/${data.access_token}`,
   });
@@ -107,7 +107,7 @@ async function readJWT(data) {
 export {
   fetchRoomNumber,
   fetchNickname,
-  readJWT,
+  getToken,
   fetchQuizSet,
   readAnswer,
   readRank,

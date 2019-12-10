@@ -37,10 +37,11 @@ class Rooms {
 
   getFinalResult(roomNumber) {
     const currentRoom = this.getRoom(roomNumber);
+    const SCORE = 1;
 
     currentRoom.players = new Map(
       [...currentRoom.players.entries()].sort(
-        ([player1, player1Score], [player2, player2Score]) => player2Score - player1Score,
+        (player1, player2) => player2[SCORE] - player1[SCORE],
       ),
     );
 
@@ -114,20 +115,18 @@ class Rooms {
   updatePlayerScore({ roomNumber, quizIndex, choose, nickname }) {
     const currentQuiz = this.getRoom(roomNumber).quizSet[quizIndex];
 
-    const result = currentQuiz.answers.includes(choose);
-    let plusScore = 0;
+    const isCorrect = currentQuiz.answers.includes(choose);
 
-    if (result) {
+    if (isCorrect) {
       const currentScore = this.getRoom(roomNumber).players.get(nickname);
       this.rooms
         .get(roomNumber)
         .players.set(nickname, currentScore + currentQuiz.score);
-      plusScore = currentQuiz.score;
     }
 
     const score = this.getRoom(roomNumber).players.get(nickname);
 
-    return [result, score, plusScore];
+    return [isCorrect, score];
   }
 
   deletePlayer(roomNumber, nickname) {
@@ -140,6 +139,7 @@ class Rooms {
         const result = this.rooms.delete(roomNumber);
         return result ? roomNumber : false;
       }
+      return false;
     });
   }
 

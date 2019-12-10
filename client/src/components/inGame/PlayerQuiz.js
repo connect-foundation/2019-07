@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import * as colors from '../../constants/colors';
@@ -9,8 +9,10 @@ import LoadingCircle from '../common/LoadingCircle';
 import { readAnswer } from '../../utils/fetch';
 
 function Selection({ currentQuiz, chooseAnswer, setIsAnswer }) {
-  // 새로운 문제이므로, 이전의 정답결과를 초기화
-  setIsAnswer(false);
+  useEffect(() => {
+    // 새로운 문제이므로, 이전의 정답결과를 초기화
+    setIsAnswer(false);
+  });
 
   return (
     <>
@@ -40,14 +42,7 @@ function Selection({ currentQuiz, chooseAnswer, setIsAnswer }) {
   );
 }
 
-function Quiz({
-  quizSet,
-  roomNumber,
-  quizIndex,
-  setIsAnswer,
-  nickname,
-  setPlus,
-}) {
+function PlayerQuiz({ quizSet, roomNumber, quizIndex, setIsAnswer, nickname }) {
   const [choosed, setChoosed] = useState(false);
 
   const currentQuiz = quizSet[quizIndex];
@@ -56,10 +51,8 @@ function Quiz({
     readAnswer(roomNumber, nickname, quizIndex, itemIndex).then(response => {
       if (response.isCorrect) {
         setIsAnswer(true);
-        setPlus(response.plusScore);
       } else {
         setIsAnswer(false);
-        setPlus(0);
       }
     });
   }
@@ -92,7 +85,7 @@ Selection.propTypes = {
   setIsAnswer: PropTypes.func.isRequired,
 };
 
-Quiz.propTypes = {
+PlayerQuiz.propTypes = {
   quizSet: PropTypes.shape({
     items: PropTypes.shape({
       title: PropTypes.string,
@@ -103,7 +96,6 @@ Quiz.propTypes = {
   quizIndex: PropTypes.number.isRequired,
   setIsAnswer: PropTypes.func.isRequired,
   nickname: PropTypes.string.isRequired,
-  setPlus: PropTypes.func.isRequired,
 };
 
-export default Quiz;
+export default PlayerQuiz;

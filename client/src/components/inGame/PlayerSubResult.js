@@ -37,11 +37,11 @@ const Score = styled.div`
   transform: translateY(10rem);
 `;
 
-function PlayerSubResultComponent({ plus, score, setScore, isAnswer }) {
+function PlayerSubResult({ plusScore, score, setScore, isAnswer }) {
   useEffect(() => {
     // 정답인 경우에만 점수를 갱신함
     if (isAnswer) {
-      setScore(score + plus);
+      setScore(score + plusScore);
     }
   }, []);
 
@@ -55,18 +55,18 @@ function PlayerSubResultComponent({ plus, score, setScore, isAnswer }) {
       {isAnswer && (
         <Background color={COLORS.GREEN}>
           <Message>맞았습니다.</Message>
-          <Score>+{plus}</Score>
+          <Score>+{plusScore}</Score>
         </Background>
       )}
     </>
   );
 }
 
-PlayerSubResultComponent.propTypes = {
-  plus: PropTypes.number.isRequired,
+PlayerSubResult.propTypes = {
+  plusScore: PropTypes.number.isRequired,
   score: PropTypes.number.isRequired,
   setScore: PropTypes.func.isRequired,
   isAnswer: PropTypes.bool.isRequired,
 };
 
-export default PlayerSubResultComponent;
+export default PlayerSubResult;

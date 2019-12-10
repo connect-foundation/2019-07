@@ -45,7 +45,6 @@ function PlayerGameRoom({ location }) {
   const [score, setScore] = useState(0);
   const [ranking, setRanking] = useState([]);
   const [isAnswer, setIsAnswer] = useState(false);
-  const [plus, setPlus] = useState(0);
 
   function blockClose(e) {
     e.returnValue = 'warning';
@@ -119,12 +118,11 @@ function PlayerGameRoom({ location }) {
           quizIndex={quizIndex}
           setIsAnswer={setIsAnswer}
           nickname={nickname}
-          setPlus={setPlus}
         />
       )}
       {viewState === VIEW_STATE.SUB_RESULT && (
         <PlayerSubResult
-          plus={plus}
+          plusScore={quizSet[quizIndex].score}
           score={score}
           setScore={setScore}
           isAnswer={isAnswer}
