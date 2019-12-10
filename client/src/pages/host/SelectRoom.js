@@ -98,12 +98,17 @@ function SelectRoom({ history }) {
   }, [userId]);
 
   function handleCreateButtonClick() {
+    if (!inputValue.trim()) {
+      alert('방의 이름을 입력하세요');
+      return false;
+    }
+
     if (rooms.find(room => room.title === inputValue)) {
       alert('방의 이름은 중복될 수 없습니다');
       return false;
     }
 
-    addRoom({ userId, roomTitle: inputValue }).then(response => {
+    addRoom({ userId, roomTitle: inputValue.trim() }).then(response => {
       if (response.isSuccess) {
         setRooms([...rooms, { id: response.data.insertId, title: inputValue }]);
         return;
