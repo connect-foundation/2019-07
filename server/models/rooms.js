@@ -37,11 +37,10 @@ class Rooms {
 
   getFinalResult(roomNumber) {
     const currentRoom = this.getRoom(roomNumber);
-    const SCORE = 1;
 
     currentRoom.players = new Map(
       [...currentRoom.players.entries()].sort(
-        (player1, player2) => player2[SCORE] - player1[SCORE],
+        ([player1, player1Score], [player2, player2Score]) => player2Score - player1Score,
       ),
     );
 
