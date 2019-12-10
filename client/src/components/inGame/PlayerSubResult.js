@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-
-import { fetchCheckAnswer } from '../../utils/fetch';
 
 const COLORS = {
   GREEN: '#51ce66',
@@ -39,61 +37,36 @@ const Score = styled.div`
   transform: translateY(10rem);
 `;
 
-function PlayerSubResultComponent({
-  choose,
-  score,
-  setScore,
-  nickname,
-  roomNumber,
-  quizIndex,
-}) {
-  const [result, setResult] = useState({ isCorrect: undefined });
-  const [plusScore, setPlus] = useState(0);
-
+function PlayerSubResultComponent({ plus, score, setScore, isAnswer }) {
   useEffect(() => {
-    fetchCheckAnswer(roomNumber, nickname, quizIndex, choose).then(response => {
-      setResult(response);
-
-      if (response.isCorrect) {
-        setPlus(Number(response.score) - score);
-        setScore(response.score);
-      }
-    });
+    // 정답인 경우에만 점수를 갱신함
+    if (isAnswer) {
+      setScore(score + plus);
+    }
   }, []);
 
-  if (result.isCorrect === undefined) {
-    return (
-      <Background color={COLORS.WHITE}>
-        <Message>정답을 확인 중 입니다.</Message>
-      </Background>
-    );
-  }
-
-  if (result.isCorrect === false) {
-    return (
-      <Background color={COLORS.RED}>
-        <Message>틀렸습니다.</Message>
-      </Background>
-    );
-  }
-
-  if (result.isCorrect === true) {
-    return (
-      <Background color={COLORS.GREEN}>
-        <Message>맞았습니다.</Message>
-        <Score>+{plusScore}</Score>
-      </Background>
-    );
-  }
+  return (
+    <>
+      {!isAnswer && (
+        <Background color={COLORS.RED}>
+          <Message>틀렸습니다.</Message>
+        </Background>
+      )}
+      {isAnswer && (
+        <Background color={COLORS.GREEN}>
+          <Message>맞았습니다.</Message>
+          <Score>+{plus}</Score>
+        </Background>
+      )}
+    </>
+  );
 }
 
 PlayerSubResultComponent.propTypes = {
-  choose: PropTypes.number.isRequired,
+  plus: PropTypes.number.isRequired,
   score: PropTypes.number.isRequired,
   setScore: PropTypes.func.isRequired,
-  nickname: PropTypes.string.isRequired,
-  roomNumber: PropTypes.string.isRequired,
-  quizIndex: PropTypes.number.isRequired,
+  isAnswer: PropTypes.bool.isRequired,
 };
 
 export default PlayerSubResultComponent;
