@@ -14,6 +14,23 @@ class Quizset extends Table {
 
     return this.query(query, roomId);
   }
+
+  createQuizset(roomId, quizset) {
+    const { title, quizsetOrder } = quizset;
+    const insert = `INSERT INTO ${quizsetTable} (title, quizset_order, room_id)`;
+    const values = `VALUES (?, ?, ?)`;
+    const query = `${insert} ${values}`;
+    return this.query(query, title, quizsetOrder, roomId);
+  }
+
+  readLastQuizsetId(roomId) {
+    const select = `SELECT id`;
+    const from = `FROM ${quizsetTable}`;
+    const where = `WHERE room_id = ?`;
+    const orderBy = `ORDER BY id DESC LIMIT 1`;
+    const query = `${select} ${from} ${where} ${orderBy};`;
+    return this.query(query, roomId);
+  }
 }
 
 module.exports = Quizset;
