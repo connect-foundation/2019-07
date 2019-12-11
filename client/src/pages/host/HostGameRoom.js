@@ -3,6 +3,7 @@ import { Prompt } from 'react-router';
 import styled from 'styled-components';
 import io from 'socket.io-client';
 import PropTypes from 'prop-types';
+
 import HostFooter from '../../components/inGame/HostFooter';
 import HostWaitingRoom from '../../components/inGame/HostWaitingRoom';
 import HostLoading from '../../components/inGame/HostLoading';

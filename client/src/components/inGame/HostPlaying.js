@@ -54,7 +54,7 @@ function HostPlaying() {
       <layout.CenterRightPanel>
         <layout.RemainPeople>
           <br />
-          {roomState.players.length}명이 풀이중
+          {roomState.players.length}명이 참가 중
         </layout.RemainPeople>
       </layout.CenterRightPanel>
     </layout.CenterContentContainer>
