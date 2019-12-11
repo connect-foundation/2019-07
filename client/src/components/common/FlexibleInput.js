@@ -125,14 +125,15 @@ function FlexibleInput({
   }
 
   function handleInput(event) {
-    let testContent = event.target.textContent;
-    let value = testContent;
+    const { target } = event;
+    let value = event.target.textContent;
 
     if (value.length >= maxLength) {
       value = value.substring(0, maxLength);
       if (inputValue.length === maxLength) value = inputValue;
 
-      testContent = value;
+      target.textContent = value;
+
       warningRef.current.textContent = `${maxLength}글자를 넘을 수 없습니다`;
     }
 
