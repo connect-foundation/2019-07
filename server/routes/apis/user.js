@@ -102,6 +102,18 @@ router.put(
       const { roomId, title } = req.body;
       const result = await dbManager.room.updateRoom(roomId, title);
 
+      if (result.isSuccess && result.data.affectedRows) {
+        res.send({
+          isSuccess: true,
+        });
+        return;
+      }
+
+      res.send({
+        isError: true,
+        data: result.data,
+      });
+
       res.send(result);
     } catch (err) {
       res.send({
@@ -118,7 +130,17 @@ router.delete('/room', [check('roomId').exists()], async (req, res) => {
     const { roomId } = req.body;
     const result = await dbManager.room.deleteRoom(roomId);
 
-    res.send(result);
+    if (result.isSuccess && result.data.affectedRows) {
+      res.send({
+        isSuccess: true,
+      });
+      return;
+    }
+
+    res.send({
+      isError: true,
+      data: result.data,
+    });
   } catch (err) {
     res.send({
       isError: true,
