@@ -7,6 +7,7 @@ const {
 } = require('../../middleware/validations');
 
 const router = express.Router();
+const dbManager = require('../../models/database/dbManager');
 
 router.get('/', (req, res) => {
   res.json({
@@ -74,5 +75,18 @@ router.get(
     });
   },
 );
+
+router.get('/quizset/:roomId', async (req, res) => {
+  const { roomId } = req.params;
+  const { isError, data } = await dbManager.quizset.readLastQuizsetId(roomId);
+  const isSuccess = isError === undefined;
+  const [{ id }] = data;
+  res.json({
+    isSuccess,
+    data: {
+      quizsetId: id,
+    },
+  });
+});
 
 module.exports = router;
