@@ -125,18 +125,18 @@ function FlexibleInput({
   }
 
   function handleInput(event) {
-    let value = event.target.textContent;
+    let testContent = event.target.textContent;
+    let value = testContent;
 
     if (value.length >= maxLength) {
       value = value.substring(0, maxLength);
       if (inputValue.length === maxLength) value = inputValue;
 
-      event.target.textContent = value;
+      testContent = value;
       warningRef.current.textContent = `${maxLength}글자를 넘을 수 없습니다`;
     }
 
     setInputValue(value);
-    if (callback !== undefined) callback(value);
   }
 
   return (
@@ -146,7 +146,7 @@ function FlexibleInput({
         onKeyDown={handleKeyDown}
         onInput={handleInput}
         onFocus={() => setFocus(true)}
-        onBlur={() => setFocus(false)}
+        onBlur={() => callback(inputValue)}
         mobileFontSize={mobileFontSize}
       />
 
