@@ -100,21 +100,22 @@ router.put(
     try {
       validationResult(req).throw();
       const { roomId, title } = req.body;
-      const result = await dbManager.room.updateRoom(roomId, title);
+      const { isSuccess, data } = await dbManager.room.updateRoom(
+        roomId,
+        title,
+      );
 
-      if (result.isSuccess && result.data.affectedRows) {
+      if (isSuccess && data.affectedRows) {
         res.send({
-          isSuccess: true,
+          isSuccess,
         });
         return;
       }
 
       res.send({
         isError: true,
-        data: result.data,
+        data,
       });
-
-      res.send(result);
     } catch (err) {
       res.send({
         isError: true,
@@ -128,18 +129,18 @@ router.delete('/room', [check('roomId').exists()], async (req, res) => {
   try {
     validationResult(req).throw();
     const { roomId } = req.body;
-    const result = await dbManager.room.deleteRoom(roomId);
+    const { isSuccess, data } = await dbManager.room.deleteRoom(roomId);
 
-    if (result.isSuccess && result.data.affectedRows) {
+    if (isSuccess && data.affectedRows) {
       res.send({
-        isSuccess: true,
+        isSuccess,
       });
       return;
     }
 
     res.send({
       isError: true,
-      data: result.data,
+      data,
     });
   } catch (err) {
     res.send({
