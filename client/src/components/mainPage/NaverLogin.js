@@ -1,6 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
+
 import NaverLogin from '../../utils/naverLoginSdk';
 import loginImage from '../../assets/images/naverLoginButton_long.PNG';
 
@@ -26,21 +26,11 @@ function LoginPage() {
     <NaverLogin
       clientId={clientId}
       callbackUrl={callbackPageFullUrl}
-      render={props => <NoStyleButton onClick={props.onClick} type="button" />}
+      render={({ onClick }) => (
+        <NoStyleButton type="button" onClick={onClick} />
+      )}
     />
   );
 }
-
-LoginPage.propTypes = {
-  onClick: PropTypes.func.isRequired,
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-    location: PropTypes.shape({
-      state: PropTypes.shape({
-        roomNumber: PropTypes.string.isRequired,
-      }),
-    }),
-  }).isRequired,
-};
 
 export default LoginPage;
