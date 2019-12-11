@@ -1,3 +1,5 @@
+import { createContext } from 'react';
+
 const HostGameAction = {
   SET_SOCKET: 'SET_SOCKET',
   SET_ROOM_NUMBER: 'SET_ROOM_NUMBER',
@@ -10,6 +12,13 @@ const HostGameAction = {
   SET_ENTIRE_QUIZ: 'SET_ENTIRE_QUIZ',
   REQUEST_QUIZ_END: 'REQUEST_QUIZ_END',
   SHOW_SCOREBOARD: 'SHOW_SCOREBOARD',
+};
+
+const HOST_PAGE_STATE = {
+  WAITING: 'WAITING',
+  LOADING: 'LOADING',
+  PLAYING: 'PLAYING',
+  END: 'END',
 };
 
 const roomReducer = (state, action) => {
@@ -25,7 +34,7 @@ const roomReducer = (state, action) => {
     }
     case HostGameAction.GAME_START: {
       state.socket.emit('start', { roomNumber: state.roomNumber });
-      return { ...state, isQuizStart: true };
+      return { ...state, pageState: HOST_PAGE_STATE.LOADING };
     }
     case HostGameAction.SET_CURRENT_QUIZ: {
       return {
@@ -34,6 +43,7 @@ const roomReducer = (state, action) => {
           ...state.fullQuizData[action.index],
           index: action.index,
         },
+        pageState: HOST_PAGE_STATE.PLAYING,
       };
     }
     case HostGameAction.REQUEST_NEXT_QUIZ: {
@@ -70,7 +80,7 @@ const roomReducer = (state, action) => {
       return state;
     }
     case HostGameAction.SHOW_SCOREBOARD: {
-      return { ...state, isQuizEnd: true };
+      return { ...state, pageState: HOST_PAGE_STATE.END };
     }
     default:
       return state;
@@ -83,10 +93,11 @@ const initialRoomState = {
   socket: null,
   fullQuizData: [],
   totalQuizCount: 0,
-  isQuizStart: false,
-  isQuizEnd: false,
+  pageState: HOST_PAGE_STATE.WAITING,
   currentQuiz: null,
   quizSubResult: null,
 };
 
-export { initialRoomState, roomReducer, HostGameAction };
+const HostGameContext = createContext();
+
+export { initialRoomState, roomReducer, HostGameAction, HostGameContext };
