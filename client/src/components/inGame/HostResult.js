@@ -35,7 +35,7 @@ const ButtonContainer = styled.div`
 
 function HostGameResult({ ranking }) {
   function exit() {
-    window.location.href = 'host/room/select';
+    window.location.href = '/host/room/select';
   }
 
   return (

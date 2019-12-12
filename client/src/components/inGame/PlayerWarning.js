@@ -1,11 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const COLORS = {
-  GREEN: '#51ce66',
-  RED: '#ff6b6b',
-  WHITE: '#ffffff',
-};
+import { BACKGROUND_LIGHT_WHITE } from '../../constants/colors';
 
 const Background = styled.div`
   width: 100%;
@@ -26,7 +22,7 @@ const Message = styled.div`
 
 function PlayerSubResult() {
   return (
-    <Background color={COLORS.WHITE}>
+    <Background color={BACKGROUND_LIGHT_WHITE}>
       <Message>중간에 들어오셨군요. 잠시만 기다려주세요</Message>
     </Background>
   );
