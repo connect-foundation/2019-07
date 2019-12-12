@@ -57,12 +57,35 @@ const PlayerList = styled.ul`
   background-color: white;
   flex: 1;
   overflow-y: auto;
+
   li {
     display: inline-block;
     margin: 1rem;
-    font-size: 1.5rem;
+    font-size: 2rem;
     font-weight: bold;
     color: ${colors.TEXT_BLACK};
+  }
+
+  @media (min-width: ${DESKTOP_MIN_WIDTH}) {
+    li {
+      font-size: 3rem;
+    }
+  }
+`;
+
+const BigRoomNumber = styled.div`
+  position: absolute;
+  top: 15rem;
+  font-size: 3rem;
+  color: #fff;
+  width: 100%;
+  z-index: 10000;
+  font-weight: bold;
+  transform: translateY(-50%);
+  text-align: center;
+
+  @media (min-width: ${DESKTOP_MIN_WIDTH}) {
+    font-size: 5rem;
   }
 `;
 
@@ -75,7 +98,10 @@ function HostWaitingRoom() {
   return (
     <>
       {!roomState.players.length && (
-        <Loading message="참가자를 기다리고 있습니다" />
+        <>
+          <BigRoomNumber>방 번호 : {roomState.roomNumber}</BigRoomNumber>
+          <Loading message="참가자를 기다리고 있습니다..." />
+        </>
       )}
       <Header>
         <RoomInformation>

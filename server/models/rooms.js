@@ -45,7 +45,7 @@ class Rooms {
       ),
     );
 
-    return this.getPlayers(roomNumber).slice(0, 9);
+    return this.getPlayers(roomNumber).slice(0, 10);
   }
 
   getRoomHostId(roomNumber) {
@@ -58,27 +58,23 @@ class Rooms {
     const { data } = await dbManager.quizset.getQuizset(roomId);
     const quizset = [];
 
-    data.forEach((currentValue) => {
-      let target = quizset.find(
-        (object) => object.title === currentValue.quizTitle,
-      );
-
-      if (target === undefined) {
+    let quizIndex = -1;
+    data.forEach((currentValue, index) => {
+      if (index % 4 === 0) {
+        quizIndex += 1;
         const currentQuiz = quizTemplate();
         currentQuiz.title = currentValue.quizTitle;
         currentQuiz.score = currentValue.score;
         currentQuiz.timeLimit = currentValue.time_limit;
         currentQuiz.image = currentValue.image;
-        quizset.push(currentQuiz);
 
-        target = quizset[quizset.length - 1];
+        quizset.push(currentQuiz);
       }
       const currentItem = itemTemplate();
       currentItem.title = currentValue.itemTitle;
-      target.items.push(currentItem);
-
+      quizset[quizIndex].items.push(currentItem);
       if (currentValue.is_answer === 1) {
-        target.answers.push(currentValue.item_order);
+        quizset[quizIndex].answers.push(currentValue.item_order);
       }
     });
 

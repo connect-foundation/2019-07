@@ -9,6 +9,7 @@ import PlayerQuizLoading from '../../components/inGame/PlayerQuizLoading';
 import PlayerQuiz from '../../components/inGame/PlayerQuiz';
 import PlayerSubResult from '../../components/inGame/PlayerSubResult';
 import PlayerResult from '../../components/inGame/PlayerResult';
+import PlayerWarning from '../../components/inGame/PlayerWarning';
 
 const VIEW_STATE = {
   WAITING: 'WAITING',
@@ -56,12 +57,13 @@ function PlayerGameRoom({ location }) {
       roomNumber: location.state.roomNumber,
     });
 
-    window.addEventListener('beforeunload', blockClose);
     window.addEventListener('unload', () => {
-      socket.emit('leavePlayer', {
-        nickname: location.state.nickname,
-        roomNumber: location.state.roomNumber,
-      });
+      if (document.readyState !== 'complete') {
+        socket.emit('leavePlayer', {
+          nickname: location.state.nickname,
+          roomNumber: location.state.roomNumber,
+        });
+      }
     });
 
     return () => {
@@ -75,12 +77,12 @@ function PlayerGameRoom({ location }) {
 
   socket.on('start', () => {
     setViewState(VIEW_STATE.LOADING);
+    window.addEventListener('beforeunload', blockClose);
   });
 
   // 다음 문제 (새로운 문제) 시작;
   socket.on('next', nextQuizIndex => {
     setCurrentQuiz(nextQuizIndex);
-
     setViewState(VIEW_STATE.IN_QUIZ);
   });
 
@@ -102,32 +104,44 @@ function PlayerGameRoom({ location }) {
     window.location.href = '/';
   });
 
+  socket.on('settingScore', existedScore => {
+    setScore(existedScore);
+  });
+
   return (
     <Container>
-      {viewState !== VIEW_STATE.END && (
+      {viewState !== VIEW_STATE.END && viewState !== VIEW_STATE.WAITING && (
         <Prompt message="페이지를 이동하면 방에서 나가게 됩니다. 계속 하시겠습니까?" />
       )}
-      {viewState === VIEW_STATE.WAITING && <PlayerWaiting />}
-      {viewState === VIEW_STATE.LOADING && (
-        <PlayerQuizLoading setQuizSet={setQuizSet} roomNumber={roomNumber} />
+      {viewState === VIEW_STATE.WAITING && (
+        <PlayerWaiting setQuizSet={setQuizSet} roomNumber={roomNumber} />
       )}
-      {viewState === VIEW_STATE.IN_QUIZ && (
-        <PlayerQuiz
-          quizSet={quizSet}
-          roomNumber={roomNumber}
-          quizIndex={quizIndex}
-          setIsAnswer={setIsAnswer}
-          nickname={nickname}
-        />
+      {viewState === VIEW_STATE.LOADING && <PlayerQuizLoading />}
+      {quizSet[quizIndex] !== undefined && (
+        <>
+          {viewState === VIEW_STATE.IN_QUIZ && (
+            <PlayerQuiz
+              quizSet={quizSet}
+              roomNumber={roomNumber}
+              quizIndex={quizIndex}
+              setIsAnswer={setIsAnswer}
+              nickname={nickname}
+            />
+          )}
+          {viewState === VIEW_STATE.SUB_RESULT && (
+            <PlayerSubResult
+              plusScore={quizSet[quizIndex].score}
+              score={score}
+              setScore={setScore}
+              isAnswer={isAnswer}
+            />
+          )}
+        </>
       )}
-      {viewState === VIEW_STATE.SUB_RESULT && (
-        <PlayerSubResult
-          plusScore={quizSet[quizIndex].score}
-          score={score}
-          setScore={setScore}
-          isAnswer={isAnswer}
-        />
-      )}
+      {!quizSet[quizIndex] &&
+        viewState !== VIEW_STATE.LOADING &&
+        viewState !== VIEW_STATE.WAITING &&
+        viewState !== VIEW_STATE.END && <PlayerWarning />}
       {viewState === VIEW_STATE.END && (
         <PlayerResult
           ranking={ranking}
@@ -135,7 +149,6 @@ function PlayerGameRoom({ location }) {
           nickname={nickname}
         />
       )}
-
       <PlayerFooter nickname={nickname} score={score} />
     </Container>
   );

@@ -76,22 +76,27 @@ function PlayerQuiz({ quizSet, roomNumber, quizIndex, setIsAnswer, nickname }) {
 
 Selection.propTypes = {
   currentQuiz: PropTypes.shape({
-    items: PropTypes.shape({
-      map: PropTypes.func.isRequired,
-      title: PropTypes.string.isRequired,
-    }).isRequired,
+    items: PropTypes.arrayOf(
+      PropTypes.shape({
+        title: PropTypes.string.isRequired,
+      }),
+    ).isRequired,
   }).isRequired,
   chooseAnswer: PropTypes.func.isRequired,
   setIsAnswer: PropTypes.func.isRequired,
 };
 
 PlayerQuiz.propTypes = {
-  quizSet: PropTypes.shape({
-    items: PropTypes.shape({
-      title: PropTypes.string,
+  quizSet: PropTypes.arrayOf(
+    PropTypes.shape({
+      items: PropTypes.arrayOf(
+        PropTypes.shape({
+          title: PropTypes.string.isRequired,
+        }),
+      ).isRequired,
+      title: PropTypes.string.isRequired,
     }),
-    title: PropTypes.string.isRequired,
-  }).isRequired,
+  ).isRequired,
   roomNumber: PropTypes.string.isRequired,
   quizIndex: PropTypes.number.isRequired,
   setIsAnswer: PropTypes.func.isRequired,
