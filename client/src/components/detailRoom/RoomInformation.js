@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+
 import * as colors from '../../constants/colors';
 import { fetchRoomTitle, updateRoomTitle } from '../../utils/fetch';
 import Modal from '../common/Modal';
 import FlexibleInput from '../common/FlexibleInput';
 import { ModalContext } from '../common/ModalProvider';
+import editRoomImage from '../../assets/images/edit_room.png';
 
 const RoomInformationContainer = styled.div`
   position: absolute;
@@ -24,12 +26,12 @@ const RoomInformationContainer = styled.div`
 `;
 
 const EditRoomNameImage = styled.img.attrs({
-  src:
-    'https://iconmonstr.com/wp-content/g/gd/makefg.php?i=../assets/preview/2012/png/iconmonstr-edit-4.png&r=255&g=255&b=255',
+  src: editRoomImage,
 })`
   width: 2.5rem;
   cursor: pointer;
   opacity: 0.6;
+  margin-left: 1rem;
   &:hover {
     text-decoration: underline;
     opacity: 1;
