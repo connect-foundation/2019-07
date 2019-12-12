@@ -1,22 +1,30 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
+
 import * as colors from '../../constants/colors';
+import DESKTOP_MIN_WIDTH from '../../constants/media';
 import Header from '../common/Header';
+import Loading from '../common/Loading';
 import { YellowButton } from '../common/Buttons';
-import { HostGameAction } from '../../reducer/hostGameReducer';
+import { HostGameAction, HostGameContext } from '../../reducer/hostGameReducer';
 
 const ButtonContainer = styled.div`
   position: absolute;
   right: 1rem;
   top: 50%;
   transform: translateY(-50%);
-  height: 4rem;
-  width: 7rem;
+  button {
+    font-size: 1.5rem;
+  }
+  @media (min-width: ${DESKTOP_MIN_WIDTH}) {
+    button {
+      font-size: 2rem;
+    }
+  }
 `;
 
 const RoomInformation = styled.div`
-  @media (min-width: 700px) {
+  @media (min-width: ${DESKTOP_MIN_WIDTH}) {
     width: auto;
     font-size: 3rem;
   }
@@ -58,25 +66,29 @@ const PlayerList = styled.ul`
   }
 `;
 
-function HostWaitingRoom({ state, dispatcher }) {
+function HostWaitingRoom() {
+  const { roomState, dispatcher } = useContext(HostGameContext);
   function startQuiz() {
     dispatcher({ type: HostGameAction.GAME_START });
   }
 
   return (
     <>
+      {!roomState.players.length && (
+        <Loading message="참가자를 기다리고 있습니다" />
+      )}
       <Header>
         <RoomInformation>
-          방 번호 <strong>{state.roomNumber}</strong>
+          방 번호 <strong>{roomState.roomNumber}</strong>
         </RoomInformation>
         <ButtonContainer>
-          <YellowButton onClick={startQuiz}>Start</YellowButton>
+          <YellowButton onClick={startQuiz}>퀴즈 시작</YellowButton>
         </ButtonContainer>
       </Header>
       <Main>
-        <PlayerCounter>대기자 {state.players.length}명</PlayerCounter>
+        <PlayerCounter>대기자 {roomState.players.length}명</PlayerCounter>
         <PlayerList>
-          {state.players.map(player => (
+          {roomState.players.map(player => (
             <li key={player.nickname}>{player.nickname}</li>
           ))}
         </PlayerList>
@@ -84,13 +96,5 @@ function HostWaitingRoom({ state, dispatcher }) {
     </>
   );
 }
-
-HostWaitingRoom.propTypes = {
-  state: PropTypes.shape({
-    roomNumber: PropTypes.string.isRequired,
-    players: PropTypes.array.isRequired,
-  }).isRequired,
-  dispatcher: PropTypes.func.isRequired,
-};
 
 export default HostWaitingRoom;

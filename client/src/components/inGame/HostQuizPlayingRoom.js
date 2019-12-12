@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
 import * as colors from '../../constants/colors';
 import HostPlaying from './HostPlaying';
 import HostSubResult from './HostSubResult';
 import * as layout from './Layout';
 import { Button } from '../common/Buttons';
+import { HostGameContext } from '../../reducer/hostGameReducer';
 
 const QuizInformation = styled.span`
   position: absolute;
@@ -14,40 +14,41 @@ const QuizInformation = styled.span`
   font-size: 1rem;
 `;
 
-function HostQuizPlayingRoom({ state, dispatcher }) {
+function HostQuizPlayingRoom() {
+  const { dispatcher, roomState } = useContext(HostGameContext);
   const [showSubResult, setSubResultState] = useState(false);
 
   useEffect(() => {
-    if (state.quizSubResult) {
+    if (roomState.quizSubResult) {
       setSubResultState(true);
     }
-  }, [state.quizSubResult]);
+  }, [roomState.quizSubResult]);
 
   useEffect(() => {
     setSubResultState(false);
-  }, [state.currentQuiz]);
+  }, [roomState.currentQuiz]);
 
   return (
     <layout.Background>
       <layout.TitleContainer>
         <layout.Title>
           <QuizInformation>
-            {state.currentQuiz.index + 1}/{state.totalQuizCount}
+            {roomState.currentQuiz.index + 1}/{roomState.totalQuizCount}
           </QuizInformation>
-          {state.currentQuiz.title}
+          {roomState.currentQuiz.title}
         </layout.Title>
       </layout.TitleContainer>
       <layout.Center>
         {!showSubResult && (
-          <HostPlaying state={state} dispatcher={dispatcher} />
+          <HostPlaying state={roomState} dispatcher={dispatcher} />
         )}
         {showSubResult && (
-          <HostSubResult state={state} dispatcher={dispatcher} />
+          <HostSubResult state={roomState} dispatcher={dispatcher} />
         )}
       </layout.Center>
       <layout.Bottom>
         <layout.ItemContainer>
-          {state.currentQuiz.items.map((item, index) => (
+          {roomState.currentQuiz.items.map((item, index) => (
             <layout.Item key={item.title}>
               <Button
                 backgroundColor={colors.ITEM_COLOR[index]}
@@ -62,14 +63,5 @@ function HostQuizPlayingRoom({ state, dispatcher }) {
     </layout.Background>
   );
 }
-
-HostQuizPlayingRoom.propTypes = {
-  state: PropTypes.shape({
-    quizSubResult: PropTypes.array,
-    currentQuiz: PropTypes.object.isRequired,
-    totalQuizCount: PropTypes.number.isRequired,
-  }).isRequired,
-  dispatcher: PropTypes.func.isRequired,
-};
 
 export default HostQuizPlayingRoom;

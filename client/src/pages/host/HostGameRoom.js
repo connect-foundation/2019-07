@@ -3,6 +3,7 @@ import { Prompt } from 'react-router';
 import styled from 'styled-components';
 import io from 'socket.io-client';
 import PropTypes from 'prop-types';
+
 import HostFooter from '../../components/inGame/HostFooter';
 import HostWaitingRoom from '../../components/inGame/HostWaitingRoom';
 import HostLoading from '../../components/inGame/HostLoading';
@@ -12,6 +13,7 @@ import {
   roomReducer,
   initialRoomState,
   HostGameAction,
+  HostGameContext,
 } from '../../reducer/hostGameReducer';
 
 const Container = styled.div`
@@ -72,17 +74,19 @@ function HostGameRoom({ location }) {
 
   return (
     <Container>
-      <Prompt message="페이지를 이동하면 방이 닫힐 수 있습니다. 계속 하시겠습니까?" />
-      {!roomState.isQuizStart && !roomState.currentQuiz && (
-        <HostWaitingRoom dispatcher={dispatcher} state={roomState} />
+      {roomState.pageState !== 'END' && (
+        <Prompt message="페이지를 이동하면 방이 닫힐 수 있습니다. 계속 하시겠습니까?" />
       )}
-      {roomState.isQuizStart && !roomState.currentQuiz && (
-        <HostLoading state={roomState} dispatcher={dispatcher} />
-      )}
-      {roomState.currentQuiz && !roomState.isQuizEnd && (
-        <HostQuizPlayingRoom dispatcher={dispatcher} state={roomState} />
-      )}
-      {roomState.isQuizEnd && <GameResult ranking={ranking} />}
+      <HostGameContext.Provider value={{ dispatcher, roomState }}>
+        {
+          {
+            WAITING: <HostWaitingRoom />,
+            LOADING: <HostLoading />,
+            PLAYING: <HostQuizPlayingRoom />,
+            END: <GameResult ranking={ranking} />,
+          }[roomState.pageState]
+        }
+      </HostGameContext.Provider>
       <HostFooter roomNumber={roomState.roomNumber} />
     </Container>
   );

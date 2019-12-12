@@ -31,8 +31,12 @@ function HostGameResult({ ranking }) {
   );
 }
 
+HostGameResult.defaultProps = {
+  ranking: [],
+};
+
 HostGameResult.propTypes = {
-  ranking: PropTypes.shape.isRequired,
+  ranking: PropTypes.arrayOf(PropTypes.object),
 };
 
 export default HostGameResult;
