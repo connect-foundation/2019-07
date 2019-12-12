@@ -94,10 +94,9 @@ const UploadedImage = styled.div`
 function Thumbnail({ index }) {
   const { quizsetState, dispatch, actionTypes } = useContext(EditContext);
   const { quizset, currentIndex } = quizsetState;
-  const { title, image } = quizset[index];
-
+  const { title, imagePath } = quizset[index];
   function selectQuiz() {
-    dispatch({ type: actionTypes.CHNAGE_CURRENT_INDEX, currentIndex: index });
+    dispatch({ type: actionTypes.UPDATE_CURRENT_INDEX, currentIndex: index });
   }
 
   return (
@@ -110,8 +109,10 @@ function Thumbnail({ index }) {
               <Title>{title}</Title>
             </ingameLayout.TitleContainer>
             <ingameLayout.Center>
-              <ImageField isEmpty={image.length !== 0}>
-                <UploadedImage url={image.length === 0 ? emptyImage : image} />
+              <ImageField isEmpty={imagePath !== null}>
+                <UploadedImage
+                  url={imagePath === null ? emptyImage : imagePath}
+                />
               </ImageField>
             </ingameLayout.Center>
           </ingameLayout.Background>
