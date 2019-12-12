@@ -1,14 +1,17 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import styled, { css } from 'styled-components';
 import PropTypes from 'prop-types';
+
 import * as colors from '../../constants/colors';
-import { YellowButton } from '../common/Buttons';
+import { Button, YellowButton } from '../common/Buttons';
 import { EditContext } from './EditContextProvider';
 import Thumbnail from './Thumbnail';
 
 const SIDE_BAR_SIZE = '20vmin';
 const BUTTON_PADDING = '1vmin';
 const BUTTON_FONT_SIZE = '2vmin';
+const BUTTONS_CONTAINER_PADDING = '1vmin';
+const BUTTON_WRAPPER_SIZE = '3.5';
 
 const FlexStyle = css`
   display: flex;
@@ -54,38 +57,46 @@ const ThumbnailContainer = styled.div`
   }
 `;
 
-function AddQuizButton({ onClick }) {
-  const ButtonWrapper = styled.div`
-    position: relative;
-    flex: none;
-    width: ${SIDE_BAR_SIZE};
-    height: calc(${SIDE_BAR_SIZE} / 2);
+const ButtonContainers = styled.div`
+  ${FlexStyle};
+  padding: ${BUTTONS_CONTAINER_PADDING} 0;
+  @media (orientation: portrait) {
+    padding: 0 ${BUTTONS_CONTAINER_PADDING};
+  }
+`;
+
+const ButtonWrapper = styled.div`
+  position: relative;
+  flex: none;
+  width: ${SIDE_BAR_SIZE};
+  height: calc(${SIDE_BAR_SIZE} / ${BUTTON_WRAPPER_SIZE});
+
+  @media (orientation: portrait) {
+    width: calc(${SIDE_BAR_SIZE} / ${BUTTON_WRAPPER_SIZE});
+    height: ${SIDE_BAR_SIZE};
+  }
+
+  div.buttonWrapper {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    width: 80%;
+    height: calc(${BUTTON_PADDING} * 2 + ${BUTTON_FONT_SIZE});
 
     @media (orientation: portrait) {
-      width: calc(${SIDE_BAR_SIZE} / 2);
-      height: ${SIDE_BAR_SIZE};
+      width: calc(${BUTTON_PADDING} * 2 + ${BUTTON_FONT_SIZE});
+      height: 80%;
     }
+  }
 
-    div.buttonWrapper {
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+  button {
+    padding: ${BUTTON_PADDING};
+    font-size: ${BUTTON_FONT_SIZE};
+  }
+`;
 
-      width: 80%;
-      height: calc(${BUTTON_PADDING} * 2 + ${BUTTON_FONT_SIZE});
-
-      @media (orientation: portrait) {
-        width: calc(${BUTTON_PADDING} * 2 + ${BUTTON_FONT_SIZE});
-        height: 80%;
-      }
-    }
-
-    button {
-      padding: ${BUTTON_PADDING};
-      font-size: ${BUTTON_FONT_SIZE};
-    }
-  `;
-
+function AddQuizButton({ onClick }) {
   return (
     <ButtonWrapper>
       <YellowButton onClick={onClick}>퀴즈 생성</YellowButton>
@@ -93,9 +104,18 @@ function AddQuizButton({ onClick }) {
   );
 }
 
-AddQuizButton.propTypes = {
-  onClick: PropTypes.func.isRequired,
-};
+function DeleteQuizButton({ onClick }) {
+  return (
+    <ButtonWrapper>
+      <Button onClick={onClick}>퀴즈 삭제</Button>
+    </ButtonWrapper>
+  );
+}
+
+const buttonPropTypes = { onClick: PropTypes.func.isRequired };
+
+AddQuizButton.propTypes = buttonPropTypes;
+DeleteQuizButton.propTypes = buttonPropTypes;
 
 function SideBar() {
   const { quizsetState, dispatch, actionTypes } = useContext(EditContext);
@@ -105,6 +125,10 @@ function SideBar() {
 
   function addQuiz() {
     dispatch({ type: actionTypes.CREATE_QUIZ });
+  }
+
+  function deleteQuiz() {
+    dispatch({ type: actionTypes.DELETE_QUIZ });
   }
 
   function moveScroll() {
@@ -137,7 +161,10 @@ function SideBar() {
             <Thumbnail key={index} index={index} />
           ))}
         </ThumbnailContainer>
-        <AddQuizButton onClick={addQuiz} />
+        <ButtonContainers>
+          <DeleteQuizButton onClick={deleteQuiz} />
+          <AddQuizButton onClick={addQuiz} />
+        </ButtonContainers>
       </Container>
     </Background>
   );

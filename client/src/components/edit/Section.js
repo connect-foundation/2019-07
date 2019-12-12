@@ -10,7 +10,6 @@ import * as ingameLayout from '../inGame/Layout';
 import { EditContext } from './EditContextProvider';
 import { readQuizset } from '../../utils/fetch';
 import Loading from '../common/Loading';
-import DeleteButton from './DeleteButton';
 
 const MAIN_PADDING = '3vmin';
 
@@ -84,9 +83,7 @@ function Section({ roomId, quizsetId }) {
                     <ingameLayout.ImagePanel>
                       <ImageField />
                     </ingameLayout.ImagePanel>
-                    <ingameLayout.CenterRightPanel>
-                      <DeleteButton />
-                    </ingameLayout.CenterRightPanel>
+                    <ingameLayout.CenterRightPanel />
                   </ingameLayout.CenterContentContainer>
                 </ingameLayout.Center>
                 <ingameLayout.Bottom>
