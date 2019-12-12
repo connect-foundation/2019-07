@@ -110,7 +110,7 @@ async function createQuizset(roomId, quizset) {
 
 async function readQuizsetId(quizsetState, roomId, quizsetTitle, quizsetOrder) {
   const quizsetId =
-    quizsetState.quizsetId === undefined
+    quizsetState.quizsetId !== undefined
       ? quizsetState.quizsetId
       : await createQuizset(roomId, quizsetTitle, quizsetOrder);
   return quizsetId;
@@ -125,39 +125,78 @@ async function updateQuizset(quizset, quizsetId, quizsetState) {
 
 function checkItemsCanSave(items) {
   return items.reduce(
-    (result, item, index) => {
+    (state, item, index) => {
+      const titleArray =
+        item.title.length === 0
+          ? state.titleArray
+          : [...state.titleArray, item.title];
       //보기 중 정답체크가 하나라도 되어있으면 true, 아니면 false
-      const isAnswer = result.isAnswer || item.isAnswer === 1;
-      //보기1과 보기2의 title이 비어있지 않을때 true 둘 중 하나라도 비어있으면 false
-      const title =
-        index < 2 ? result.title && item.title.length > 0 : result.title;
-      return { isAnswer, title };
+      const isAnswer = state.isAnswer || item.isAnswer === 1;
+      //보기1과 보기2의 title이 전부 입력했으면 true 하나라도 비어있으면 false
+      const essentialTitle =
+        index < 2
+          ? state.essentialTitle && item.title.length > 0
+          : state.essentialTitle;
+
+      const hasDuplicateTitle = state.titleArray.indexOf(item.title) >= 0;
+      //items에서 중복된 title이 있는지 여부를 판단함
+      const duplicateTitle = state.duplicateTitle || hasDuplicateTitle;
+      return { titleArray, isAnswer, essentialTitle, duplicateTitle };
     },
-    { isAnswer: false, title: true },
+    {
+      titleArray: [],
+      isAnswer: false,
+      essentialTitle: true,
+      duplicateTitle: false,
+    },
   );
 }
 
-function alertMustFill({ index, quizTitle, isAnswer, itemTitle }) {
-  const quizTitleMessage = quizTitle ? '' : `퀴즈 제목을 입력해주세요`;
-  const isAnswerMessage = isAnswer ? '' : `정답을 하나 이상 선택해주세요`;
-  const itemTitleMessage = itemTitle
+function alertMustFill({
+  index,
+  quizTitle,
+  isAnswer,
+  essentialTitle,
+  duplicateTitle,
+}) {
+  const indexMessage = `${index + 1}번 퀴즈의 필수 항목을 입력해주세요\n`;
+  const quizTitleMessage = quizTitle ? '' : `\n퀴즈 제목을 입력해주세요`;
+  const isAnswerMessage = isAnswer ? '' : `\n정답을 하나 이상 선택해주세요`;
+  const essentialTitleMessage = essentialTitle
     ? ''
-    : `보기1과 보기2는 필수 입력 사항입니다`;
-  alert(`${index + 1}번 퀴즈의 필수 항목을 입력해주세요
-   ${quizTitleMessage}
-   ${isAnswerMessage}
-   ${itemTitleMessage}
-  `);
+    : `\n보기1번과 보기2번은 필수 입력 항목입니다`;
+  const duplicateTitleMessage = duplicateTitle
+    ? `\n보기는 중복 입력이 불가능합니다`
+    : '';
+  const messages = [
+    quizTitleMessage,
+    isAnswerMessage,
+    essentialTitleMessage,
+    duplicateTitleMessage,
+  ];
+  const alertMessage = messages.reduce(
+    (result, message) => `${result}${message}`,
+    indexMessage,
+  );
+  alert(alertMessage);
 }
 
 function checkQuizsetCanSave(quizset, changeCurrentIndex) {
   for (let index = 0; index < quizset.length; index += 1) {
     const quiz = quizset[index];
     const quizTitle = quiz.title.length > 0;
-    const { isAnswer, title } = checkItemsCanSave(quiz.items);
-    if (!(quizTitle && isAnswer && title)) {
+    const { isAnswer, essentialTitle, duplicateTitle } = checkItemsCanSave(
+      quiz.items,
+    );
+    if (!(quizTitle && isAnswer && essentialTitle && !duplicateTitle)) {
       changeCurrentIndex(index);
-      alertMustFill({ index, quizTitle, isAnswer, itemTitle: title });
+      alertMustFill({
+        index,
+        quizTitle,
+        isAnswer,
+        essentialTitle,
+        duplicateTitle,
+      });
       return false;
     }
   }
