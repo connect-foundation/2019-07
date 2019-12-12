@@ -115,6 +115,69 @@ async function getToken(data) {
   return response;
 }
 
+async function readQuizsetId(roomId) {
+  const url = `/room/quizset/${roomId}`;
+  const response = await fetchGet({ url });
+  return response;
+}
+
+async function createQuizset(roomId, quizsetTitle, quizsetOrder) {
+  const url = `/edit/quizset`;
+  const response = await fetchPost({
+    url,
+    data: { roomId, quizsetTitle, quizsetOrder },
+  });
+  return response;
+}
+
+async function readQuizset(quizsetId) {
+  const url = `/edit/quizset/${quizsetId}`;
+  const response = await fetchGet({ url });
+  return response;
+}
+
+async function createQuiz(quizsetId, quiz) {
+  const url = '/edit/quiz';
+  const response = await fetchPost({ url, data: { quizsetId, quiz } });
+  return response;
+}
+
+async function updateQuiz(quiz) {
+  const url = '/edit/quiz';
+  const response = await fetchPost({
+    url,
+    data: { quiz },
+    method: 'PUT',
+  });
+  return response;
+}
+
+async function createItems(quizId, items) {
+  const url = '/edit/items';
+  const response = await fetchPost({ url, data: { quizId, items } });
+  return response;
+}
+
+async function updateItem(item) {
+  const url = '/edit/item';
+  const response = await fetchPost({
+    url,
+    data: { item },
+    method: 'PUT',
+  });
+  return response;
+}
+
+async function deleteQuiz(quizId) {
+  const url = '/edit/quiz';
+  const response = await fetchPost({
+    url,
+    data: { quizId },
+    method: 'DELETE',
+  });
+  return response;
+}
+
 export {
   fetchRoomNumber,
   fetchNickname,
@@ -126,5 +189,13 @@ export {
   fetchRoomTitle,
   addRoom,
   updateRoomTitle,
+  readQuizsetId,
+  createQuizset,
+  readQuizset,
+  createQuiz,
+  updateQuiz,
+  createItems,
+  updateItem,
+  deleteQuiz,
   deleteRoom,
 };
