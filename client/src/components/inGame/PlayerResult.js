@@ -102,8 +102,12 @@ function PlayerResult({ ranking, roomNumber, nickname }) {
   }
 }
 
+PlayerResult.defaultProps = {
+  ranking: [],
+};
+
 PlayerResult.propTypes = {
-  ranking: PropTypes.shape.isRequired,
+  ranking: PropTypes.arrayOf(PropTypes.object),
   roomNumber: PropTypes.string.isRequired,
   nickname: PropTypes.string.isRequired,
 };
