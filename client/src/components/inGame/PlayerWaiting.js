@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 import * as colors from '../../constants/colors';
 import DESKTOP_MIN_WIDTH from '../../constants/media';
 import LoadingCircle from '../common/LoadingCircle';
+
+import { fetchQuizSet } from '../../utils/fetch';
 
 const LoadingText = styled.span`
   font-size: 1.5rem;
@@ -26,7 +29,13 @@ const Main = styled.main`
   align-items: center;
 `;
 
-function PlayerWaiting() {
+function PlayerWaiting({ setQuizSet, roomNumber }) {
+  useEffect(() => {
+    fetchQuizSet(roomNumber).then(response => {
+      setQuizSet(response.quizSet);
+    });
+  }, []);
+
   return (
     <Main>
       <LoadingCircle color={colors.PRIMARY_DEEP_GREEN} />
@@ -34,5 +43,10 @@ function PlayerWaiting() {
     </Main>
   );
 }
+
+PlayerWaiting.propTypes = {
+  setQuizSet: PropTypes.func.isRequired,
+  roomNumber: PropTypes.string.isRequired,
+};
 
 export default PlayerWaiting;
