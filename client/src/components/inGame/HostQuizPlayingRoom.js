@@ -13,6 +13,10 @@ const QuizInformation = styled.span`
   left: 1rem;
   top: 1rem;
   font-size: 1rem;
+  color: ${colors.TEXT_GRAY};
+  @media (min-width: ${DESKTOP_MIN_WIDTH}) {
+    font-size: 1.5rem;
+  }
 `;
 
 const ItemList = styled.div`
