@@ -4,7 +4,7 @@ import * as colors from '../../constants/colors';
 import HostPlaying from './HostPlaying';
 import HostSubResult from './HostSubResult';
 import * as layout from './Layout';
-import { Button } from '../common/Buttons';
+import DESKTOP_MIN_WIDTH from '../../constants/media';
 import { HostGameContext } from '../../reducer/hostGameReducer';
 
 const QuizInformation = styled.span`
@@ -12,6 +12,28 @@ const QuizInformation = styled.span`
   left: 1rem;
   top: 1rem;
   font-size: 1rem;
+  color: ${colors.TEXT_GRAY};
+  @media (min-width: ${DESKTOP_MIN_WIDTH}) {
+    font-size: 1.5rem;
+  }
+`;
+
+const ItemList = styled.div`
+  width: 100%;
+  border-radius: 5px;
+  background-color: ${props => props.fontColor};
+  p {
+    word-break: break-all;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100%;
+    margin: 0;
+    color: ${colors.TEXT_WHITE};
+    font-size: 1.5vh;
+    font-weight: bold;
+    text-align: center;
+  }
 `;
 
 function HostQuizPlayingRoom() {
@@ -39,23 +61,20 @@ function HostQuizPlayingRoom() {
         </layout.Title>
       </layout.TitleContainer>
       <layout.Center>
-        {!showSubResult && (
-          <HostPlaying state={roomState} dispatcher={dispatcher} />
-        )}
-        {showSubResult && (
-          <HostSubResult state={roomState} dispatcher={dispatcher} />
-        )}
+        {
+          {
+            false: <HostPlaying state={roomState} dispatcher={dispatcher} />,
+            true: <HostSubResult state={roomState} dispatcher={dispatcher} />,
+          }[showSubResult]
+        }
       </layout.Center>
       <layout.Bottom>
         <layout.ItemContainer>
           {roomState.currentQuiz.items.map((item, index) => (
             <layout.Item key={item.title}>
-              <Button
-                backgroundColor={colors.ITEM_COLOR[index]}
-                fontColor={colors.TEXT_WHITE}
-              >
-                {item.title}
-              </Button>
+              <ItemList key={item.title} fontColor={colors.ITEM_COLOR[index]}>
+                <p>{item.title}</p>
+              </ItemList>
             </layout.Item>
           ))}
         </layout.ItemContainer>

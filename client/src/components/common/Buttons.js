@@ -20,9 +20,9 @@ const ButtonTop = styled.button`
   border-radius: 0.5rem;
   border: none;
   font-weight: bold;
-  font-size: 2rem;
-  padding: 1rem;
-  text-shadow: black 0.1rem 0.1rem;
+  font-size: 1.5rem;
+  padding: 0.5rem;
+  text-shadow: black 0.8px 0.8px;
   user-select: none;
   transform: translateY(-0.3rem);
   transition: transform 0.1s;
@@ -40,6 +40,8 @@ const ButtonTop = styled.button`
     &:hover {
       transform: translateY(-0.1rem);
     }
+    font-size: 2rem;
+    padding: 1rem;
   }
 `;
 
