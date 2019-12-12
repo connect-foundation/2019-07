@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
 import { YellowButton } from '../common/Buttons';
-import { TEXT_BLACK } from '../../constants/colors';
+import { readQuizset } from '../../utils/fetch';
+import QuizList from './QuizList';
 
 const Background = styled.div`
   padding: 1rem;
@@ -17,14 +18,21 @@ const ButtonContainer = styled.div`
   }
 `;
 
-const Information = styled.div`
-  padding: 5rem;
-  font-size: 3rem;
-  text-align: center;
-  color: ${TEXT_BLACK};
+const QuizContainer = styled.div`
+  margin-top: 5rem;
 `;
 
 function QuizTab({ history, roomId, quizsetId }) {
+  const [quizData, setQuizdata] = useState([
+    {
+      id: -1,
+      quiz_order: -1,
+      title: '퀴즈가 없으면 어떻게 될까요? 퀴즈를 생성하세요!',
+      score: 0,
+      time_limit: 'infinity',
+    },
+  ]);
+
   function editPage() {
     history.push({
       pathname: '/edit',
@@ -35,6 +43,20 @@ function QuizTab({ history, roomId, quizsetId }) {
     });
   }
 
+  useEffect(() => {
+    if (!quizsetId) return;
+
+    readQuizset(quizsetId).then(response => {
+      if (!response.isSuccess) {
+        alert('오류로 인해 퀴즈 데이터를 받는 데 실패했습니다');
+      }
+      const quizset = response.data.quizset.sort((quiz1, quiz2) => {
+        return quiz1.quiz_order - quiz2.quiz_order;
+      });
+      setQuizdata(quizset);
+    });
+  }, [quizsetId]);
+
   return (
     <Background>
       <ButtonContainer>
@@ -42,9 +64,9 @@ function QuizTab({ history, roomId, quizsetId }) {
           {quizsetId === undefined ? '퀴즈 생성' : '퀴즈 편집'}
         </YellowButton>
       </ButtonContainer>
-      {!quizsetId && (
-        <Information>퀴즈가 없으면 시작할 수 없습니다</Information>
-      )}
+      <QuizContainer>
+        <QuizList quizData={quizData} />
+      </QuizContainer>
     </Background>
   );
 }
