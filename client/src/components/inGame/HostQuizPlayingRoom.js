@@ -4,7 +4,8 @@ import * as colors from '../../constants/colors';
 import HostPlaying from './HostPlaying';
 import HostSubResult from './HostSubResult';
 import * as layout from './Layout';
-import { Button } from '../common/Buttons';
+// import { Button } from '../common/Buttons';
+import DESKTOP_MIN_WIDTH from '../../constants/media';
 import { HostGameContext } from '../../reducer/hostGameReducer';
 
 const QuizInformation = styled.span`
@@ -12,6 +13,28 @@ const QuizInformation = styled.span`
   left: 1rem;
   top: 1rem;
   font-size: 1rem;
+`;
+
+const ItemList = styled.div`
+  width: 100%;
+  border-radius: 5px;
+  background-color: ${props => props.fontColor};
+  p {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100%;
+    margin: 0;
+    color: ${colors.TEXT_WHITE};
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+  }
+  @media (min-width: ${DESKTOP_MIN_WIDTH}) {
+    p {
+      font-size: 3rem;
+    }
+  }
 `;
 
 function HostQuizPlayingRoom() {
@@ -50,12 +73,9 @@ function HostQuizPlayingRoom() {
         <layout.ItemContainer>
           {roomState.currentQuiz.items.map((item, index) => (
             <layout.Item key={item.title}>
-              <Button
-                backgroundColor={colors.ITEM_COLOR[index]}
-                fontColor={colors.TEXT_WHITE}
-              >
-                {item.title}
-              </Button>
+              <ItemList key={item.title} fontColor={colors.ITEM_COLOR[index]}>
+                <p>{item.title}</p>
+              </ItemList>
             </layout.Item>
           ))}
         </layout.ItemContainer>
