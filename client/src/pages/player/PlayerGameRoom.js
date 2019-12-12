@@ -45,6 +45,7 @@ function PlayerGameRoom({ location }) {
   const [score, setScore] = useState(0);
   const [ranking, setRanking] = useState([]);
   const [isAnswer, setIsAnswer] = useState(false);
+  const [wrongAccess, setWrongAccess] = useState(false);
 
   function blockClose(e) {
     e.returnValue = 'warning';
@@ -56,7 +57,7 @@ function PlayerGameRoom({ location }) {
       roomNumber: location.state.roomNumber,
     });
 
-    window.addEventListener('beforeunload', blockClose);
+    // window.addEventListener('beforeunload', blockClose);
     window.addEventListener('unload', () => {
       socket.emit('leavePlayer', {
         nickname: location.state.nickname,
@@ -75,12 +76,12 @@ function PlayerGameRoom({ location }) {
 
   socket.on('start', () => {
     setViewState(VIEW_STATE.LOADING);
+    window.addEventListener('beforeunload', blockClose);
   });
 
   // 다음 문제 (새로운 문제) 시작;
   socket.on('next', nextQuizIndex => {
     setCurrentQuiz(nextQuizIndex);
-
     setViewState(VIEW_STATE.IN_QUIZ);
   });
 
@@ -102,42 +103,63 @@ function PlayerGameRoom({ location }) {
     window.location.href = '/';
   });
 
-  return (
-    <Container>
-      {viewState !== VIEW_STATE.END && (
-        <Prompt message="페이지를 이동하면 방에서 나가게 됩니다. 계속 하시겠습니까?" />
-      )}
-      {viewState === VIEW_STATE.WAITING && <PlayerWaiting />}
-      {viewState === VIEW_STATE.LOADING && (
-        <PlayerQuizLoading setQuizSet={setQuizSet} roomNumber={roomNumber} />
-      )}
-      {viewState === VIEW_STATE.IN_QUIZ && (
-        <PlayerQuiz
-          quizSet={quizSet}
-          roomNumber={roomNumber}
-          quizIndex={quizIndex}
-          setIsAnswer={setIsAnswer}
-          nickname={nickname}
-        />
-      )}
-      {viewState === VIEW_STATE.SUB_RESULT && (
-        <PlayerSubResult
-          plusScore={quizSet[quizIndex].score}
-          score={score}
-          setScore={setScore}
-          isAnswer={isAnswer}
-        />
-      )}
-      {viewState === VIEW_STATE.END && (
-        <PlayerResult
-          ranking={ranking}
-          roomNumber={roomNumber}
-          nickname={nickname}
-        />
-      )}
+  function getOut() {
+    window.removeEventListener('beforeunload', blockClose);
+    // eslint-disable-next-line no-alert
+    alert('퀴즈가 시작된 이후에는 참가하실 수 없습니다.');
+    window.location.href = '/';
+  }
 
-      <PlayerFooter nickname={nickname} score={score} />
-    </Container>
+  return (
+    <>
+      {!wrongAccess && (
+        <Container>
+          {viewState !== VIEW_STATE.END && viewState !== VIEW_STATE.WAITING && (
+            <Prompt message="페이지를 이동하면 방에서 나가게 됩니다. 계속 하시겠습니까?" />
+          )}
+          {viewState === VIEW_STATE.WAITING && <PlayerWaiting />}
+          {viewState === VIEW_STATE.LOADING && (
+            <PlayerQuizLoading
+              setQuizSet={setQuizSet}
+              roomNumber={roomNumber}
+            />
+          )}
+          {quizSet[quizIndex] !== undefined && (
+            <>
+              {viewState === VIEW_STATE.IN_QUIZ && (
+                <PlayerQuiz
+                  quizSet={quizSet}
+                  roomNumber={roomNumber}
+                  quizIndex={quizIndex}
+                  setIsAnswer={setIsAnswer}
+                  nickname={nickname}
+                />
+              )}
+              {viewState === VIEW_STATE.SUB_RESULT && (
+                <PlayerSubResult
+                  plusScore={quizSet[quizIndex].score}
+                  score={score}
+                  setScore={setScore}
+                  isAnswer={isAnswer}
+                />
+              )}
+              {viewState === VIEW_STATE.END && (
+                <PlayerResult
+                  ranking={ranking}
+                  roomNumber={roomNumber}
+                  nickname={nickname}
+                />
+              )}
+            </>
+          )}
+          {viewState !== VIEW_STATE.WAITING &&
+            viewState !== VIEW_STATE.LOADING &&
+            quizSet[quizIndex] === undefined && <>{setWrongAccess(true)}</>}
+          <PlayerFooter nickname={nickname} score={score} />
+        </Container>
+      )}
+      {wrongAccess && <>{getOut()}</>}
+    </>
   );
 }
 

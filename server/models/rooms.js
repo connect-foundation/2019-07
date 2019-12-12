@@ -45,7 +45,7 @@ class Rooms {
       ),
     );
 
-    return this.getPlayers(roomNumber).slice(0, 9);
+    return this.getPlayers(roomNumber).slice(0, 10);
   }
 
   getRoomHostId(roomNumber) {
