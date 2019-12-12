@@ -121,9 +121,12 @@ async function readQuizsetId(roomId) {
   return response;
 }
 
-async function createQuizset(roomId, quizset) {
+async function createQuizset(roomId, quizsetTitle, quizsetOrder) {
   const url = `/edit/quizset`;
-  const response = await fetchPost({ url, data: { roomId, quizset } });
+  const response = await fetchPost({
+    url,
+    data: { roomId, quizsetTitle, quizsetOrder },
+  });
   return response;
 }
 

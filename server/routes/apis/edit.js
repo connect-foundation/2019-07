@@ -6,7 +6,7 @@ const dbManager = require('../../models/database/dbManager');
 
 function getQuizset(quizzes, items) {
   function pushQuiz(quizset, quiz) {
-    const matchedItems = items.filter((item) => item.quiz_id === quiz.id);
+    const matchedItems = items.filter(item => item.quiz_id === quiz.id);
     const newQuiz = {
       ...quiz,
       items: matchedItems,
@@ -22,24 +22,26 @@ router.get('/quizset/:quizsetId', async (req, res) => {
   const quizzes = await dbManager.quiz.readQuizzes(quizsetId);
   const items = await dbManager.item.readItems(quizsetId);
   const isSuccess = !quizzes.isError && !items.isError;
-  const data = isSuccess
-    ? {
-      quizset: getQuizset(quizzes.data, items.data),
-    }
-    : {
-    };
-  const result = {
+  if (isSuccess) {
+    res.json({
+      isSuccess,
+      data: {
+        quizset: getQuizset(quizzes.data, items.data),
+      },
+    });
+    return;
+  }
+  res.json({
     isSuccess,
-    data,
-  };
-  res.json(result);
+  });
 });
 
 router.post('/quizset', async (req, res) => {
-  const { roomId, quizset } = req.body;
+  const { roomId, quizsetTitle, quizsetOrder } = req.body;
   const { data, isError } = await dbManager.quizset.createQuizset(
     roomId,
-    quizset,
+    quizsetTitle,
+    quizsetOrder,
   );
   const isSuccess = isError === undefined;
   if (!isSuccess) {

@@ -15,12 +15,11 @@ class Quizset extends Table {
     return this.query(query, roomId);
   }
 
-  createQuizset(roomId, quizset) {
-    const { title, quizsetOrder } = quizset;
+  createQuizset(roomId, quizsetTitle, quizsetOrder) {
     const insert = `INSERT INTO ${quizsetTable} (title, quizset_order, room_id)`;
     const values = `VALUES (?, ?, ?)`;
     const query = `${insert} ${values}`;
-    return this.query(query, title, quizsetOrder, roomId);
+    return this.query(query, quizsetTitle, quizsetOrder, roomId);
   }
 
   readLastQuizsetId(roomId) {
