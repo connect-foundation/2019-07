@@ -100,7 +100,7 @@ function HostWaitingRoom() {
       {!roomState.players.length && (
         <>
           <BigRoomNumber>방 번호 : {roomState.roomNumber}</BigRoomNumber>
-          <Loading message="참가자를 기다리고 있습니다." />
+          <Loading message="참가자를 기다리고 있습니다..." />
         </>
       )}
       <Header>
