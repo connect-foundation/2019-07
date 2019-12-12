@@ -88,11 +88,6 @@ function Item({ itemIndex }) {
     inputRef.current.value = title;
   }, [currentIndex, deleteCount]);
 
-  function onChangeHanlder(event) {
-    const itemTitle = event.target.value;
-    dispatch({ type: actionTypes.UPDATE_ITEM_TITLE, itemTitle, itemIndex });
-  }
-
   function changeIsAnswer() {
     const itemIsAnswer = 1 - isAnswer;
     dispatch({
@@ -100,6 +95,12 @@ function Item({ itemIndex }) {
       itemIsAnswer,
       itemIndex,
     });
+  }
+
+  function onChangeHanlder(event) {
+    const itemTitle = event.target.value;
+    if (itemTitle.length === 0) changeIsAnswer();
+    dispatch({ type: actionTypes.UPDATE_ITEM_TITLE, itemTitle, itemIndex });
   }
 
   return (
@@ -118,7 +119,13 @@ function Item({ itemIndex }) {
               (itemIndex < 2 ? '(필수)' : '(옵션)')}`}
           />
         </InputWrapper>
-        <ItemCheckBox isAnswer={isAnswer} onClick={changeIsAnswer} />
+        <ItemCheckBox
+          isAnswer={isAnswer}
+          onClick={() => {
+            if (title.length === 0) return;
+            changeIsAnswer();
+          }}
+        />
       </ContentArea>
     </ItemWrapper>
   );
