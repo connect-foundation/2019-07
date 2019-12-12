@@ -186,7 +186,7 @@ function DashBoard({ ranking }) {
 }
 
 DashBoard.propTypes = {
-  ranking: PropTypes.arrayOf.isRequired,
+  ranking: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default DashBoard;
