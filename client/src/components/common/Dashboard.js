@@ -30,7 +30,7 @@ const Line = styled.div`
   position: relative;
   display: flex;
   width: 100%;
-  height: calc(10% - ${lineMarginBottom});
+  height: calc(8% - ${lineMarginBottom});
   margin-bottom: ${lineMarginBottom};
   background-color: white;
   align-items: center;
@@ -115,6 +115,15 @@ const Score = styled.span`
   }
 `;
 
+const Title = styled.div`
+  width: 100%;
+  text-align: center;
+  position: relative;
+  margin: 3vmin 0;
+  font-size: 8vmin;
+  font-weight: bold;
+`;
+
 function sortByHighScore(player1, player2) {
   if (player1.score < player2.score) return 1;
   if (player1.score > player2.score) return -1;
@@ -156,6 +165,7 @@ function DashBoard({ ranking }) {
 
   return (
     <Container>
+      <Title>TOP 10</Title>
       {lines.map(data => (
         <Line key={data.nickname}>
           <Order order={data.order}>{data.order > 2 && data.order + 1}</Order>

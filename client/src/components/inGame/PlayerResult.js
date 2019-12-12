@@ -3,10 +3,11 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import Dashboard from '../common/Dashboard';
-import * as colors from '../../constants/colors';
-import { readRank } from '../../utils/fetch';
-
 import LoadingCircle from '../common/LoadingCircle';
+import { YellowButton } from '../common/Buttons';
+import { readRank } from '../../utils/fetch';
+import * as colors from '../../constants/colors';
+import DESKTOP_MIN_WIDTH from '../../constants/media';
 import goldMedalImage from '../../assets/images/goldMedal.png';
 import silverMedalImage from '../../assets/images/silverMedal.png';
 import bronzeMedalImage from '../../assets/images/bronzeMedal.png';
@@ -21,13 +22,6 @@ const Background = styled.div`
   height: 100vh;
   background-color: ${colors.BACKGROUND_LIGHT_GRAY};
   user-select: none;
-`;
-
-const Title = styled.span`
-  position: relative;
-  margin: 3vmin 0;
-  font-size: 8vmin;
-  font-weight: bold;
 `;
 
 const RankSection = styled.div`
@@ -58,6 +52,22 @@ const Medal = styled.div`
   ${props => `background-image: url(${medalImages[props.rank - 1]})`};
 `;
 
+const ButtonContainer = styled.div`
+  right: 0;
+  position: absolute;
+  margin: 1rem;
+
+  button {
+    font-size: 1rem;
+  }
+
+  @media (min-width: ${DESKTOP_MIN_WIDTH}) {
+    button {
+      font-size: 2rem;
+    }
+  }
+`;
+
 function PlayerResult({ ranking, roomNumber, nickname }) {
   const [rank, setRank] = useState(0);
 
@@ -72,15 +82,20 @@ function PlayerResult({ ranking, roomNumber, nickname }) {
     return <LoadingCircle color={colors.PRIMARY_DEEP_GREEN} />;
   }
 
+  function exit() {
+    window.location.href = '/';
+  }
   // fetch 요청으로 rank를 받아온 경우
   if (rank) {
     return (
       <Background>
+        <ButtonContainer>
+          <YellowButton onClick={exit}>나가기</YellowButton>
+        </ButtonContainer>
         <RankSection>
           {rank <= 3 && <Medal rank={rank} />}
           {rank > 3 && <Rank>{rank}등</Rank>}
         </RankSection>
-        <Title>TOP 10</Title>
         <Dashboard ranking={ranking} />
       </Background>
     );
