@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import * as colors from '../../constants/colors';
 import Header from '../../components/common/Header';
 import { YellowButton } from '../../components/common/Buttons';
-import TabContents from '../../components/detailRoom/TabContents';
+import QuizTab from '../../components/detailRoom/QuizTab';
 import RoomInformation from '../../components/detailRoom/RoomInformation';
 import { readQuizsetId } from '../../utils/fetch';
 
@@ -58,7 +58,7 @@ function DetailRoom({ history, location }) {
           )}
         </ButtonContainer>
       </Header>
-      <TabContents roomId={roomId} history={history} quizsetId={quizsetId} />
+      <QuizTab roomId={roomId} history={history} quizsetId={quizsetId} />
     </Background>
   );
 }
