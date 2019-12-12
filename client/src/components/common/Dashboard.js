@@ -133,10 +133,16 @@ function sortByHighScore(player1, player2) {
 }
 
 function DashBoard({ ranking }) {
+  if (!ranking) {
+    window.location.href = '/';
+  }
   const [lines, setLines] = useState([]);
   const datas = ranking;
 
   useEffect(() => {
+    if (datas.length === 0 || datas === undefined) {
+      return;
+    }
     datas.sort(sortByHighScore);
     const maxScore = datas[0].score;
     datas[0].order = 0;
