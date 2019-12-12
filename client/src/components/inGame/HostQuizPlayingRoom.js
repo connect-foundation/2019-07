@@ -23,20 +23,16 @@ const ItemList = styled.div`
   border-radius: 5px;
   background-color: ${props => props.fontColor};
   p {
+    word-break: break-all;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
     width: 100%;
     margin: 0;
     color: ${colors.TEXT_WHITE};
-    font-size: 1.5rem;
+    font-size: 1.5vh;
     font-weight: bold;
     text-align: center;
-  }
-  @media (min-width: ${DESKTOP_MIN_WIDTH}) {
-    p {
-      font-size: 3rem;
-    }
   }
 `;
 
