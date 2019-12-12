@@ -26,12 +26,12 @@ function DetailRoom({ history, location }) {
   if (!location.state) {
     window.location.href = '/host/room/select';
   }
-
+  const { roomId } = location.state;
   function handlePlayButton() {
     history.push({
       pathname: '/host',
       state: {
-        roomId: location.state.roomId,
+        roomId,
       },
     });
   }
@@ -39,12 +39,12 @@ function DetailRoom({ history, location }) {
   return (
     <Background>
       <Header>
-        <RoomInformation roomId={location.state.roomId} />
+        <RoomInformation roomId={roomId} />
         <ButtonContainer>
           <YellowButton onClick={handlePlayButton}>시작하기</YellowButton>
         </ButtonContainer>
       </Header>
-      <TabContents roomId={location.state.roomId} history={history} />
+      <TabContents roomId={roomId} history={history} />
     </Background>
   );
 }
