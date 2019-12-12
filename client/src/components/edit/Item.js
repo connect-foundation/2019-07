@@ -41,7 +41,6 @@ const InputWrapper = styled.div`
   flex: 1;
   height: 100%;
   margin-right: 1vmin;
-  background-color: gray;
 `;
 
 const ItemInput = styled.input`
@@ -80,24 +79,24 @@ const ItemCheckBox = styled.div`
 
 function Item({ itemIndex }) {
   const { quizsetState, dispatch, actionTypes } = useContext(EditContext);
-  const { quizset, currentIndex } = quizsetState;
+  const { quizset, currentIndex, deleteCount } = quizsetState;
   const { items } = quizset[currentIndex];
   const { isAnswer, title } = items[itemIndex];
   const inputRef = useRef();
 
   useEffect(() => {
     inputRef.current.value = title;
-  }, [currentIndex]);
+  }, [currentIndex, deleteCount]);
 
   function onChangeHanlder(event) {
     const itemTitle = event.target.value;
-    dispatch({ type: actionTypes.CHANGE_ITEM_TITLE, itemTitle, itemIndex });
+    dispatch({ type: actionTypes.UPDATE_ITEM_TITLE, itemTitle, itemIndex });
   }
 
   function changeIsAnswer() {
-    const itemIsAnswer = !isAnswer;
+    const itemIsAnswer = 1 - isAnswer;
     dispatch({
-      type: actionTypes.CHANGE_ITEM_IS_ANSWER,
+      type: actionTypes.UPDATE_ITEM_IS_ANSWER,
       itemIsAnswer,
       itemIndex,
     });
@@ -114,7 +113,9 @@ function Item({ itemIndex }) {
               title.length === 0 ? 'white' : colors.ITEM_COLOR[itemIndex]
             }
             maxLength={75}
-            placeholder={`Add Answer${itemIndex + 1}`}
+            placeholder={`보기 입력${itemIndex +
+              1 +
+              (itemIndex < 2 ? '(필수)' : '(옵션)')}`}
           />
         </InputWrapper>
         <ItemCheckBox isAnswer={isAnswer} onClick={changeIsAnswer} />

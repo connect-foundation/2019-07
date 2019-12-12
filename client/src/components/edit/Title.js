@@ -8,7 +8,7 @@ function Title() {
   const { title } = quizset[currentIndex];
 
   function onChangeHanlder(value) {
-    dispatch({ type: actionTypes.CHANGE_TITLE, title: value });
+    dispatch({ type: actionTypes.UPDATE_TITLE, title: value });
   }
 
   return (
