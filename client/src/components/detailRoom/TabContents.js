@@ -30,7 +30,7 @@ const TabMenuButton = styled.div`
   }
 `;
 
-function TabContents({ history }) {
+function TabContents({ history, roomId }) {
   const [isQuizMenuSelected, setQuizMenuState] = useState(true);
   const [isAnalysisMenuSelected, setAnalysisMenuState] = useState(false);
 
@@ -68,7 +68,7 @@ function TabContents({ history }) {
         </TabMenuButton>
       </NavigationBar>
       <main>
-        {isQuizMenuSelected && <QuizTab history={history} />}
+        {isQuizMenuSelected && <QuizTab history={history} roomId={roomId} />}
         {isAnalysisMenuSelected && <>ver 1.0에서 제공되지 않는 기능입니다</>}
       </main>
     </>
@@ -79,6 +79,7 @@ TabContents.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
+  roomId: PropTypes.number.isRequired,
 };
 
 export default TabContents;

@@ -73,14 +73,14 @@ function ImageField() {
   const [file, setFile] = useState(undefined);
 
   useEffect(() => {
-    setFile(quizset[currentIndex].image);
+    setFile(quizset[currentIndex].imagePath);
   }, [currentIndex]);
 
   const onDrop = useCallback(acceptedFiles => {
     try {
-      const image = URL.createObjectURL(acceptedFiles[0]);
-      dispatch({ type: actionTypes.CHANGE_IMAGE, image });
-      setFile(image);
+      const imagePath = URL.createObjectURL(acceptedFiles[0]);
+      dispatch({ type: actionTypes.UPDATE_IMAGE, imagePath });
+      setFile(imagePath);
     } catch (error) {
       //error
     }
