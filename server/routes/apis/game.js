@@ -20,13 +20,20 @@ const {
 router.get('/room/:roomNumber/quiz', async (req, res) => {
   const { roomNumber } = req.params;
 
-  // inMemory서 quizSet을 가져옴.
-  const quizSet = inMemory.room.getQuizSet(roomNumber);
-
-  // 받아온 quizSet을 전송
-  res.json({
-    quizSet,
-  });
+  try {
+    // inMemory서 quizSet을 가져옴.
+    const quizSet = inMemory.room.getQuizSet(roomNumber);
+    // 받아온 quizSet을 전송
+    res.json({
+      isSuccess: true,
+      quizSet,
+    });
+  } catch (error) {
+    res.json({
+      isError: true,
+      message: error.message,
+    });
+  }
 });
 
 /**

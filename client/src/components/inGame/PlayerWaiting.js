@@ -32,7 +32,12 @@ const Main = styled.main`
 function PlayerWaiting({ setQuizSet, roomNumber }) {
   useEffect(() => {
     fetchQuizSet(roomNumber).then(response => {
-      setQuizSet(response.quizSet);
+      if (response.isSuccess) {
+        setQuizSet(response.quizSet);
+      } else {
+        // 유효하지 않은 방의 퀴즈세트를 받는 경우
+        window.location.href = '/';
+      }
     });
   }, []);
 

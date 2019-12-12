@@ -51,6 +51,15 @@ function handleEndQuiz({ roomNumber }) {
 function handleEnterPlayer({ roomNumber, nickname }) {
   if (!inMemory.room.isRoomExist(roomNumber)) return;
 
+  if (inMemory.room.isPlayerExist(roomNumber, nickname)) {
+    const score = inMemory.room.getPlayerScore(roomNumber, nickname);
+
+    this.join(roomNumber, () => {
+      io.to(this.id).emit('settingScore', score);
+    });
+    return;
+  }
+
   const players = inMemory.room.setNewPlayer(roomNumber, nickname);
 
   this.join(roomNumber, () => {

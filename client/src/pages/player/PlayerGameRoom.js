@@ -49,7 +49,6 @@ function PlayerGameRoom({ location }) {
 
   function blockClose(e) {
     e.returnValue = 'warning';
-    window.location.href = '/nickname/';
   }
 
   useEffect(() => {
@@ -59,10 +58,12 @@ function PlayerGameRoom({ location }) {
     });
 
     window.addEventListener('unload', () => {
-      socket.emit('leavePlayer', {
-        nickname: location.state.nickname,
-        roomNumber: location.state.roomNumber,
-      });
+      if (document.readyState !== 'complete') {
+        socket.emit('leavePlayer', {
+          nickname: location.state.nickname,
+          roomNumber: location.state.roomNumber,
+        });
+      }
     });
 
     return () => {
@@ -101,6 +102,10 @@ function PlayerGameRoom({ location }) {
   socket.on('closeRoom', () => {
     window.removeEventListener('beforeunload', blockClose);
     window.location.href = '/';
+  });
+
+  socket.on('settingScore', existedScore => {
+    setScore(existedScore);
   });
 
   return (
