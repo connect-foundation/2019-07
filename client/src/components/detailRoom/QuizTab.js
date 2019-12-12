@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
 import { YellowButton } from '../common/Buttons';
-import { readQuizsetId } from '../../utils/fetch';
+import { TEXT_BLACK } from '../../constants/colors';
 
 const Background = styled.div`
   padding: 1rem;
@@ -17,9 +17,14 @@ const ButtonContainer = styled.div`
   }
 `;
 
-function QuizTab({ history, roomId }) {
-  const [quizsetId, setQuizsetId] = useState(undefined);
+const Information = styled.div`
+  padding: 5rem;
+  font-size: 3rem;
+  text-align: center;
+  color: ${TEXT_BLACK};
+`;
 
+function QuizTab({ history, roomId, quizsetId }) {
   function editPage() {
     history.push({
       pathname: '/edit',
@@ -30,14 +35,6 @@ function QuizTab({ history, roomId }) {
     });
   }
 
-  useEffect(() => {
-    async function getQuizsetId() {
-      const { data } = await readQuizsetId(roomId);
-      setQuizsetId(data.quizsetId);
-    }
-    getQuizsetId();
-  }, []);
-
   return (
     <Background>
       <ButtonContainer>
@@ -45,15 +42,23 @@ function QuizTab({ history, roomId }) {
           {quizsetId === undefined ? '퀴즈 생성' : '퀴즈 편집'}
         </YellowButton>
       </ButtonContainer>
+      {!quizsetId && (
+        <Information>퀴즈가 없으면 시작할 수 없습니다</Information>
+      )}
     </Background>
   );
 }
+
+QuizTab.defaultProps = {
+  quizsetId: undefined,
+};
 
 QuizTab.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
   roomId: PropTypes.number.isRequired,
+  quizsetId: PropTypes.number,
 };
 
 export default QuizTab;
