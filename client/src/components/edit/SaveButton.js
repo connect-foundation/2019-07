@@ -110,7 +110,7 @@ async function createQuizset(roomId, quizset) {
 
 async function readQuizsetId(quizsetState, roomId, quizsetTitle, quizsetOrder) {
   const quizsetId =
-    quizsetState.quizsetId === undefined
+    quizsetState.quizsetId !== undefined
       ? quizsetState.quizsetId
       : await createQuizset(roomId, quizsetTitle, quizsetOrder);
   return quizsetId;

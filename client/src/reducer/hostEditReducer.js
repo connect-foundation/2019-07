@@ -44,7 +44,7 @@ const actionTypes = {
   ON_OFF_TIME_LIMIT: 8,
   READ_QUIZSET: 9,
   DELETE_QUIZ: 10,
-  UPDATE_ROOM_ID: 11,
+  UPDATE_IDS: 11,
   CHANGE_LOADING: 12,
 };
 
@@ -146,8 +146,9 @@ const quizsetReducer = (quizsetState, action) => {
         deleteCount: deleteCount + 1,
       };
     }
-    case actionTypes.UPDATE_ROOM_ID: {
-      return { ...quizsetState, roomId: action.roomId };
+    case actionTypes.UPDATE_IDS: {
+      const { roomId, quizsetId } = action;
+      return { ...quizsetState, roomId, quizsetId };
     }
     case actionTypes.CHANGE_LOADING: {
       return { ...quizsetState, isLoading: action.isLoading };

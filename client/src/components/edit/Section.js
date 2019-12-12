@@ -55,7 +55,7 @@ function Section({ roomId, quizsetId }) {
       dispatch({ type: actionTypes.READ_QUIZSET, quizset });
     }
 
-    dispatch({ type: actionTypes.UPDATE_ROOM_ID, roomId });
+    dispatch({ type: actionTypes.UPDATE_IDS, roomId, quizsetId });
 
     if (quizsetId === undefined) {
       dispatch({ type: actionTypes.CREATE_QUIZ });
