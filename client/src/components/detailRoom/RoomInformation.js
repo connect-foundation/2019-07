@@ -9,6 +9,7 @@ import { ModalContext } from '../common/ModalProvider';
 
 const RoomInformationContainer = styled.div`
   position: absolute;
+  left: 0;
   top: 50%;
   transform: translateY(-50%);
   display: flex;
