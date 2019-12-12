@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useRef } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import styled, { css } from 'styled-components';
 import PropTypes from 'prop-types';
 import * as colors from '../../constants/colors';
@@ -46,6 +46,7 @@ const ThumbnailContainer = styled.div`
   ${FlexStyle};
   overflow-y: auto;
   overflow-x: hidden;
+  scroll-behavior: smooth;
   @media (orientation: portrait) {
     overflow-x: auto;
     overflow-y: hidden;
@@ -98,18 +99,35 @@ AddQuizButton.propTypes = {
 
 function SideBar() {
   const { quizsetState, dispatch, actionTypes } = useContext(EditContext);
-  const { quizset } = quizsetState;
+  const { quizset, currentIndex } = quizsetState;
   const thumbnailContainerRef = useRef();
+  const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
 
   function addQuiz() {
-    dispatch({ type: actionTypes.ADD_QUIZ });
+    dispatch({ type: actionTypes.CREATE_QUIZ });
+  }
+
+  function moveScroll() {
+    const thumbContainer = thumbnailContainerRef.current;
+    const horizontalMax =
+      thumbContainer.scrollWidth - thumbContainer.offsetWidth;
+    const verticalMax =
+      thumbContainer.scrollHeight - thumbContainer.offsetHeight;
+    const lastIndex = quizset.length - 1;
+    const scrollPosition = currentIndex / lastIndex;
+    thumbContainer.scrollLeft = scrollPosition * horizontalMax;
+    thumbContainer.scrollTop = scrollPosition * verticalMax;
   }
 
   useEffect(() => {
-    const thumbContainer = thumbnailContainerRef.current;
-    thumbContainer.scrollLeft = thumbContainer.scrollWidth;
-    thumbContainer.scrollTop = thumbContainer.offsetHeight;
-  }, [quizset.length]);
+    window.addEventListener('resize', () =>
+      setWindowSize({ width: window.innerWidth, height: window.innerHeight }),
+    );
+  }, []);
+
+  useEffect(() => {
+    moveScroll();
+  }, [currentIndex, windowSize]);
 
   return (
     <Background>
