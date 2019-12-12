@@ -1,10 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
 
 import * as colors from '../../constants/colors';
 import ProgressBar from './ProgressBar';
-import { fetchQuizSet } from '../../utils/fetch';
 
 const Container = styled.div`
   display: flex;
@@ -30,13 +28,7 @@ const Saying = styled.span`
   text-align: center;
 `;
 
-function PlayerQuizLoading({ setQuizSet, roomNumber }) {
-  useEffect(() => {
-    fetchQuizSet(roomNumber).then(response => {
-      setQuizSet(response.quizSet);
-    });
-  }, []);
-
+function PlayerQuizLoading() {
   return (
     <Container>
       <Main>
@@ -49,10 +41,5 @@ function PlayerQuizLoading({ setQuizSet, roomNumber }) {
     </Container>
   );
 }
-
-PlayerQuizLoading.propTypes = {
-  setQuizSet: PropTypes.func.isRequired,
-  roomNumber: PropTypes.string.isRequired,
-};
 
 export default PlayerQuizLoading;
