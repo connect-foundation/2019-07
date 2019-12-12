@@ -88,8 +88,7 @@ function Item({ itemIndex }) {
     inputRef.current.value = title;
   }, [currentIndex, deleteCount]);
 
-  function changeIsAnswer() {
-    const itemIsAnswer = 1 - isAnswer;
+  function updateIsAnswer(itemIsAnswer) {
     dispatch({
       type: actionTypes.UPDATE_ITEM_IS_ANSWER,
       itemIsAnswer,
@@ -99,7 +98,7 @@ function Item({ itemIndex }) {
 
   function onChangeHanlder(event) {
     const itemTitle = event.target.value;
-    if (itemTitle.length === 0) changeIsAnswer();
+    if (itemTitle.length === 0) updateIsAnswer(0);
     dispatch({ type: actionTypes.UPDATE_ITEM_TITLE, itemTitle, itemIndex });
   }
 
@@ -123,7 +122,7 @@ function Item({ itemIndex }) {
           isAnswer={isAnswer}
           onClick={() => {
             if (title.length === 0) return;
-            changeIsAnswer();
+            updateIsAnswer(1 - isAnswer);
           }}
         />
       </ContentArea>
