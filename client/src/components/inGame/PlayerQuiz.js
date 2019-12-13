@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 
 import * as colors from '../../constants/colors';
 import { Button } from '../common/Buttons';
@@ -7,6 +8,16 @@ import * as layout from './Layout';
 
 import LoadingCircle from '../common/LoadingCircle';
 import { readAnswer } from '../../utils/fetch';
+
+const ImageContainer = styled.div`
+  width: 100%;
+  height: 100%;
+
+  background-image: url(${props => props.image});
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+`;
 
 function Selection({ currentQuiz, chooseAnswer, setIsAnswer }) {
   useEffect(() => {
@@ -19,7 +30,11 @@ function Selection({ currentQuiz, chooseAnswer, setIsAnswer }) {
       <layout.Center>
         <layout.CenterContentContainer>
           <layout.CenterLeftPanel />
-          <layout.ImagePanel />
+          <layout.ImagePanel>
+            {currentQuiz.image !== null && (
+              <ImageContainer image={currentQuiz.image} />
+            )}
+          </layout.ImagePanel>
           <layout.CenterRightPanel />
         </layout.CenterContentContainer>
       </layout.Center>
@@ -81,6 +96,7 @@ Selection.propTypes = {
         title: PropTypes.string.isRequired,
       }),
     ).isRequired,
+    image: PropTypes.string.isRequired,
   }).isRequired,
   chooseAnswer: PropTypes.func.isRequired,
   setIsAnswer: PropTypes.func.isRequired,

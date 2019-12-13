@@ -4,6 +4,7 @@ import { GreenButton } from '../common/Buttons';
 import * as layout from './Layout';
 import Hourglass from './Hourglass';
 import { HostGameAction, HostGameContext } from '../../reducer/hostGameReducer';
+import multipleChoiceImage from '../../assets/images/multiple_choice.svg';
 
 const RemainTime = styled.span`
   position: absolute;
@@ -11,6 +12,13 @@ const RemainTime = styled.span`
   font-size: 2vw;
   font-weight: bold;
   user-select: none;
+`;
+
+const QuizImage = styled.img.attrs({
+  src: props => props.src,
+})`
+  width: 100%;
+  height: 100%;
 `;
 
 function HostPlaying() {
@@ -50,7 +58,9 @@ function HostPlaying() {
         <Hourglass />
         <RemainTime>{remainTime}</RemainTime>
       </layout.CenterLeftPanel>
-      <layout.ImagePanel />
+      <layout.ImagePanel>
+        <QuizImage src={roomState.currentQuiz.image || multipleChoiceImage} />
+      </layout.ImagePanel>
       <layout.CenterRightPanel>
         <layout.RemainPeople>
           <br />
