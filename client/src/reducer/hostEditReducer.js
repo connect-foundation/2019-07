@@ -8,28 +8,17 @@ const createItem = itemOrder => {
     isAnswer: false,
   };
 };
-const createQuiz = () => {
+const createQuiz = order => {
   return {
     id: undefined,
     title: '',
-    quizOrder: 0,
+    quizOrder: order,
     imagePath: null,
+    imageFile: null,
     items: [createItem(0), createItem(1), createItem(2), createItem(3)],
     timeLimit: 30,
     score: 1000,
   };
-};
-
-const initialQuizsetState = {
-  roomId: undefined,
-  quizsetId: undefined,
-  quizset: [],
-  readedQuizset: [],
-  deletedQuizzes: [],
-  deleteCount: 0,
-  currentIndex: 0,
-  isTimeLimitOpend: false,
-  isLoading: true,
 };
 
 const actionTypes = {
@@ -48,8 +37,27 @@ const actionTypes = {
   CHANGE_LOADING: 12,
 };
 
+const loadingTypes = {
+  IDLE: 0,
+  READ_DATA: 1,
+  UPDATE_DATA: 2,
+};
+
+const initialQuizsetState = {
+  roomId: undefined,
+  quizsetId: undefined,
+  quizset: [],
+  readedQuizset: [],
+  deletedQuizzes: [],
+  deleteCount: 0,
+  currentIndex: 0,
+  isTimeLimitOpend: false,
+  loadingType: loadingTypes.READ_DATA,
+};
+
 function addQuiz(quizset) {
-  return [...quizset, createQuiz()];
+  const order = quizset.length;
+  return [...quizset, createQuiz(order)];
 }
 
 function updateArray(array, index, element) {
@@ -68,7 +76,7 @@ const quizsetReducer = (quizsetState, action) => {
         quizset: addQuiz(quizset),
         currentIndex: quizset.length,
         isTimeLimitOpend: false,
-        isLoading: false,
+        loadingType: loadingTypes.IDLE,
       };
     }
     case actionTypes.UPDATE_CURRENT_INDEX: {
@@ -85,6 +93,7 @@ const quizsetReducer = (quizsetState, action) => {
     }
     case actionTypes.UPDATE_IMAGE: {
       quiz.imagePath = action.imagePath;
+      quiz.imageFile = action.imageFile;
       const newQuizset = updateArray(quizset, currentIndex, quiz);
       return { ...quizsetState, quizset: newQuizset };
     }
@@ -128,7 +137,7 @@ const quizsetReducer = (quizsetState, action) => {
         ...quizsetState,
         quizset: getNewQuizset(),
         readedQuizset: getNewQuizset(),
-        isLoading: false,
+        loadingType: loadingTypes.IDLE,
       };
     }
     case actionTypes.DELETE_QUIZ: {
@@ -137,6 +146,12 @@ const quizsetReducer = (quizsetState, action) => {
       if (deletedQuiz.id !== undefined) deletedQuizzes.push(deletedQuiz);
       const nextIndex = Math.min(currentIndex, Math.max(quizset.length - 1, 0));
       const nextQuizset = quizset.length > 0 ? quizset : [createQuiz()];
+
+      //quizOrder 리셋
+      for (let index = nextIndex; index < nextQuizset.length; index += 1) {
+        const nextQuiz = nextQuizset[index];
+        nextQuiz.quizOrder = index;
+      }
       return {
         ...quizsetState,
         deletedQuizzes,
@@ -151,11 +166,11 @@ const quizsetReducer = (quizsetState, action) => {
       return { ...quizsetState, roomId, quizsetId };
     }
     case actionTypes.CHANGE_LOADING: {
-      return { ...quizsetState, isLoading: action.isLoading };
+      return { ...quizsetState, loadingType: action.loadingType };
     }
     default:
       return quizsetState;
   }
 };
 
-export { initialQuizsetState, quizsetReducer, actionTypes };
+export { initialQuizsetState, quizsetReducer, actionTypes, loadingTypes };

@@ -4,6 +4,7 @@ import {
   initialQuizsetState,
   quizsetReducer,
   actionTypes,
+  loadingTypes,
 } from '../../reducer/hostEditReducer';
 
 export const EditContext = createContext();
@@ -14,7 +15,9 @@ function EditContextProvider({ children }) {
     initialQuizsetState,
   );
   return (
-    <EditContext.Provider value={{ quizsetState, dispatch, actionTypes }}>
+    <EditContext.Provider
+      value={{ quizsetState, dispatch, actionTypes, loadingTypes }}
+    >
       {children}
     </EditContext.Provider>
   );

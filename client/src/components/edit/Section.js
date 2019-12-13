@@ -41,8 +41,10 @@ const MainContentContainer = styled.div`
 `;
 
 function Section({ roomId, quizsetId }) {
-  const { quizsetState, dispatch, actionTypes } = useContext(EditContext);
-  const { isLoading } = quizsetState;
+  const { quizsetState, dispatch, actionTypes, loadingTypes } = useContext(
+    EditContext,
+  );
+  const { loadingType } = quizsetState;
   useEffect(() => {
     async function fetchData(tryCount) {
       if (tryCount === 0) return;
@@ -66,7 +68,7 @@ function Section({ roomId, quizsetId }) {
 
   return (
     <>
-      {isLoading ? (
+      {loadingType !== loadingTypes.IDLE ? (
         <Loading message="데이터를 불러오는 중입니다" />
       ) : (
         <Background>
