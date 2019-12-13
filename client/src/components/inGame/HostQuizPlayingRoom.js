@@ -70,13 +70,16 @@ function HostQuizPlayingRoom() {
       </layout.Center>
       <layout.Bottom>
         <layout.ItemContainer>
-          {roomState.currentQuiz.items.map((item, index) => (
-            <layout.Item key={item.title}>
-              <ItemList key={item.title} fontColor={colors.ITEM_COLOR[index]}>
-                <p>{item.title}</p>
-              </ItemList>
-            </layout.Item>
-          ))}
+          {roomState.currentQuiz.items.map((item, index) => {
+            if (!item.title) return null;
+            return (
+              <layout.Item key={item.title}>
+                <ItemList key={item.title} fontColor={colors.ITEM_COLOR[index]}>
+                  <p>{item.title}</p>
+                </ItemList>
+              </layout.Item>
+            );
+          })}
         </layout.ItemContainer>
       </layout.Bottom>
     </layout.Background>
