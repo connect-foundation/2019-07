@@ -119,21 +119,24 @@ function ScoreChart({ itemDatas }) {
   }, []);
   return (
     <Container>
-      {items.map((item, index) => (
-        <GraphWrapper key={item.title} width={graphWidth}>
-          <GraphBottom index={index}>
-            <ItemTitle>{item.title}</ItemTitle>
-          </GraphBottom>
-          <GraphTopWrapper>
-            <GraphTop index={index} animationName={item.animationName}>
-              <GraphCount index={index} isAnswer={item.isAnswer}>
-                {item.playerCount}
-              </GraphCount>
-            </GraphTop>
-          </GraphTopWrapper>
-          <GraphTopLimiter />
-        </GraphWrapper>
-      ))}
+      {items.map((item, index) => {
+        if (!item.title) return null;
+        return (
+          <GraphWrapper key={item.title} width={graphWidth}>
+            <GraphBottom index={index}>
+              <ItemTitle>{item.title}</ItemTitle>
+            </GraphBottom>
+            <GraphTopWrapper>
+              <GraphTop index={index} animationName={item.animationName}>
+                <GraphCount index={index} isAnswer={item.isAnswer}>
+                  {item.playerCount}
+                </GraphCount>
+              </GraphTop>
+            </GraphTopWrapper>
+            <GraphTopLimiter />
+          </GraphWrapper>
+        );
+      })}
     </Container>
   );
 }
