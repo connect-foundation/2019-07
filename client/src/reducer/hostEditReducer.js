@@ -35,6 +35,7 @@ const actionTypes = {
   DELETE_QUIZ: 10,
   UPDATE_IDS: 11,
   CHANGE_LOADING: 12,
+  RESET_DELETE_QUIZZES: 13,
 };
 
 const loadingTypes = {
@@ -167,6 +168,9 @@ const quizsetReducer = (quizsetState, action) => {
     }
     case actionTypes.CHANGE_LOADING: {
       return { ...quizsetState, loadingType: action.loadingType };
+    }
+    case actionTypes.RESET_DELETE_QUIZZES: {
+      return { ...quizsetState, deletedQuizzes: [] };
     }
     default:
       return quizsetState;
