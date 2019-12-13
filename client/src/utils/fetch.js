@@ -136,17 +136,27 @@ async function readQuizset(quizsetId) {
   return response;
 }
 
-async function createQuiz(quizsetId, quiz) {
+async function fetchForm({ data, method }) {
   const url = '/edit/quiz';
-  const response = await fetchPost({ url, data: { quizsetId, quiz } });
+  const response = await fetch(url, {
+    method,
+    body: data,
+  });
+  const responseJson = await response.json();
+  return responseJson;
+}
+
+async function createQuiz(formData) {
+  const response = await fetchForm({
+    data: formData,
+    method: 'POST',
+  });
   return response;
 }
 
-async function updateQuiz(quiz) {
-  const url = '/edit/quiz';
-  const response = await fetchPost({
-    url,
-    data: { quiz },
+async function updateQuiz(formData) {
+  const response = await fetchForm({
+    data: formData,
     method: 'PUT',
   });
   return response;
@@ -168,11 +178,11 @@ async function updateItem(item) {
   return response;
 }
 
-async function deleteQuiz(quizId) {
+async function deleteQuiz(roomId, quizId) {
   const url = '/edit/quiz';
   const response = await fetchPost({
     url,
-    data: { quizId },
+    data: { roomId, quizId },
     method: 'DELETE',
   });
   return response;

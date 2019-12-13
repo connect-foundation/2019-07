@@ -1,8 +1,11 @@
 const express = require('express');
+const multer = require('multer');
 
+const upload = multer();
 const router = express.Router();
 
 const dbManager = require('../../models/database/dbManager');
+const objectStorage = require('../../objectStorage');
 
 function getQuizset(quizzes, items) {
   function pushQuiz(quizset, quiz) {
@@ -15,6 +18,13 @@ function getQuizset(quizzes, items) {
   }
 
   return quizzes.reduce(pushQuiz, []);
+}
+
+function getImagePath(roomId, quizId, originalname) {
+  const filename = encodeURIComponent(originalname)
+    .replace(/[!'()]/g, escape)
+    .replace(/\*/g, '%2A');
+  return `https://kr.object.ncloudstorage.com/pickyforky/images/${roomId}/${quizId}/${filename}`;
 }
 
 router.get('/quizset/:quizsetId', async (req, res) => {
@@ -58,9 +68,14 @@ router.post('/quizset', async (req, res) => {
   });
 });
 
-router.post('/quiz', async (req, res) => {
-  const { quizsetId, quiz } = req.body;
-  const { data, isError } = await dbManager.quiz.createQuiz(quizsetId, quiz);
+router.post('/quiz', upload.single('file'), async (req, res) => {
+  const { roomId, quizsetId, title, quizOrder, score, timeLimit } = req.body;
+  const { data, isError } = await dbManager.quiz.createQuiz(quizsetId, {
+    title,
+    quizOrder,
+    score,
+    timeLimit,
+  });
   const isSuccess = isError === undefined;
   if (!isSuccess) {
     res.json({
@@ -68,26 +83,48 @@ router.post('/quiz', async (req, res) => {
     });
     return;
   }
+  const quizId = data.insertId;
+  const { file } = req;
+  if (file !== undefined) {
+    const { buffer, originalname } = file;
+    await objectStorage.uploadImage(roomId, quizId, originalname, buffer);
+    const newImagePath = getImagePath(roomId, quizId, originalname);
+    await dbManager.quiz.updateImagePath(quizId, newImagePath);
+  }
   res.json({
     isSuccess,
     data: {
-      quizId: data.insertId,
+      quizId,
     },
   });
 });
 
-router.put('/quiz', async (req, res) => {
-  const { quiz } = req.body;
-  const { isError } = await dbManager.quiz.updateQuiz(quiz);
+router.put('/quiz', upload.single('file'), async (req, res) => {
+  const { roomId, id, title, quizOrder, score, timeLimit } = req.body;
+  const { file } = req;
+  const { isError } = await dbManager.quiz.updateQuiz({
+    id,
+    title,
+    quizOrder,
+    score,
+    timeLimit,
+  });
   const isSuccess = isError === undefined;
+  if (file !== undefined) {
+    const { buffer, originalname } = file;
+    await objectStorage.uploadImage(roomId, id, originalname, buffer);
+    const newImagePath = getImagePath(roomId, id, originalname);
+    await dbManager.quiz.updateImagePath(id, newImagePath);
+  }
   res.json({
     isSuccess,
   });
 });
 
 router.delete('/quiz', async (req, res) => {
-  const { quizId } = req.body;
+  const { roomId, quizId } = req.body;
   const { isError } = await dbManager.quiz.deleteQuiz(quizId);
+  await objectStorage.deleteQuizFolder(roomId, quizId);
   const isSuccess = isError === undefined;
   res.json({
     isSuccess,
