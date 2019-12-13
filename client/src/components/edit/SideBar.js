@@ -144,9 +144,14 @@ function SideBar() {
   }
 
   useEffect(() => {
-    window.addEventListener('resize', () =>
-      setWindowSize({ width: window.innerWidth, height: window.innerHeight }),
-    );
+    function changeWindowSize() {
+      setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+    }
+
+    window.addEventListener('resize', changeWindowSize);
+    return () => {
+      window.removeEventListener('resize', changeWindowSize);
+    };
   }, []);
 
   useEffect(() => {
