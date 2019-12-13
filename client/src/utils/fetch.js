@@ -1,5 +1,3 @@
-import * as address from '../constants/apiAddresses';
-
 async function fetchPost({ url, data, method = 'POST' }) {
   const response = await fetch(url, {
     method,
@@ -13,9 +11,15 @@ async function fetchPost({ url, data, method = 'POST' }) {
   return responseJson;
 }
 
+async function fetchGet({ url }) {
+  const response = await fetch(url);
+  const responseJson = await response.json();
+  return responseJson;
+}
+
 async function addRoom({ userId, roomTitle }) {
   const response = await fetchPost({
-    url: `/${address.userApiUrl}/room`,
+    url: `/user/room`,
     data: {
       title: roomTitle,
       userId,
@@ -36,15 +40,20 @@ async function updateRoomTitle({ roomId, title }) {
   return response;
 }
 
-async function fetchGet({ url }) {
-  const response = await fetch(url);
-  const responseJson = await response.json();
-  return responseJson;
+async function deleteRoom({ roomId }) {
+  const response = await fetchPost({
+    url: `/user/room`,
+    data: {
+      roomId,
+    },
+    method: 'DELETE',
+  });
+  return response;
 }
 
 async function fetchRooms({ userId }) {
   const response = await fetchGet({
-    url: `/${address.userApiUrl}/${userId}/rooms`,
+    url: `/user/${userId}/rooms`,
   });
   return response;
 }
@@ -56,57 +65,125 @@ async function fetchRoomTitle({ roomId }) {
   return response;
 }
 
+async function readAnswer(roomNumber, nickname, quizIndex, choose) {
+  const url = `/room/player/choose/check`;
+  const response = await fetchPost({
+    url,
+    data: {
+      roomNumber,
+      nickname,
+      quizIndex,
+      choose,
+    },
+  });
+  return response;
+}
+
 async function fetchRoomNumber(roomNumber) {
   const response = await fetchGet({
-    url: `/${address.roomApiUrl}/${roomNumber}`,
+    url: `/room/${roomNumber}`,
   });
   return response;
 }
 
 async function fetchNickname(nickname, roomNumber) {
   const response = await fetchGet({
-    url: `/${address.roomApiUrl}/${roomNumber}/${address.name}/${nickname}`,
-  });
-  return response;
-}
-
-async function fetchToken(data) {
-  const response = await fetchGet({
-    url: `/${address.getToken}/${data.access_token}`,
+    url: `/room/${roomNumber}/name/${nickname}`,
   });
   return response;
 }
 
 async function fetchQuizSet(roomNumber) {
   const response = await fetchGet({
-    url: `/${address.roomApiUrl}/${roomNumber}/${address.roomApiGetQuizSet}`,
+    url: `/room/${roomNumber}/quiz`,
   });
   return response;
 }
 
-async function fetchChoose(roomNumber, quizIndex, choose) {
-  // url 양식 : /room/:roomNumber/quiz/:quizIndex/choose/:choose
-  const url = `/${address.roomApiUrl}/${roomNumber}/${address.quiz}/${quizIndex}/${address.choose}/${choose}`;
-  const response = await fetchPost({
-    url,
-  });
-  return response;
-}
-
-async function fetchCheckAnswer(roomNumber, nickname, quizIndex, choose) {
-  // url 양식 : /room/:roomNumber/player/:nickname/quiz/:quizIndex/choose/:choose
-  const url = `/${address.roomApiUrl}/${roomNumber}/${address.player}/${nickname}/${address.quiz}/${quizIndex}/${address.choose}/${choose}`;
-  const response = await fetchPost({
-    url,
-  });
-  return response;
-}
-
-async function fetchRank(roomNumber, nickname) {
-  // url 양식 : /room/:roomNumber/player/:nickname/result
-  const url = `/${address.roomApiUrl}/${roomNumber}/${address.player}/${nickname}/${address.result}`;
+async function readRank(roomNumber, nickname) {
+  const url = `/room/${roomNumber}/player/${nickname}/result`;
   const response = await fetchGet({
     url,
+  });
+  return response;
+}
+
+async function getToken(data) {
+  const response = await fetchGet({
+    url: `/login/token/${data.access_token}`,
+  });
+  return response;
+}
+
+async function readQuizsetId(roomId) {
+  const url = `/room/quizset/${roomId}`;
+  const response = await fetchGet({ url });
+  return response;
+}
+
+async function createQuizset(roomId, quizsetTitle, quizsetOrder) {
+  const url = `/edit/quizset`;
+  const response = await fetchPost({
+    url,
+    data: { roomId, quizsetTitle, quizsetOrder },
+  });
+  return response;
+}
+
+async function readQuizset(quizsetId) {
+  const url = `/edit/quizset/${quizsetId}`;
+  const response = await fetchGet({ url });
+  return response;
+}
+
+async function fetchForm({ data, method }) {
+  const url = '/edit/quiz';
+  const response = await fetch(url, {
+    method,
+    body: data,
+  });
+  const responseJson = await response.json();
+  return responseJson;
+}
+
+async function createQuiz(formData) {
+  const response = await fetchForm({
+    data: formData,
+    method: 'POST',
+  });
+  return response;
+}
+
+async function updateQuiz(formData) {
+  const response = await fetchForm({
+    data: formData,
+    method: 'PUT',
+  });
+  return response;
+}
+
+async function createItems(quizId, items) {
+  const url = '/edit/items';
+  const response = await fetchPost({ url, data: { quizId, items } });
+  return response;
+}
+
+async function updateItem(item) {
+  const url = '/edit/item';
+  const response = await fetchPost({
+    url,
+    data: { item },
+    method: 'PUT',
+  });
+  return response;
+}
+
+async function deleteQuiz(roomId, quizId) {
+  const url = '/edit/quiz';
+  const response = await fetchPost({
+    url,
+    data: { roomId, quizId },
+    method: 'DELETE',
   });
   return response;
 }
@@ -114,13 +191,21 @@ async function fetchRank(roomNumber, nickname) {
 export {
   fetchRoomNumber,
   fetchNickname,
-  fetchToken,
+  getToken,
   fetchQuizSet,
-  fetchChoose,
-  fetchCheckAnswer,
-  fetchRank,
+  readAnswer,
+  readRank,
   fetchRooms,
   fetchRoomTitle,
   addRoom,
   updateRoomTitle,
+  readQuizsetId,
+  createQuizset,
+  readQuizset,
+  createQuiz,
+  updateQuiz,
+  createItems,
+  updateItem,
+  deleteQuiz,
+  deleteRoom,
 };

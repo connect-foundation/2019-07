@@ -2,12 +2,12 @@ const Table = require('./Table');
 const { userTable } = require('../../../constants/tableName');
 
 class User extends Table {
-  insertUser({ email }) {
-    return this.query(`INSERT INTO ${userTable} (email) VALUES ('${email}')`);
+  insertUser({ id }) {
+    return this.query(`INSERT INTO ${userTable} (naver_id) VALUES ('${id}')`);
   }
 
   selectAllUser() {
-    return this.query(`select id, email from ${userTable}`);
+    return this.query(`select id, naver_id from ${userTable}`);
   }
 }
 

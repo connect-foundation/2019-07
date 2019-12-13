@@ -70,17 +70,22 @@ const UploadedImage = styled.div`
 function ImageField() {
   const { quizsetState, dispatch, actionTypes } = useContext(EditContext);
   const { quizset, currentIndex } = quizsetState;
-  const [file, setFile] = useState(undefined);
+  const [imagePath, setImagePath] = useState(null);
 
   useEffect(() => {
-    setFile(quizset[currentIndex].image);
+    setImagePath(quizset[currentIndex].imagePath);
   }, [currentIndex]);
 
   const onDrop = useCallback(acceptedFiles => {
     try {
-      const image = URL.createObjectURL(acceptedFiles[0]);
-      dispatch({ type: actionTypes.CHANGE_IMAGE, image });
-      setFile(image);
+      const [imageFile] = acceptedFiles;
+      const newImagePath = URL.createObjectURL(imageFile);
+      dispatch({
+        type: actionTypes.UPDATE_IMAGE,
+        imagePath: newImagePath,
+        imageFile,
+      });
+      setImagePath(newImagePath);
     } catch (error) {
       //error
     }
@@ -97,7 +102,7 @@ function ImageField() {
       </UploadGuide>
       {<input {...getInputProps()} />}
 
-      {file && <UploadedImage url={file}></UploadedImage>}
+      {imagePath && <UploadedImage url={imagePath}></UploadedImage>}
       {isDragActive && (
         <DropHereContainer>
           <DropHereBackground />

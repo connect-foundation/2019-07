@@ -1,25 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 
 import * as colors from '../../constants/colors';
 import { Button } from '../common/Buttons';
 import * as layout from './Layout';
 
 import LoadingCircle from '../common/LoadingCircle';
-import { fetchChoose } from '../../utils/fetch';
+import { readAnswer } from '../../utils/fetch';
 
-function Selection({ currentQuiz, roomNumber, quizIndex, chooseAnswer }) {
-  function choose(index) {
-    chooseAnswer(index);
-    fetchChoose(roomNumber, quizIndex, index);
-  }
+const ImageContainer = styled.div`
+  width: 100%;
+  height: 100%;
+
+  background-image: url(${props => props.image});
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+`;
+
+function Selection({ currentQuiz, chooseAnswer, setIsAnswer }) {
+  useEffect(() => {
+    // 새로운 문제이므로, 이전의 정답결과를 초기화
+    setIsAnswer(false);
+  });
 
   return (
     <>
       <layout.Center>
         <layout.CenterContentContainer>
           <layout.CenterLeftPanel />
-          <layout.ImagePanel />
+          <layout.ImagePanel>
+            {currentQuiz.image !== null && (
+              <ImageContainer image={currentQuiz.image} />
+            )}
+          </layout.ImagePanel>
           <layout.CenterRightPanel />
         </layout.CenterContentContainer>
       </layout.Center>
@@ -30,7 +45,7 @@ function Selection({ currentQuiz, roomNumber, quizIndex, chooseAnswer }) {
               <Button
                 backgroundColor={colors.ITEM_COLOR[index]}
                 fontColor={colors.TEXT_WHITE}
-                onClick={e => choose(index, e)}
+                onClick={e => chooseAnswer(index, e)}
               >
                 {item.title}
               </Button>
@@ -42,13 +57,19 @@ function Selection({ currentQuiz, roomNumber, quizIndex, chooseAnswer }) {
   );
 }
 
-function Quiz({ quizSet, roomNumber, quizIndex, setChoose }) {
+function PlayerQuiz({ quizSet, roomNumber, quizIndex, setIsAnswer, nickname }) {
   const [choosed, setChoosed] = useState(false);
 
   const currentQuiz = quizSet[quizIndex];
-  function chooseAnswer(index) {
-    setChoose(index);
+  async function chooseAnswer(itemIndex) {
     setChoosed(true);
+    readAnswer(roomNumber, nickname, quizIndex, itemIndex).then(response => {
+      if (response.isCorrect) {
+        setIsAnswer(true);
+      } else {
+        setIsAnswer(false);
+      }
+    });
   }
 
   return (
@@ -59,9 +80,8 @@ function Quiz({ quizSet, roomNumber, quizIndex, setChoose }) {
       {!choosed && (
         <Selection
           currentQuiz={currentQuiz}
-          roomNumber={roomNumber}
           chooseAnswer={chooseAnswer}
-          quizIndex={quizIndex}
+          setIsAnswer={setIsAnswer}
         />
       )}
       {choosed && <LoadingCircle color={colors.PRIMARY_DEEP_GREEN} />}
@@ -71,26 +91,32 @@ function Quiz({ quizSet, roomNumber, quizIndex, setChoose }) {
 
 Selection.propTypes = {
   currentQuiz: PropTypes.shape({
-    items: PropTypes.shape({
-      map: PropTypes.func.isRequired,
-      title: PropTypes.string.isRequired,
-    }).isRequired,
+    items: PropTypes.arrayOf(
+      PropTypes.shape({
+        title: PropTypes.string.isRequired,
+      }),
+    ).isRequired,
+    image: PropTypes.string.isRequired,
   }).isRequired,
-  quizIndex: PropTypes.number.isRequired,
-  roomNumber: PropTypes.string.isRequired,
   chooseAnswer: PropTypes.func.isRequired,
+  setIsAnswer: PropTypes.func.isRequired,
 };
 
-Quiz.propTypes = {
-  quizSet: PropTypes.shape({
-    items: PropTypes.shape({
-      title: PropTypes.string,
+PlayerQuiz.propTypes = {
+  quizSet: PropTypes.arrayOf(
+    PropTypes.shape({
+      items: PropTypes.arrayOf(
+        PropTypes.shape({
+          title: PropTypes.string.isRequired,
+        }),
+      ).isRequired,
+      title: PropTypes.string.isRequired,
     }),
-    title: PropTypes.string.isRequired,
-  }).isRequired,
+  ).isRequired,
   roomNumber: PropTypes.string.isRequired,
   quizIndex: PropTypes.number.isRequired,
-  setChoose: PropTypes.func.isRequired,
+  setIsAnswer: PropTypes.func.isRequired,
+  nickname: PropTypes.string.isRequired,
 };
 
-export default Quiz;
+export default PlayerQuiz;

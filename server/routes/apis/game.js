@@ -1,8 +1,7 @@
 const express = require('express');
 
 const router = express.Router();
-
-const inMemory = require('../../models/rooms');
+const inMemory = require('../../models/inMemory');
 
 const {
   isRoomExist,
@@ -21,12 +20,20 @@ const {
 router.get('/room/:roomNumber/quiz', async (req, res) => {
   const { roomNumber } = req.params;
 
-  // inMemory서 quizSet을 가져옴.
-  const { quizSet } = inMemory.getRoom(roomNumber);
-  // 받아온 quizSet을 전송
-  res.json({
-    quizSet,
-  });
+  try {
+    // inMemory서 quizSet을 가져옴.
+    const quizSet = inMemory.room.getQuizSet(roomNumber);
+    // 받아온 quizSet을 전송
+    res.json({
+      isSuccess: true,
+      quizSet,
+    });
+  } catch (error) {
+    res.json({
+      isError: true,
+      message: error.message,
+    });
+  }
 });
 
 /**
@@ -48,16 +55,11 @@ router.get(
   async (req, res) => {
     const { roomNumber, nickname } = req.params;
 
-    const currentRoom = inMemory.rooms.find(
-      (room) => room.roomNumber === roomNumber,
-    );
-    const currentUser = currentRoom.players.find(
-      (player) => player.nickname === nickname,
-    );
+    const score = inMemory.room.getPlayerScore(roomNumber, nickname);
 
     res.json({
       nickname,
-      score: currentUser.score,
+      score,
     });
   },
 );
@@ -82,25 +84,19 @@ router.get(
   async (req, res) => {
     const { roomNumber, nickname } = req.params;
 
-    const currentRoom = inMemory.rooms.find(
-      (room) => room.roomNumber === roomNumber,
-    );
-
     let rank = 1;
-    let score = 0;
+    const score = inMemory.room.getPlayerScore(roomNumber, nickname);
+    const players = inMemory.room.getPlayers(roomNumber);
 
-    for (let index = 0; index < currentRoom.players.length; index += 1) {
-      const currentPlayer = currentRoom.players[index];
-      const previousPlayer = currentRoom.players[index - 1];
+    for (let index = 0; index < players.length; index += 1) {
+      const currentPlayer = players[index];
+      const previousPlayer = players[index - 1];
 
-      if (index > 0) {
+      if (previousPlayer) {
         rank = previousPlayer.score === currentPlayer.score ? rank : index + 1;
       }
 
-      if (currentPlayer.nickname === nickname) {
-        score = currentPlayer.score;
-        break;
-      }
+      if (currentPlayer.nickname === nickname) break;
     }
 
     res.json({
@@ -112,8 +108,9 @@ router.get(
 );
 
 /**
- * 플레이어가 문항을 선택했을 때 정답, 오답여부를 판별해주는 API
- * @api {get} /room/:roomNumber/player/:nickname/choose/:choose
+ * 플레이어가 문항을 선택했을 때 카운트를 증가시키고,
+ * 정답, 오답여부를 판별해주는 API
+ * @api {post} /room/player/choose/check
  * @apiName choose
  * @apiGroup room
  *
@@ -126,68 +123,28 @@ router.get(
  * @apiSuccess {int} score 갱신된 점수
  */
 router.post(
-  '/room/:roomNumber/player/:nickname/quiz/:quizIndex/choose/:choose',
+  '/room/player/choose/check',
   isRoomExist,
   isNicknameExist,
   async (req, res) => {
-    const { roomNumber, nickname, quizIndex, choose } = req.params;
+    const { quizIndex, choose, roomNumber, nickname } = req.body;
 
-    const currentRoom = inMemory.rooms.find(
-      (current) => current.roomNumber === roomNumber,
-    );
-
-    const player = currentRoom.players.find(
-      (current) => current.nickname === nickname,
-    );
-
-    const quiz = currentRoom.quizSet[quizIndex];
-
-    // choose는 문자열 형태이므로, answer에 있는 정수와 타입을 맞춰주어야함
-    const result = quiz.answers.find((answer) => `${answer}` === choose);
-
-    if (result === undefined) {
-      res.json({
-        isCorrect: false,
-        score: player.score,
-      });
-      return;
-    }
-
-    res.json({
-      isCorrect: true,
-      score: (player.score += quiz.score),
+    const [isCorrect, score] = inMemory.room.updatePlayerScore({
+      roomNumber,
+      quizIndex,
+      nickname,
+      choose,
     });
-  },
-);
 
-/**
- * 플레이어가 문항을 선택했을 때 카운트를 증가시키는 API
- * @api {get} /room/:roomNumber/quiz/:quizIndex/choose/:choose
- * @apiName choose
- * @apiGroup room
- *
- * @apiParam {string} roomNumber 6글자 방 번호
- * @apiParam {int} quizIndex 현재 문제의 index
- * @apiParam {int} choose 유저가 선택한 번호
- *
- * @apiSuccess {bool} isSuccess 갱신이 성공했는지 여부
- */
-router.post(
-  '/room/:roomNumber/quiz/:quizIndex/choose/:choose',
-  isRoomExist,
-  async (req, res) => {
-    const { roomNumber, quizIndex, choose } = req.params;
-
-    const currentRoom = inMemory.rooms.find(
-      (current) => current.roomNumber === roomNumber,
-    );
-
-    const quiz = currentRoom.quizSet[quizIndex];
-
-    quiz.items[choose].playerCount += 1;
+    inMemory.room.updateQuizCount({
+      roomNumber,
+      quizIndex,
+      choose,
+    });
 
     res.json({
-      isSuccess: true,
+      isCorrect,
+      score,
     });
   },
 );

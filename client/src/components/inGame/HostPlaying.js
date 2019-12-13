@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
 import { GreenButton } from '../common/Buttons';
 import * as layout from './Layout';
 import Hourglass from './Hourglass';
-import { HostGameAction } from '../../reducer/hostGameReducer';
+import { HostGameAction, HostGameContext } from '../../reducer/hostGameReducer';
+import multipleChoiceImage from '../../assets/images/multiple_choice.svg';
 
 const RemainTime = styled.span`
   position: absolute;
@@ -14,11 +14,19 @@ const RemainTime = styled.span`
   user-select: none;
 `;
 
-function HostPlaying({ state, dispatcher }) {
+const QuizImage = styled.img.attrs({
+  src: props => props.src,
+})`
+  width: 100%;
+  height: 100%;
+`;
+
+function HostPlaying() {
   const [remainTime, setRemainTime] = useState(0);
+  const { dispatcher, roomState } = useContext(HostGameContext);
 
   useEffect(() => {
-    setRemainTime(Number(state.currentQuiz.timeLimit));
+    setRemainTime(Number(roomState.currentQuiz.timeLimit));
     const timer = setInterval(() => {
       setRemainTime(cur => {
         if (cur === 0) {
@@ -33,7 +41,7 @@ function HostPlaying({ state, dispatcher }) {
     return () => {
       clearInterval(timer);
     };
-  }, [state.currentQuiz]);
+  }, [roomState.currentQuiz]);
 
   return (
     <layout.CenterContentContainer>
@@ -50,23 +58,17 @@ function HostPlaying({ state, dispatcher }) {
         <Hourglass />
         <RemainTime>{remainTime}</RemainTime>
       </layout.CenterLeftPanel>
-      <layout.ImagePanel />
+      <layout.ImagePanel>
+        <QuizImage src={roomState.currentQuiz.image || multipleChoiceImage} />
+      </layout.ImagePanel>
       <layout.CenterRightPanel>
         <layout.RemainPeople>
           <br />
-          {state.players.length}명이 풀이중
+          {roomState.players.length}명이 참가 중
         </layout.RemainPeople>
       </layout.CenterRightPanel>
     </layout.CenterContentContainer>
   );
 }
-
-HostPlaying.propTypes = {
-  state: PropTypes.shape({
-    currentQuiz: PropTypes.object.isRequired,
-    players: PropTypes.array.isRequired,
-  }).isRequired,
-  dispatcher: PropTypes.func.isRequired,
-};
 
 export default HostPlaying;

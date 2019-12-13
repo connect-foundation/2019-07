@@ -7,6 +7,7 @@ const {
 } = require('../../middleware/validations');
 
 const router = express.Router();
+const dbManager = require('../../models/database/dbManager');
 
 router.get('/', (req, res) => {
   res.json({
@@ -74,5 +75,19 @@ router.get(
     });
   },
 );
+
+router.get('/quizset/:roomId', async (req, res) => {
+  const { roomId } = req.params;
+  const { isError, data } = await dbManager.quizset.readLastQuizsetId(roomId);
+  const isSuccess = isError === undefined && data.length > 0;
+  const quizsetId = isSuccess ? data[0].id : undefined;
+  // undefined를 front에서 사용하기 때문에 보냄
+  res.json({
+    isSuccess,
+    data: {
+      quizsetId,
+    },
+  });
+});
 
 module.exports = router;

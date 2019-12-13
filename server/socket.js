@@ -1,31 +1,20 @@
 const io = require('socket.io')();
-const inMemory = require('./models/rooms');
-const roomTemplate = require('./models/templates/room');
-const playerTemplate = require('./models/templates/player');
+const inMemory = require('./models/inMemory');
 
 async function handleOpenRoom({ roomId }) {
-  const roomNumber = inMemory.getNewRoomNumber();
-  const newRoom = roomTemplate();
+  const roomNumber = inMemory.room.setNewRoom(this.id);
 
-  newRoom.hostId = this.id;
-  newRoom.roomNumber = roomNumber;
-
-  inMemory.pushRoom(newRoom);
-  await inMemory.setQuizset(roomNumber, roomId);
+  await inMemory.room.setQuizSet(roomNumber, roomId);
 
   this.join(roomNumber, () => {
-    io.to(newRoom.hostId).emit('openRoom', {
+    io.to(inMemory.room.getRoomHostId(roomNumber)).emit('openRoom', {
       roomNumber,
     });
   });
 }
 
-function isRoomExist(roomNumber) {
-  return inMemory.getRoom(roomNumber);
-}
-
 function handleStartQuiz({ roomNumber }) {
-  if (!isRoomExist(roomNumber)) return;
+  if (!inMemory.room.isRoomExist(roomNumber)) return;
 
   io.to(roomNumber).emit('start');
 
@@ -35,34 +24,18 @@ function handleStartQuiz({ roomNumber }) {
 }
 
 function handleNextQuiz({ roomNumber, nextQuizIndex }) {
-  if (!isRoomExist(roomNumber)) return;
+  if (!inMemory.room.isRoomExist(roomNumber)) return;
 
   io.to(roomNumber).emit('next', nextQuizIndex);
 }
 
-function handlePlayerChoose({
-  roomNumber,
-  nickname,
-  quizIndex,
-  selectItemIndex,
-}) {
-  if (!isRoomExist(roomNumber)) return;
-
-  inMemory.UpdatePlayerScore({
-    roomNumber,
-    nickname,
-    quizIndex,
-    selectItemIndex,
-  });
-}
-
 function handleBreakQuiz({ roomNumber, quizIndex }) {
-  if (!isRoomExist(roomNumber)) return;
+  if (!inMemory.room.isRoomExist(roomNumber)) return;
 
   this.join(roomNumber, () => {
     io.to(this.id).emit(
       'subResult',
-      inMemory.getSubResult(roomNumber, quizIndex),
+      inMemory.room.getSubResult(roomNumber, quizIndex),
     );
   });
 
@@ -70,36 +43,46 @@ function handleBreakQuiz({ roomNumber, quizIndex }) {
 }
 
 function handleEndQuiz({ roomNumber }) {
-  if (!isRoomExist(roomNumber)) return;
+  if (!inMemory.room.isRoomExist(roomNumber)) return;
 
-  io.to(roomNumber).emit('end', inMemory.getFinalResult(roomNumber));
+  io.to(roomNumber).emit('end', inMemory.room.getFinalResult(roomNumber));
 }
 
 function handleEnterPlayer({ roomNumber, nickname }) {
-  if (!isRoomExist(roomNumber)) return;
+  if (!inMemory.room.isRoomExist(roomNumber)) return;
 
-  const currentRoom = inMemory.getRoom(roomNumber);
-  const newPlayer = playerTemplate();
-  newPlayer.nickname = nickname;
+  if (inMemory.room.isPlayerExist(roomNumber, nickname)) {
+    const score = inMemory.room.getPlayerScore(roomNumber, nickname);
 
-  inMemory.pushPlayer(roomNumber, newPlayer);
+    this.join(roomNumber, () => {
+      io.to(this.id).emit('settingScore', score);
+    });
+    return;
+  }
+
+  const players = inMemory.room.setNewPlayer(roomNumber, nickname);
 
   this.join(roomNumber, () => {
-    io.to(currentRoom.hostId).emit('enterPlayer', currentRoom.players);
+    io.to(inMemory.room.getRoomHostId(roomNumber)).emit('enterPlayer', players);
   });
 }
 
 function handleLeavePlayer({ roomNumber, nickname }) {
-  if (!isRoomExist(roomNumber)) return;
-  const playerRoom = inMemory.removePlayer(roomNumber, nickname);
+  if (!inMemory.room.isRoomExist(roomNumber)) return;
+  const result = inMemory.room.deletePlayer(roomNumber, nickname);
 
-  this.join(roomNumber, () => {
-    io.to(playerRoom.hostId).emit('leavePlayer', playerRoom.players);
-  });
+  if (result) {
+    this.join(roomNumber, () => {
+      io.to(inMemory.room.getRoomHostId(roomNumber)).emit(
+        'leavePlayer',
+        inMemory.room.getPlayers(roomNumber),
+      );
+    });
+  }
 }
 
 function handleCloseRoom() {
-  const roomNumber = inMemory.removeRoom(this.id);
+  const roomNumber = inMemory.room.deleteRoom(this.id);
   io.to(roomNumber).emit('closeRoom');
 }
 
@@ -109,7 +92,6 @@ io.on('connection', (socket) => {
   socket.on('closeRoom', handleCloseRoom.bind(socket));
   socket.on('start', handleStartQuiz.bind(socket));
   socket.on('next', handleNextQuiz.bind(socket));
-  socket.on('choose', handlePlayerChoose.bind(socket));
   socket.on('break', handleBreakQuiz.bind(socket));
   socket.on('end', handleEndQuiz.bind(socket));
   socket.on('enterPlayer', handleEnterPlayer.bind(socket));
