@@ -56,6 +56,7 @@ function Section({ roomId, quizsetId }) {
       const { quizset } = result.data;
       dispatch({ type: actionTypes.READ_QUIZSET, quizset });
     }
+    dispatch({ type: actionTypes.RESET_DELETE_QUIZZES });
 
     dispatch({ type: actionTypes.UPDATE_IDS, roomId, quizsetId });
 
