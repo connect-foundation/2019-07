@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
@@ -60,25 +60,36 @@ async function updateItem(item) {
   const { isSuccess } = await fetcher.updateItem(refinedItem);
 }
 
-async function createQuiz(quizsetId, quiz) {
+function getQuizFormData(roomId, quiz) {
   const refinedQuiz = refineQuiz(quiz);
-  const { isSuccess, data } = await fetcher.createQuiz(quizsetId, refinedQuiz);
+  const formData = new FormData();
+  formData.append('file', quiz.imageFile);
+  formData.append('roomId', roomId);
+  Object.keys(refinedQuiz).forEach(key => {
+    if (key === 'imagePath') return;
+    formData.append(key, refinedQuiz[key]);
+  });
+  return formData;
+}
+
+async function createQuiz(roomId, quizsetId, quiz) {
+  const formData = getQuizFormData(roomId, quiz);
+  formData.append('quizsetId', quizsetId);
+  const { isSuccess, data } = await fetcher.createQuiz(formData);
   if (!isSuccess) return;
   const { quizId } = data;
   createItems(quizId, quiz.items);
 }
 
-async function updateQuiz(quiz, readedQuizset) {
+async function updateQuiz(roomId, quiz, readedQuizset) {
   if (!isQuizUpdated(quiz, readedQuizset)) return;
-  const refinedQuiz = refineQuiz(quiz);
-  //isSuccess가 실패할 경우 재요청하거나 오류를 알려줘야함
-  const { isSuccess } = await fetcher.updateQuiz(refinedQuiz);
+  const formData = getQuizFormData(roomId, quiz);
+  const { isSuccess } = await fetcher.updateQuiz(formData);
 }
 
-async function deleteQuiz(quiz) {
-  const quizId = quiz.id;
+async function deleteQuiz(roomId, quizId) {
   //isSuccess가 실패할 경우 재요청하거나 오류를 알려줘야함
-  const { isSuccess } = await fetcher.deleteQuiz(quizId);
+  const { isSuccess } = await fetcher.deleteQuiz(roomId, quizId);
 }
 
 function updateItems(quiz, readedQuizset) {
@@ -90,15 +101,15 @@ function updateItems(quiz, readedQuizset) {
   }
 }
 
-async function updateQuizzes(quizset, quizsetId, readedQuizset) {
+async function updateQuizzes(roomId, quizset, quizsetId, readedQuizset) {
   quizset.forEach(quiz => {
     const isNewQuiz = quiz.id === undefined;
     if (isNewQuiz) {
-      createQuiz(quizsetId, quiz);
+      createQuiz(roomId, quizsetId, quiz);
       return;
     }
     updateItems(quiz, readedQuizset);
-    updateQuiz(quiz, readedQuizset);
+    updateQuiz(roomId, quiz, readedQuizset);
   });
 }
 
@@ -116,10 +127,10 @@ async function readQuizsetId(quizsetState, roomId, quizsetTitle, quizsetOrder) {
   return quizsetId;
 }
 
-async function updateQuizset(quizset, quizsetId, quizsetState) {
+async function updateQuizset(roomId, quizset, quizsetId, quizsetState) {
   const { readedQuizset, deletedQuizzes } = quizsetState;
-  deletedQuizzes.forEach(quiz => deleteQuiz(quiz));
-  updateQuizzes(quizset, quizsetId, readedQuizset);
+  deletedQuizzes.forEach(quiz => deleteQuiz(roomId, quiz.id));
+  updateQuizzes(roomId, quizset, quizsetId, readedQuizset);
   return quizsetId;
 }
 
@@ -213,22 +224,36 @@ function moveToDetailPage(history, roomId) {
 }
 
 function SaveButton({ history }) {
-  const { quizsetState, dispatch, actionTypes } = useContext(EditContext);
-  const { quizset, roomId } = quizsetState;
+  const { quizsetState, dispatch, actionTypes, loadingTypes } = useContext(
+    EditContext,
+  );
+  const { quizset, roomId, loadingType } = quizsetState;
 
   function changeCurrentIndex(currentIndex) {
     dispatch({ type: actionTypes.UPDATE_CURRENT_INDEX, currentIndex });
   }
+
+  function changeLoading(type) {
+    dispatch({ type: actionTypes.CHANGE_LOADING, loadingType: type });
+  }
+
+  useEffect(() => {
+    if (loadingType !== loadingTypes.UPDATE_DATA) return;
+    async function communicateWithServer() {
+      const quizsetId = await readQuizsetId(quizsetState, roomId);
+      await updateQuizset(roomId, quizset, quizsetId, quizsetState);
+      changeLoading(loadingTypes.IDLE);
+      moveToDetailPage(history, roomId);
+    }
+    communicateWithServer();
+  }, [loadingType]);
 
   return (
     <ButtonWrapper>
       <YellowButton
         onClick={async () => {
           if (!checkQuizsetCanSave(quizset, changeCurrentIndex)) return;
-
-          const quizsetId = await readQuizsetId(quizsetState, roomId);
-          await updateQuizset(quizset, quizsetId, quizsetState);
-          moveToDetailPage(history, roomId);
+          changeLoading(loadingTypes.UPDATE_DATA);
         }}
       >
         저장
