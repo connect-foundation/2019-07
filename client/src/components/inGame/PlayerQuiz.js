@@ -99,7 +99,7 @@ Selection.propTypes = {
         title: PropTypes.string.isRequired,
       }),
     ).isRequired,
-    image: PropTypes.string.isRequired,
+    image: PropTypes.string,
   }).isRequired,
   chooseAnswer: PropTypes.func.isRequired,
   setIsAnswer: PropTypes.func.isRequired,
