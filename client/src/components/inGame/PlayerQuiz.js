@@ -49,7 +49,7 @@ function Selection({ currentQuiz, chooseAnswer, setIsAnswer }) {
     return () => {
       clearInterval(timer);
     };
-  }, [currentQuiz]);
+  }, [currentQuiz, setIsAnswer]);
 
   return (
     <>
