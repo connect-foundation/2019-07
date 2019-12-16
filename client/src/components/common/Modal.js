@@ -84,7 +84,7 @@ function Modal({
   return (
     isModalOn && (
       <ModalOutside onClick={closeModal}>
-        <ModalMain onClick={e => e.stopPropagation()}>
+        <ModalMain onClick={e => e.preventDefault()}>
           <ModalTitle>{title}</ModalTitle>
           {description && <Description>{description}</Description>}
           {children}
