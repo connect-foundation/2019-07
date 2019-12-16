@@ -108,14 +108,21 @@ function SelectRoom({ history }) {
       return false;
     }
 
-    addRoom({ userId, roomTitle: inputValue.trim() }).then(response => {
-      if (response.isError) {
+    async function createNewRoom() {
+      const { isSuccess, data } = await addRoom({
+        userId,
+        roomTitle: inputValue.trim(),
+      });
+
+      if (!isSuccess) {
         alert('방이 오류로 인해 추가되지 못했습니다');
         return;
       }
-      setRooms([...rooms, { id: response.data.insertId, title: inputValue }]);
-    });
 
+      setRooms([...rooms, { id: data.insertId, title: inputValue }]);
+    }
+
+    createNewRoom();
     return true;
   }
 
