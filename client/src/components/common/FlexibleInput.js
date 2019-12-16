@@ -77,12 +77,13 @@ const Placeholder = styled.span`
 
 const Warning = styled.div`
   background-color: #ffc6c6;
-  color: red;
+  color: white;
+  padding: 0.5rem;
   border-radius: 5px;
   font-weight: bold;
   text-align: center;
   @media (min-width: ${DESKTOP_MIN_WIDTH}) {
-    font-size: 1.5rem;
+    font-size: 2rem;
   }
 `;
 
@@ -95,7 +96,7 @@ function FlexibleInput({
 }) {
   const [inputValue, setInputValue] = useState('');
   const [isFocus, setFocus] = useState(false);
-  const warningRef = useRef(null);
+  const [message, setMessage] = useState('');
   const inputRef = useRef();
 
   useEffect(() => {
@@ -103,10 +104,10 @@ function FlexibleInput({
     inputRef.current.textContent = title;
     setInputValue(title);
     if (title.length < maxLength) {
-      warningRef.current.textContent = '';
+      setMessage('');
       return;
     }
-    warningRef.current.textContent = `${maxLength}글자를 넘을 수 없습니다`;
+    setMessage(`${maxLength}자까지 입력할 수 있습니다`);
   }, [title]);
 
   useEffect(() => {
@@ -124,7 +125,7 @@ function FlexibleInput({
     ) {
       event.preventDefault();
     } else {
-      warningRef.current.textContent = '';
+      setMessage('');
     }
   }
 
@@ -137,8 +138,7 @@ function FlexibleInput({
       if (inputValue.length === maxLength) value = inputValue;
 
       target.textContent = value;
-
-      warningRef.current.textContent = `${maxLength}글자를 넘을 수 없습니다`;
+      setMessage(`${maxLength}자까지 입력할 수 있습니다`);
     }
 
     setInputValue(value);
@@ -164,7 +164,7 @@ function FlexibleInput({
       <Counter isOn={isFocus} mobileFontSize={mobileFontSize}>
         {maxLength - inputValue.length}
       </Counter>
-      <Warning ref={warningRef} />
+      {message && <Warning>{message}</Warning>}
     </InputContainer>
   );
 }
