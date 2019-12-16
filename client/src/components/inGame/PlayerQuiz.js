@@ -40,17 +40,20 @@ function Selection({ currentQuiz, chooseAnswer, setIsAnswer }) {
       </layout.Center>
       <layout.Bottom>
         <layout.ItemContainer>
-          {currentQuiz.items.map((item, index) => (
-            <layout.Item key={item.title}>
-              <Button
-                backgroundColor={colors.ITEM_COLOR[index]}
-                fontColor={colors.TEXT_WHITE}
-                onClick={e => chooseAnswer(index, e)}
-              >
-                {item.title}
-              </Button>
-            </layout.Item>
-          ))}
+          {currentQuiz.items.map((item, index) => {
+            if (!item.title) return null;
+            return (
+              <layout.Item key={item.title}>
+                <Button
+                  backgroundColor={colors.ITEM_COLOR[index]}
+                  fontColor={colors.TEXT_WHITE}
+                  onClick={e => chooseAnswer(index, e)}
+                >
+                  {item.title}
+                </Button>
+              </layout.Item>
+            );
+          })}
         </layout.ItemContainer>
       </layout.Bottom>
     </>
