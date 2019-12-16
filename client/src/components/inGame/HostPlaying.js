@@ -54,7 +54,7 @@ function HostPlaying() {
             dispatcher({ type: HostGameAction.REQUEST_SUB_RESULT });
           }}
         >
-          다음퀴즈
+          정답확인
         </GreenButton>
       </layout.NextButtonWrapper>
       <layout.CenterLeftPanel>
