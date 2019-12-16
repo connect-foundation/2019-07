@@ -133,13 +133,27 @@ class Rooms {
   }
 
   deleteRoom(hostId) {
-    this.rooms.forEach((room, roomNumber) => {
-      if (room.hostId === hostId) {
-        const result = this.rooms.delete(roomNumber);
-        return result ? roomNumber : false;
-      }
-      return false;
-    });
+    const roomList = this.rooms.entries();
+
+    const findHostRoom = () => {
+      if (!this.rooms.size) return false;
+      const { done, value } = roomList.next();
+      const [roomNumber, roomInformation] = value;
+
+      if (hostId === roomInformation.hostId) return roomNumber;
+      if (done) return false;
+
+      return findHostRoom();
+    };
+
+    const roomNumber = findHostRoom();
+
+    if (roomNumber) {
+      const isDeleted = this.rooms.delete(roomNumber);
+      return isDeleted ? roomNumber : false;
+    }
+
+    return false;
   }
 
   isRoomExist(roomNumber) {
