@@ -129,18 +129,19 @@ function FlexibleInput({
     }
   }
 
-  function handleInput(event) {
-    const { target } = event;
-    let value = event.target.textContent;
+  function handleInput() {
+    function getValidValue() {
+      const value = inputRef.current.textContent;
 
-    if (value.length >= maxLength) {
-      value = value.substring(0, maxLength);
-      if (inputValue.length === maxLength) value = inputValue;
+      if (value.length < maxLength) return value;
 
-      target.textContent = value;
       setMessage(`${maxLength}자까지 입력할 수 있습니다`);
+      if (inputValue.length === maxLength) return inputValue;
+      return value.substring(0, maxLength);
     }
 
+    const value = getValidValue();
+    if (message) inputRef.current.textContent = value;
     setInputValue(value);
   }
 
