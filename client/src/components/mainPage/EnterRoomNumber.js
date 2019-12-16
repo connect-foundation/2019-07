@@ -12,7 +12,9 @@ const ButtonContainer = styled.div`
   margin-top: ${BUTTON_MARGIN_TOP};
 `;
 
-const Input = styled.input`
+const Input = styled.input.attrs({
+  maxLength: 6,
+})`
   ${styles.InputStyle}
 `;
 
@@ -61,6 +63,11 @@ function EnterRoomNumber({ history }) {
   function handlePressEnter(e) {
     if (e.key === 'Enter') {
       handleEnterButtonClick();
+      return;
+    }
+
+    if (!/\d/.test(e.key)) {
+      e.target.value = e.target.value.replace(/[^0-9]/g, '');
     }
   }
 

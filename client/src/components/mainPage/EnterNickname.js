@@ -12,7 +12,9 @@ const ButtonContainer = styled.div`
   margin-top: ${BUTTON_MARGIN_TOP};
 `;
 
-const Input = styled.input`
+const Input = styled.input.attrs({
+  maxLength: 20,
+})`
   ${styles.InputStyle}
 `;
 
@@ -56,6 +58,12 @@ function EnterNickname({ history }) {
   function handlePressEnter(e) {
     if (e.key === 'Enter') {
       handleCreateButtonClick();
+      return;
+    }
+
+    if (!/[ㄱ-힣\w]+/g.test(e.key)) {
+      e.target.value = e.target.value.replace(/[^ㄱ-힣\w]+/g, '');
+      onToast('닉네임에 특수문자는 입력할 수 없습니다');
     }
   }
 
