@@ -44,10 +44,21 @@ function RoomInformation({ roomId }) {
   const { openModal } = useContext(ModalContext);
 
   useEffect(() => {
-    fetchRoomTitle({ roomId }).then(response => {
-      setRoomName(response.data[0].title);
-    });
-  }, []);
+    if (roomName) return;
+
+    async function getRoomTitle() {
+      const { isSuccess, data } = await fetchRoomTitle({ roomId });
+
+      if (!isSuccess) {
+        alert('오류로 인해 방의 정보를 불러올 수 없습니다');
+        return;
+      }
+
+      setRoomName(data[0].title);
+    }
+
+    getRoomTitle();
+  }, [roomName]);
 
   function handleRoomName() {
     updateRoomTitle({ roomId, title: inputValue }).then(response => {
