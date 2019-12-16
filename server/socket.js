@@ -6,6 +6,7 @@ async function handleOpenRoom({ roomId }) {
 
   await inMemory.room.setQuizSet(roomNumber, roomId);
 
+  this.host = true;
   this.join(roomNumber, () => {
     io.to(inMemory.room.getRoomHostId(roomNumber)).emit('openRoom', {
       roomNumber,
@@ -82,6 +83,7 @@ function handleLeavePlayer({ roomNumber, nickname }) {
 }
 
 function handleCloseRoom() {
+  if (!this.host) return;
   const roomNumber = inMemory.room.deleteRoom(this.id);
   io.to(roomNumber).emit('closeRoom');
 }
