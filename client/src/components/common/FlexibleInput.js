@@ -109,6 +109,10 @@ function FlexibleInput({
     warningRef.current.textContent = `${maxLength}글자를 넘을 수 없습니다`;
   }, [title]);
 
+  useEffect(() => {
+    if (!inputValue) callback(inputValue);
+  }, [inputValue]);
+
   function handleKeyDown(event) {
     if (event.keyCode === ENTER) event.preventDefault();
     if (
