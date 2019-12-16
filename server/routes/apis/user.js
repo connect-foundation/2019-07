@@ -150,4 +150,28 @@ router.delete('/room', [check('roomId').exists()], async (req, res) => {
   }
 });
 
+/**
+ * 방의 퀴즈 목록을 가져오는 API
+ * @api {put} /user/quizset/:roomId
+ * @apiName getRoomQuizset
+ * @apiGroup
+ *
+ * @apiParam {string} roomId 방의 ID
+ *
+ * @apiSuccess {object} DB select 결과 (방에 속한 퀴즈의 목록)
+ */
+router.get('/quizset/:roomId', async (req, res) => {
+  const { roomId } = req.params;
+  const { isError, data } = await dbManager.quizset.readLastQuizsetId(roomId);
+  const isSuccess = isError === undefined && data.length > 0;
+  const quizsetId = isSuccess ? data[0].id : undefined;
+  // undefined를 front에서 사용하기 때문에 보냄
+  res.json({
+    isSuccess,
+    data: {
+      quizsetId,
+    },
+  });
+});
+
 module.exports = router;
