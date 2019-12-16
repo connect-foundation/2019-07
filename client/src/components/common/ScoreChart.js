@@ -78,7 +78,7 @@ const GraphCount = styled.span`
   ${props =>
     props.isAnswer &&
     `&::before {
-      content: '✓'
+      content: '정답 '
   }`}
 `;
 function findMaxHandler(previous, current) {

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
 import LoadingCircle from './LoadingCircle';
+import DESKTOP_MIN_WIDTH from '../../constants/media';
 
 const LoadingContainer = styled.div`
   position: absolute;
@@ -29,25 +30,40 @@ const LoadingText = styled.span`
   font-size: 4vmin;
   width: 100%;
   text-align: center;
-  top: 90%;
+  top: 80%;
   transform: translateY(-100%);
 `;
 
-function Loading({ message }) {
+const BigRoomNumber = styled.div`
+  position: absolute;
+  top: 10%;
+  font-size: 3rem;
+  color: #fff;
+  width: 100%;
+  z-index: 10000;
+  font-weight: bold;
+  transform: translateY(-50%);
+  text-align: center;
+  background-color: #333;
+  padding: 2rem 0;
+
+  @media (min-width: ${DESKTOP_MIN_WIDTH}) {
+    font-size: 5rem;
+  }
+`;
+
+function Loading({ roomNumber }) {
   return (
     <LoadingContainer>
+      <BigRoomNumber>방 번호 : {roomNumber}</BigRoomNumber>
       <LoadingCircle color="white" />
-      <LoadingText>{message}</LoadingText>
+      <LoadingText>참가자를 기다리고 있습니다...</LoadingText>
     </LoadingContainer>
   );
 }
 
-Loading.defaultProps = {
-  message: '로딩 중입니다',
-};
-
 Loading.propTypes = {
-  message: PropTypes.string,
+  roomNumber: PropTypes.string.isRequired,
 };
 
 export default Loading;
