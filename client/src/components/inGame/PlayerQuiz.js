@@ -9,7 +9,7 @@ import * as layout from './Layout';
 import LoadingCircle from '../common/LoadingCircle';
 import { readAnswer } from '../../utils/fetch';
 import Hourglass from './Hourglass';
-import LogoImage from '../../assets/images/multiple_choice.svg';
+import multipleChoiceImage from '../../assets/images/multiple_choice.svg';
 
 const RemainTime = styled.span`
   position: absolute;
@@ -61,10 +61,7 @@ function Selection({ currentQuiz, chooseAnswer, setIsAnswer }) {
             <RemainTime>{remainTime}</RemainTime>
           </layout.CenterLeftPanel>
           <layout.ImagePanel>
-            {currentQuiz.image !== null && (
-              <ImageContainer image={currentQuiz.image} />
-            )}
-            {currentQuiz.image === null && <ImageContainer image={LogoImage} />}
+            <ImageContainer image={currentQuiz.image || multipleChoiceImage} />
           </layout.ImagePanel>
           <layout.CenterRightPanel />
         </layout.CenterContentContainer>

@@ -14,11 +14,14 @@ const RemainTime = styled.span`
   user-select: none;
 `;
 
-const QuizImage = styled.img.attrs({
-  src: props => props.src,
-})`
+const ImageContainer = styled.div`
   width: 100%;
   height: 100%;
+
+  background-image: url(${props => props.image});
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
 `;
 
 function HostPlaying() {
@@ -59,7 +62,9 @@ function HostPlaying() {
         <RemainTime>{remainTime}</RemainTime>
       </layout.CenterLeftPanel>
       <layout.ImagePanel>
-        <QuizImage src={roomState.currentQuiz.image || multipleChoiceImage} />
+        <ImageContainer
+          image={roomState.currentQuiz.image || multipleChoiceImage}
+        />
       </layout.ImagePanel>
       <layout.CenterRightPanel>
         <layout.RemainPeople>
