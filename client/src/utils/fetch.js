@@ -116,7 +116,7 @@ async function getToken(data) {
 }
 
 async function readQuizsetId(roomId) {
-  const url = `/room/quizset/${roomId}`;
+  const url = `/user/quizset/${roomId}`;
   const response = await fetchGet({ url });
   return response;
 }
