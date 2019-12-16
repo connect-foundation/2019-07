@@ -54,7 +54,8 @@ function RoomInformation({ roomId }) {
         return;
       }
 
-      setRoomName(data[0].title);
+      const [roomInformation] = data;
+      setRoomName(roomInformation.title);
     }
 
     getRoomTitle();
