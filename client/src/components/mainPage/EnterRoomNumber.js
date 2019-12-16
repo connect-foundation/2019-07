@@ -61,6 +61,11 @@ function EnterRoomNumber({ history }) {
   function handlePressEnter(e) {
     if (e.key === 'Enter') {
       handleEnterButtonClick();
+      return;
+    }
+
+    if (!/\d/.test(e.key)) {
+      e.target.value = e.target.value.replace(/[^0-9]/g, '');
     }
   }
 
