@@ -12,7 +12,9 @@ const ButtonContainer = styled.div`
   margin-top: ${BUTTON_MARGIN_TOP};
 `;
 
-const Input = styled.input`
+const Input = styled.input.attrs({
+  maxLength: 20,
+})`
   ${styles.InputStyle}
 `;
 
