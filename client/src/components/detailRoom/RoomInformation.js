@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
 import * as colors from '../../constants/colors';
+import DESKTOP_MIN_WIDTH from '../../constants/media';
 import { fetchRoomTitle, updateRoomTitle } from '../../utils/fetch';
 import Modal from '../common/Modal';
 import FlexibleInput from '../common/FlexibleInput';
@@ -38,9 +39,23 @@ const EditRoomNameImage = styled.img.attrs({
   }
 `;
 
+const Notify = styled.div`
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background-color: #ffc6c6;
+  border-radius: 5px;
+  color: white;
+  text-align: center;
+  font-weight: bold;
+  @media (min-width: ${DESKTOP_MIN_WIDTH}) {
+    font-size: 2rem;
+  }
+`;
+
 function RoomInformation({ roomId }) {
   const [roomName, setRoomName] = useState('');
   const [inputValue, setInputValue] = useState('');
+  const [message, setMessage] = useState('');
   const { openModal } = useContext(ModalContext);
 
   useEffect(() => {
@@ -61,13 +76,29 @@ function RoomInformation({ roomId }) {
     getRoomTitle();
   }, [roomName]);
 
+  useEffect(() => {
+    const clearMessage = setTimeout(() => {
+      setMessage('');
+    }, 1500);
+
+    return () => {
+      clearTimeout(clearMessage);
+    };
+  }, [message]);
+
   function handleRoomName() {
-    updateRoomTitle({ roomId, title: inputValue }).then(response => {
-      if (response.isSuccess) {
-        setRoomName(inputValue);
-        return;
+    if (!inputValue) {
+      setMessage('수정할 방의 이름을 입력하세요');
+      return false;
+    }
+
+    updateRoomTitle({ roomId, title: inputValue }).then(({ isSuccess }) => {
+      if (!isSuccess) {
+        alert('오류로 인해 방의 이름을 수정할 수 없습니다');
+        return false;
       }
-      alert('오류로 인해 방의 이름을 수정할 수 없습니다');
+      setRoomName(inputValue);
+      return true;
     });
 
     return true;
@@ -91,6 +122,7 @@ function RoomInformation({ roomId }) {
           maxLength={26}
           placeholder="방 이름을 입력하세요"
         />
+        {message && <Notify>{message}</Notify>}
       </Modal>
     </>
   );
