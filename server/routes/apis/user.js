@@ -1,10 +1,12 @@
 const express = require('express');
 const { check, validationResult } = require('express-validator');
+const { isUserValid } = require('../../middleware/validations');
 
 const router = express.Router();
 
 const dbManager = require('../../models/database/dbManager');
 
+router.use(isUserValid);
 /**
  * 유저의 모든 방을 가져오는 API
  * @api {get} /user/:userId/rooms

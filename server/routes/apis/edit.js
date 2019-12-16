@@ -6,10 +6,13 @@ const router = express.Router();
 
 const dbManager = require('../../models/database/dbManager');
 const objectStorage = require('../../objectStorage');
+const { isUserValid } = require('../../middleware/validations');
+
+router.use(isUserValid);
 
 function getQuizset(quizzes, items) {
   function pushQuiz(quizset, quiz) {
-    const matchedItems = items.filter(item => item.quiz_id === quiz.id);
+    const matchedItems = items.filter((item) => item.quiz_id === quiz.id);
     const newQuiz = {
       ...quiz,
       items: matchedItems,
