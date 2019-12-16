@@ -10,6 +10,7 @@ import { ModalContext } from '../../components/common/ModalProvider';
 import FlexibleInput from '../../components/common/FlexibleInput';
 import { fetchRooms, addRoom } from '../../utils/fetch';
 import RoomList from '../../components/selectRoom/RoomList';
+import { parseCookie } from '../../utils/util';
 
 const Container = styled.div`
   position: relative;
@@ -71,9 +72,8 @@ async function getRooms({ userId }) {
 }
 
 function parsingUserNaverId() {
-  const cookies = document.cookie.split(';').map(cookie => cookie.split('='));
-  const naverId = cookies.find(cookie => cookie[0] === 'naverId');
-  return naverId[1];
+  const cookies = parseCookie(document.cookie);
+  return cookies.naverId;
 }
 
 function SelectRoom({ history }) {
