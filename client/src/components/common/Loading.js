@@ -1,9 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-
 import LoadingCircle from './LoadingCircle';
-import DESKTOP_MIN_WIDTH from '../../constants/media';
 
 const LoadingContainer = styled.div`
   position: absolute;
@@ -12,7 +10,6 @@ const LoadingContainer = styled.div`
   left: 0;
   right: 0;
   z-index: 9999;
-
   &::before {
     position: absolute;
     content: '';
@@ -22,7 +19,6 @@ const LoadingContainer = styled.div`
     height: 100%;
   }
 `;
-
 const LoadingText = styled.span`
   position: absolute;
   color: white;
@@ -30,40 +26,21 @@ const LoadingText = styled.span`
   font-size: 4vmin;
   width: 100%;
   text-align: center;
-  top: 80%;
+  top: 90%;
   transform: translateY(-100%);
 `;
-
-const BigRoomNumber = styled.div`
-  position: absolute;
-  top: 10%;
-  font-size: 3rem;
-  color: #fff;
-  width: 100%;
-  z-index: 10000;
-  font-weight: bold;
-  transform: translateY(-50%);
-  text-align: center;
-  background-color: #333;
-  padding: 2rem 0;
-
-  @media (min-width: ${DESKTOP_MIN_WIDTH}) {
-    font-size: 5rem;
-  }
-`;
-
-function Loading({ roomNumber }) {
+function Loading({ message }) {
   return (
     <LoadingContainer>
-      <BigRoomNumber>방 번호 : {roomNumber}</BigRoomNumber>
       <LoadingCircle color="white" />
-      <LoadingText>참가자를 기다리고 있습니다...</LoadingText>
+      <LoadingText>{message}</LoadingText>
     </LoadingContainer>
   );
 }
-
-Loading.propTypes = {
-  roomNumber: PropTypes.string.isRequired,
+Loading.defaultProps = {
+  message: '로딩 중입니다',
 };
-
+Loading.propTypes = {
+  message: PropTypes.string,
+};
 export default Loading;

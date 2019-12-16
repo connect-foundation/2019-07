@@ -73,6 +73,24 @@ const PlayerList = styled.ul`
   }
 `;
 
+const BigRoomNumber = styled.div`
+  position: absolute;
+  top: 10%;
+  font-size: 3rem;
+  color: #fff;
+  width: 100%;
+  z-index: 10000;
+  font-weight: bold;
+  transform: translateY(-50%);
+  text-align: center;
+  background-color: #333;
+  padding: 2rem 0;
+
+  @media (min-width: ${DESKTOP_MIN_WIDTH}) {
+    font-size: 5rem;
+  }
+`;
+
 const CloseButtonContainer = styled.div`
   z-index: 10000;
 `;
@@ -89,6 +107,7 @@ function HostWaitingRoom() {
     <>
       {!roomState.players.length && (
         <>
+          <BigRoomNumber>방 번호 : {roomState.roomNumber}</BigRoomNumber>
           <Loading roomNumber={roomState.roomNumber} />
         </>
       )}
