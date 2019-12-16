@@ -152,7 +152,10 @@ function FlexibleInput({
         onKeyDown={handleKeyDown}
         onInput={handleInput}
         onFocus={() => setFocus(true)}
-        onBlur={() => callback(inputValue)}
+        onBlur={() => {
+          setFocus(false);
+          callback(inputValue);
+        }}
         mobileFontSize={mobileFontSize}
       />
 
