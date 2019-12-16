@@ -63,13 +63,6 @@ const RoomContainer = styled.div`
   width: 100%;
 `;
 
-async function getRooms({ userId }) {
-  const result = await fetchRooms({ userId }).then(response => {
-    if (response.isSuccess) return response.data;
-    return [];
-  });
-  return result;
-}
 
 function parsingUserNaverId() {
   const cookies = parseCookie(document.cookie);
@@ -91,10 +84,17 @@ function SelectRoom({ history }) {
   }, []);
 
   useEffect(() => {
-    if (userId)
-      getRooms({ userId }).then(roomList => {
-        setRooms(roomList);
-      });
+    async function getRooms() {
+      const { isSuccess, data } = await fetchRooms({ userId });
+
+      if (!isSuccess) {
+        alert('오류로 인해 방을 가져올 수 없습니다');
+        return;
+      }
+
+      setRooms(data);
+    }
+    if (userId) getRooms();
   }, [userId]);
 
   function handleCreateButtonClick() {
