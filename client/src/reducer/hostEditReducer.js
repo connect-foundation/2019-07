@@ -30,12 +30,11 @@ const actionTypes = {
   UPDATE_ITEM_IS_ANSWER: 5,
   UPDATE_ITEM_TITLE: 6,
   UPDATE_CURRENT_INDEX: 7,
-  ON_OFF_TIME_LIMIT: 8,
-  READ_QUIZSET: 9,
-  DELETE_QUIZ: 10,
-  UPDATE_IDS: 11,
-  CHANGE_LOADING: 12,
-  RESET_DELETE_QUIZZES: 13,
+  READ_QUIZSET: 8,
+  DELETE_QUIZ: 9,
+  UPDATE_IDS: 10,
+  CHANGE_LOADING: 11,
+  RESET_DELETE_QUIZZES: 12,
 };
 
 const loadingTypes = {
@@ -52,7 +51,6 @@ const initialQuizsetState = {
   deletedQuizzes: [],
   deleteCount: 0,
   currentIndex: 0,
-  isTimeLimitOpend: false,
   loadingType: loadingTypes.READ_DATA,
 };
 
@@ -67,6 +65,13 @@ function updateArray(array, index, element) {
   return newArray;
 }
 
+function resetQuizOrder(nextQuizset, nextIndex) {
+  for (let index = nextIndex; index < nextQuizset.length; index += 1) {
+    const nextQuiz = nextQuizset[index];
+    nextQuiz.quizOrder = index;
+  }
+}
+
 const quizsetReducer = (quizsetState, action) => {
   const { quizset, currentIndex } = quizsetState;
   const quiz = quizset[currentIndex];
@@ -76,7 +81,6 @@ const quizsetReducer = (quizsetState, action) => {
         ...quizsetState,
         quizset: addQuiz(quizset),
         currentIndex: quizset.length,
-        isTimeLimitOpend: false,
         loadingType: loadingTypes.IDLE,
       };
     }
@@ -84,7 +88,6 @@ const quizsetReducer = (quizsetState, action) => {
       return {
         ...quizsetState,
         currentIndex: action.currentIndex,
-        isTimeLimitOpend: false,
       };
     }
     case actionTypes.UPDATE_TITLE: {
@@ -106,7 +109,7 @@ const quizsetReducer = (quizsetState, action) => {
     case actionTypes.UPDATE_TIME_LIMIT: {
       quiz.timeLimit = action.timeLimit;
       const newQuizset = updateArray(quizset, currentIndex, quiz);
-      return { ...quizsetState, quizset: newQuizset, isTimeLimitOpend: false };
+      return { ...quizsetState, quizset: newQuizset };
     }
     case actionTypes.UPDATE_ITEM_IS_ANSWER: {
       const { itemIndex, itemIsAnswer } = action;
@@ -126,12 +129,6 @@ const quizsetReducer = (quizsetState, action) => {
       const newQuizset = updateArray(quizset, currentIndex, quiz);
       return { ...quizsetState, quizset: newQuizset };
     }
-    case actionTypes.ON_OFF_TIME_LIMIT: {
-      return {
-        ...quizsetState,
-        isTimeLimitOpend: !quizsetState.isTimeLimitOpend,
-      };
-    }
     case actionTypes.READ_QUIZSET: {
       const getNewQuizset = () => parseCamelObject(action.quizset);
       return {
@@ -148,17 +145,13 @@ const quizsetReducer = (quizsetState, action) => {
       const nextIndex = Math.min(currentIndex, Math.max(quizset.length - 1, 0));
       const nextQuizset = quizset.length > 0 ? quizset : [createQuiz()];
 
-      //quizOrder 리셋
-      for (let index = nextIndex; index < nextQuizset.length; index += 1) {
-        const nextQuiz = nextQuizset[index];
-        nextQuiz.quizOrder = index;
-      }
+      resetQuizOrder(nextQuizset, nextIndex);
+
       return {
         ...quizsetState,
         deletedQuizzes,
         quizset: nextQuizset,
         currentIndex: nextIndex,
-        isTimeLimitOpend: false,
         deleteCount: deleteCount + 1,
       };
     }
