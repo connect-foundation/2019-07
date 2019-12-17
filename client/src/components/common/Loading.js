@@ -29,6 +29,7 @@ const LoadingText = styled.span`
   text-align: center;
   top: 80%;
   transform: translateY(-100%);
+  user-select: none;
 `;
 
 function Loading({ message }) {
