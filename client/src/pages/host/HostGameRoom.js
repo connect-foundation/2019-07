@@ -23,7 +23,7 @@ const Container = styled.div`
   height: 100vh;
 `;
 
-function HostGameRoom({ location, history }) {
+function HostGameRoom({ location }) {
   if (!location.state) {
     window.location.href = '/host/room/select';
   }
