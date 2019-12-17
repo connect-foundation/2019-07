@@ -15,12 +15,35 @@ import {
   HostGameAction,
   HostGameContext,
 } from '../../reducer/hostGameReducer';
+import Loading from '../../components/common/Loading';
+import Header from '../../components/common/Header';
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 100vw;
   height: 100vh;
+`;
+
+const LoadingWrapper = styled.div`
+  position: relative;
+  flex: 1;
+`;
+
+const RoomNumber = styled.span`
+  position: absolute;
+  color: white;
+  font-size: 10vmin;
+  font-weight: bold;
+  width: 100%;
+  text-align: center;
+  z-index: 10000;
+  top: 50%;
+  transform: translateY(-250%);
+
+  &::before {
+    content: '방 번호 ';
+  }
 `;
 
 function HostGameRoom({ location }) {
@@ -31,6 +54,7 @@ function HostGameRoom({ location }) {
   const socket = io.connect(process.env.REACT_APP_BACKEND_HOST);
   const [roomState, dispatcher] = useReducer(roomReducer, initialRoomState);
   const [ranking, setRanking] = useState([]);
+  const isEmptyRoom = roomState.players.length === 0;
 
   useEffect(() => {
     dispatcher({ type: HostGameAction.SET_SOCKET, socket });
@@ -77,16 +101,27 @@ function HostGameRoom({ location }) {
       {roomState.pageState !== 'END' && (
         <Prompt message="페이지를 이동하면 방이 닫힐 수 있습니다. 계속 하시겠습니까?" />
       )}
-      <HostGameContext.Provider value={{ dispatcher, roomState }}>
-        {
+      {isEmptyRoom ? (
+        <>
+          <Header />
+          <LoadingWrapper>
+            <Loading message="참가자를 기다리고 있습니다..." />
+            <RoomNumber>{roomState.roomNumber}</RoomNumber>
+          </LoadingWrapper>
+        </>
+      ) : (
+        <HostGameContext.Provider value={{ dispatcher, roomState }}>
           {
-            WAITING: <HostWaitingRoom />,
-            LOADING: <HostLoading />,
-            PLAYING: <HostQuizPlayingRoom />,
-            END: <GameResult ranking={ranking} />,
-          }[roomState.pageState]
-        }
-      </HostGameContext.Provider>
+            {
+              WAITING: <HostWaitingRoom />,
+              LOADING: <HostLoading />,
+              PLAYING: <HostQuizPlayingRoom />,
+              END: <GameResult ranking={ranking} />,
+            }[roomState.pageState]
+          }
+        </HostGameContext.Provider>
+      )}
+
       <HostFooter roomNumber={roomState.roomNumber} />
     </Container>
   );
