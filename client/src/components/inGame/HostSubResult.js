@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { GreenButton, YellowButton } from '../common/Buttons';
+import { GreenButton } from '../common/Buttons';
 import ScoreChart from '../common/ScoreChart';
 import * as layout from './Layout';
 import { HostGameAction, HostGameContext } from '../../reducer/hostGameReducer';
@@ -30,10 +30,6 @@ function HostSubResult() {
     dispatcher({ type: HostGameAction.REQUEST_NEXT_QUIZ });
   }
 
-  function handleCloseButtonClick() {
-    dispatcher({ type: HostGameAction.REQUEST_QUIZ_END });
-  }
-
   return (
     <layout.CenterContentContainer>
       <layout.NextButtonWrapper>
@@ -41,13 +37,6 @@ function HostSubResult() {
           {nextButtonName}
         </GreenButton>
       </layout.NextButtonWrapper>
-      <layout.CloseButtonWrapper>
-        {roomState.currentQuiz.index !== roomState.totalQuizCount - 1 && (
-          <YellowButton onClick={handleCloseButtonClick}>
-            퀴즈종료하기
-          </YellowButton>
-        )}
-      </layout.CloseButtonWrapper>
       <layout.CenterLeftPanel />
       <layout.ImagePanel>
         <ScoreChart itemDatas={itemDatas} />

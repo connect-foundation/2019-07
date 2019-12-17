@@ -106,18 +106,6 @@ function WhiteButton({ children, onClick }) {
   );
 }
 
-function GrayButton({ children, onClick }) {
-  return (
-    <Button
-      backgroundColor={colors.BORDER_DARK_GRAY}
-      fontColor={colors.TEXT_WHITE}
-      onClick={onClick}
-    >
-      {children}
-    </Button>
-  );
-}
-
 Button.defaultProps = {
   backgroundColor: colors.BACKGROUND_DEEP_GRAY,
   fontColor: colors.TEXT_BLACK,
@@ -131,7 +119,6 @@ const customButtonDefaultProps = {
 GreenButton.defaultProps = customButtonDefaultProps;
 YellowButton.defaultProps = customButtonDefaultProps;
 WhiteButton.defaultProps = customButtonDefaultProps;
-GrayButton.defaultProps = customButtonDefaultProps;
 
 Button.propTypes = {
   children: PropTypes.node.isRequired,
@@ -148,6 +135,5 @@ const customButtonPropTypes = {
 YellowButton.propTypes = customButtonPropTypes;
 GreenButton.propTypes = customButtonPropTypes;
 WhiteButton.propTypes = customButtonPropTypes;
-GrayButton.propTypes = customButtonPropTypes;
 
-export { Button, YellowButton, GreenButton, WhiteButton, GrayButton };
+export { Button, YellowButton, GreenButton, WhiteButton };

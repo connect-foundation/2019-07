@@ -5,7 +5,7 @@ import * as colors from '../../constants/colors';
 import DESKTOP_MIN_WIDTH from '../../constants/media';
 import Header from '../common/Header';
 import Loading from '../common/Loading';
-import { YellowButton, GrayButton } from '../common/Buttons';
+import { YellowButton } from '../common/Buttons';
 import { HostGameAction, HostGameContext } from '../../reducer/hostGameReducer';
 
 const ButtonContainer = styled.div`
@@ -75,7 +75,7 @@ const PlayerList = styled.ul`
 
 const BigRoomNumber = styled.div`
   position: absolute;
-  top: 10%;
+  top: 15rem;
   font-size: 3rem;
   color: #fff;
   width: 100%;
@@ -83,16 +83,10 @@ const BigRoomNumber = styled.div`
   font-weight: bold;
   transform: translateY(-50%);
   text-align: center;
-  background-color: #333;
-  padding: 2rem 0;
 
   @media (min-width: ${DESKTOP_MIN_WIDTH}) {
     font-size: 5rem;
   }
-`;
-
-const CloseButtonContainer = styled.div`
-  z-index: 10000;
 `;
 
 function HostWaitingRoom() {
@@ -100,15 +94,13 @@ function HostWaitingRoom() {
   function startQuiz() {
     dispatcher({ type: HostGameAction.GAME_START });
   }
-  function closeRoom() {
-    window.location.href = '/host/room/select';
-  }
+
   return (
     <>
       {!roomState.players.length && (
         <>
           <BigRoomNumber>방 번호 : {roomState.roomNumber}</BigRoomNumber>
-          <Loading roomNumber={roomState.roomNumber} />
+          <Loading message="참가자를 기다리고 있습니다..." />
         </>
       )}
       <Header>
@@ -127,10 +119,6 @@ function HostWaitingRoom() {
           ))}
         </PlayerList>
       </Main>
-
-      <CloseButtonContainer>
-        <GrayButton onClick={closeRoom}>게임 취소</GrayButton>
-      </CloseButtonContainer>
     </>
   );
 }

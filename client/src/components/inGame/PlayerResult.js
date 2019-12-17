@@ -75,7 +75,7 @@ function PlayerResult({ ranking, roomNumber, nickname }) {
     readRank(roomNumber, nickname).then(response => {
       setRank(response.rank);
     });
-  }, [roomNumber, nickname]);
+  }, []);
 
   // fetch 요청이 끝나지 않아 rank === undefined인 경우
   if (!rank) {

@@ -73,7 +73,7 @@ function PlayerGameRoom({ location }) {
       });
       window.removeEventListener('beforeunload', blockClose);
     };
-  }, [location.state.nickname, location.state.roomNumber]);
+  }, []);
 
   socket.on('start', () => {
     setViewState(VIEW_STATE.LOADING);
