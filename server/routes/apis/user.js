@@ -9,7 +9,7 @@ const dbManager = require('../../models/database/dbManager');
 router.use(isUserValid);
 /**
  * 유저의 모든 방을 가져오는 API
- * @api {get} /user/:userId/rooms
+ * @api {get} /api/user/:userId/rooms
  * @apiName getRooms
  * @apiGroup user
  *
@@ -38,7 +38,7 @@ router.get('/room/:roomId', async (req, res) => {
 /**
  * 새로운 방을 추가하는 API
  *
- * @api {post} /user/room
+ * @api {post} /api/user/room
  * @apiName addRoom
  * @apiGroup user
  *
@@ -77,7 +77,7 @@ router.post(
 
 /**
  * 방의 이름을 수정하는 API
- * @api {put} /user/room
+ * @api {put} /api/user/room
  * @apiName updateRoomTitle
  * @apiGroup
  *
@@ -154,7 +154,7 @@ router.delete('/room', [check('roomId').exists()], async (req, res) => {
 
 /**
  * 방의 퀴즈 목록을 가져오는 API
- * @api {put} /user/quizset/:roomId
+ * @api {put} /api/user/quizset/:roomId
  * @apiName getRoomQuizset
  * @apiGroup
  *

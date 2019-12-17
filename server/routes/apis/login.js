@@ -13,7 +13,7 @@ const jwtObj = {
 };
 
 /**
- * @api {get} /login/token/:accessToken 네이버 프로필 조회 후 쿠키에 jwt로 설정하는 API.
+ * @api {get} /api/login/token/:accessToken 네이버 프로필 조회 후 쿠키에 jwt로 설정하는 API.
  * @apiName setToken
  * @apiGroup login
  *
@@ -115,7 +115,7 @@ router.get('/token/:accessToken', async (req, res) => {
 });
 
 /**
- * @api {get} /login/token/check 설정된 jwt가 유효한지 검사하는 API
+ * @api {get} /api/login/token/check 설정된 jwt가 유효한지 검사하는 API
  * @apiName checkJWT
  * @apiGroup login
  *
