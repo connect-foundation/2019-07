@@ -2,6 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { getToken } from '../../utils/fetch';
 
+import LoadingCircle from '../../components/common/LoadingCircle';
+import * as colors from '../../constants/colors';
+
 const loginPageUrl = '/login';
 
 function splitHash(rawHash) {
@@ -36,7 +39,7 @@ function LoginPage({ history }) {
     }
   });
 
-  return <></>;
+  return <LoadingCircle color={colors.PRIMARY_DEEP_GREEN} />;
 }
 
 LoginPage.propTypes = {

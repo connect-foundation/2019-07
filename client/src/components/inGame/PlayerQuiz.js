@@ -8,6 +8,16 @@ import * as layout from './Layout';
 
 import LoadingCircle from '../common/LoadingCircle';
 import { readAnswer } from '../../utils/fetch';
+import Hourglass from './Hourglass';
+import multipleChoiceImage from '../../assets/images/multiple_choice.svg';
+
+const RemainTime = styled.span`
+  position: absolute;
+  margin-top: auto;
+  font-size: 2vw;
+  font-weight: bold;
+  user-select: none;
+`;
 
 const ImageContainer = styled.div`
   width: 100%;
@@ -20,20 +30,38 @@ const ImageContainer = styled.div`
 `;
 
 function Selection({ currentQuiz, chooseAnswer, setIsAnswer }) {
+  const [remainTime, setRemainTime] = useState(0);
+
   useEffect(() => {
     // 새로운 문제이므로, 이전의 정답결과를 초기화
     setIsAnswer(false);
-  });
+
+    setRemainTime(Number(currentQuiz.timeLimit));
+    const timer = setInterval(() => {
+      setRemainTime(cur => {
+        if (cur === 0) {
+          clearInterval(timer);
+          return 0;
+        }
+        return cur - 1;
+      });
+    }, 1000);
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [currentQuiz, setIsAnswer]);
 
   return (
     <>
       <layout.Center>
         <layout.CenterContentContainer>
-          <layout.CenterLeftPanel />
+          <layout.CenterLeftPanel>
+            <Hourglass />
+            <RemainTime>{remainTime}</RemainTime>
+          </layout.CenterLeftPanel>
           <layout.ImagePanel>
-            {currentQuiz.image !== null && (
-              <ImageContainer image={currentQuiz.image} />
-            )}
+            <ImageContainer image={currentQuiz.image || multipleChoiceImage} />
           </layout.ImagePanel>
           <layout.CenterRightPanel />
         </layout.CenterContentContainer>
@@ -99,7 +127,8 @@ Selection.propTypes = {
         title: PropTypes.string.isRequired,
       }),
     ).isRequired,
-    image: PropTypes.string.isRequired,
+    image: PropTypes.string,
+    timeLimit: PropTypes.number.isRequired,
   }).isRequired,
   chooseAnswer: PropTypes.func.isRequired,
   setIsAnswer: PropTypes.func.isRequired,
