@@ -100,19 +100,19 @@ function FlexibleInput({
   const inputRef = useRef();
 
   useEffect(() => {
-    if (title === undefined) return;
+    if (!inputValue) callback(inputValue);
+    if (!title) return;
+
     inputRef.current.textContent = title;
+    callback(title);
     setInputValue(title);
+
     if (title.length < maxLength) {
       setMessage('');
       return;
     }
     setMessage(`${maxLength}자까지 입력할 수 있습니다`);
-  }, [title]);
-
-  useEffect(() => {
-    if (!inputValue) callback(inputValue);
-  }, [inputValue]);
+  }, [inputValue, title]);
 
   function handleKeyDown(event) {
     if (event.keyCode === ENTER) event.preventDefault();
