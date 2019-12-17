@@ -42,11 +42,8 @@ async function createItems(quizId, items) {
     return [...array, refineItem(item)];
   }, []);
 
-  // 3번째 아이템이 비어있고 4번째 아이템이 있을 때,
-  // 4번째 아이템의 order가 3번째 아이템으로 변경되는 기능 추가해야 함
-
   //isSuccess가 실패할 경우 재요청하거나 오류를 알려줘야함
-  const { isSucess } = await fetcher.createItems(quizId, refinedItems);
+  const { isSuccess } = await fetcher.createItems(quizId, refinedItems);
 }
 
 async function updateItem(item) {
@@ -98,7 +95,7 @@ function updateItems(quiz, readedQuiz) {
   }
 }
 
-async function updateQuizzes(roomId, quizset, quizsetId, readedQuizset) {
+function updateQuizzes(roomId, quizset, quizsetId, readedQuizset) {
   quizset.forEach(quiz => {
     const isNewQuiz = quiz.id === undefined;
     if (isNewQuiz) {
@@ -187,6 +184,7 @@ function alertMustFill({
     (result, message) => `${result}${message}`,
     indexMessage,
   );
+  // eslint-disable-next-line no-alert
   alert(alertMessage);
 }
 

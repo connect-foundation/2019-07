@@ -113,11 +113,11 @@ const Dot = styled.div`
 
 function RangeInput({ params, onChange, dependency }) {
   const inputRef = useRef();
-  const max = params.length - 1;
-  const defaultValue = parseInt(max / 2, 10);
+  const lastIndex = params.length - 1;
+  const defaultValue = parseInt(lastIndex / 2, 10);
   const [currentIndex, setCurrentIndex] = useState(defaultValue);
   const getLeft = index => {
-    return `${(index / max) * 100}%`;
+    return `${(index / lastIndex) * 100}%`;
   };
   const getValue = index => {
     return params[index];
@@ -127,11 +127,11 @@ function RangeInput({ params, onChange, dependency }) {
   function handleChange(event) {
     const index = event.target.value;
     setCurrentIndex(index);
-    if (onChange !== undefined) onChange(getValue(index));
+    if (onChange) onChange(getValue(index));
   }
 
   useEffect(() => {
-    if (dependency === undefined) return;
+    if (!dependency) return;
     setCurrentIndex(dependency);
   }, [dependency]);
 
@@ -146,7 +146,7 @@ function RangeInput({ params, onChange, dependency }) {
       </ContentArea>
       <InputStyle
         ref={inputRef}
-        max={max}
+        max={lastIndex}
         defaultValue={defaultValue}
         onChange={event => handleChange(event)}
       />

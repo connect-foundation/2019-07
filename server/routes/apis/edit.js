@@ -11,6 +11,7 @@ const { isUserValid } = require('../../middleware/validations');
 router.use(isUserValid);
 
 function getQuizset(quizzes, items) {
+  quizzes.sort((quiz1, quiz2) => quiz1.quiz_order - quiz2.quiz_order);
   function pushQuiz(quizset, quiz) {
     const matchedItems = items.filter((item) => item.quiz_id === quiz.id);
     const newQuiz = {
