@@ -8,17 +8,9 @@ import * as fetcher from '../../utils/fetch';
 
 const ButtonWrapper = styled.div`
   position: absolute;
-  right: 2vmin;
+  right: 1rem;
   top: 50%;
   transform: translateY(-50%);
-
-  div.buttonWrapper {
-    display: inline-block;
-  }
-  button {
-    font-size: 2vmin;
-    padding: 1vmin 2vmin;
-  }
 `;
 
 const refineQuiz = ({ id, title, imagePath, quizOrder, score, timeLimit }) => {
@@ -33,8 +25,7 @@ function findReadedQuiz(quizId, readedQuizset) {
   return readedQuiz;
 }
 
-function isQuizUpdated(quiz, readedQuizset) {
-  const readedQuiz = findReadedQuiz(quiz.id, readedQuizset);
+function isQuizUpdated(quiz, readedQuiz) {
   return (
     JSON.stringify(refineQuiz(quiz)) !== JSON.stringify(refineQuiz(readedQuiz))
   );
@@ -50,6 +41,10 @@ async function createItems(quizId, items) {
   const refinedItems = items.reduce((array, item) => {
     return [...array, refineItem(item)];
   }, []);
+
+  // 3번째 아이템이 비어있고 4번째 아이템이 있을 때,
+  // 4번째 아이템의 order가 3번째 아이템으로 변경되는 기능 추가해야 함
+
   //isSuccess가 실패할 경우 재요청하거나 오류를 알려줘야함
   const { isSucess } = await fetcher.createItems(quizId, refinedItems);
 }
@@ -81,9 +76,12 @@ async function createQuiz(roomId, quizsetId, quiz) {
   createItems(quizId, quiz.items);
 }
 
-async function updateQuiz(roomId, quiz, readedQuizset) {
-  if (!isQuizUpdated(quiz, readedQuizset)) return;
+async function updateQuiz(roomId, quiz, readedQuiz) {
+  if (!isQuizUpdated(quiz, readedQuiz)) return;
   const formData = getQuizFormData(roomId, quiz);
+
+  if (readedQuiz.imagePath && !quiz.imagePath)
+    formData.append('requestDeleteImage', true);
   const { isSuccess } = await fetcher.updateQuiz(formData);
 }
 
@@ -92,8 +90,7 @@ async function deleteQuiz(roomId, quizId) {
   const { isSuccess } = await fetcher.deleteQuiz(roomId, quizId);
 }
 
-function updateItems(quiz, readedQuizset) {
-  const readedQuiz = findReadedQuiz(quiz.id, readedQuizset);
+function updateItems(quiz, readedQuiz) {
   for (let index = 0; index < 4; index += 1) {
     const item = quiz.items[index];
     const readedItem = readedQuiz.items[index];
@@ -108,8 +105,9 @@ async function updateQuizzes(roomId, quizset, quizsetId, readedQuizset) {
       createQuiz(roomId, quizsetId, quiz);
       return;
     }
-    updateItems(quiz, readedQuizset);
-    updateQuiz(roomId, quiz, readedQuizset);
+    const readedQuiz = findReadedQuiz(quiz.id, readedQuizset);
+    updateItems(quiz, readedQuiz);
+    updateQuiz(roomId, quiz, readedQuiz);
   });
 }
 
