@@ -16,6 +16,18 @@ const S3 = new AWS.S3({
 const rootFolder = 'images/';
 const bucket = process.env.OS_BUCKET;
 
+function getDeleteObjects(listedObjects) {
+  return listedObjects.Contents.reduce(
+    (array, { Key }) => [
+      ...array,
+      {
+        Key,
+      },
+    ],
+    [],
+  );
+}
+
 async function emptyS3Directory(dir) {
   const listParams = {
     Bucket: bucket,
@@ -29,15 +41,9 @@ async function emptyS3Directory(dir) {
   const deleteParams = {
     Bucket: bucket,
     Delete: {
-      Objects: [],
+      Objects: getDeleteObjects(listedObjects),
     },
   };
-
-  listedObjects.Contents.forEach(({ Key }) => {
-    deleteParams.Delete.Objects.push({
-      Key,
-    });
-  });
 
   await S3.deleteObjects(deleteParams).promise();
 
@@ -54,21 +60,22 @@ async function deleteQuizFolder(roomId, quizId) {
   emptyS3Directory(folder);
 }
 
-async function uploadImage(roomId, quizId, filename, buffer) {
-  // create folder
-  const folder = `${rootFolder}${roomId}/${quizId}/`;
+async function createFolder(folder) {
   await S3.putObject({
     Bucket: bucket,
     Key: folder,
   }).promise();
+}
 
-  // upload file
+async function uploadImage(roomId, quizId, filename, buffer) {
+  const folder = `${rootFolder}${roomId}/${quizId}/`;
+  await createFolder(folder);
+
   await S3.putObject({
     Bucket: bucket,
     Key: `${folder}${filename}`,
     Body: buffer,
     ACL: 'public-read',
-    // ACL을 지우면 전체공개가 되지 않습니다.
   }).promise();
 }
 
