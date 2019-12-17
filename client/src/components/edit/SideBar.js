@@ -99,7 +99,7 @@ const ButtonWrapper = styled.div`
 function AddQuizButton({ onClick }) {
   return (
     <ButtonWrapper>
-      <YellowButton onClick={onClick}>퀴즈 생성</YellowButton>
+      <YellowButton onClick={onClick}>퀴즈 추가</YellowButton>
     </ButtonWrapper>
   );
 }

@@ -61,6 +61,7 @@ const ItemInput = styled.input`
 
 const ItemCheckBox = styled.div`
   position: relative;
+  display: ${props => (props.isActive ? 'block' : 'none')};
   flex: none;
   width: 3vmin;
   height: 3vmin;
@@ -119,9 +120,9 @@ function Item({ itemIndex }) {
           />
         </InputWrapper>
         <ItemCheckBox
+          isActive={title.length > 0}
           isAnswer={isAnswer}
           onClick={() => {
-            if (title.length === 0) return;
             updateIsAnswer(1 - isAnswer);
           }}
         />
