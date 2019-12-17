@@ -68,6 +68,7 @@ class Rooms {
         currentQuiz.score = currentValue.score;
         currentQuiz.timeLimit = currentValue.time_limit;
         currentQuiz.image = currentValue.image_path;
+        currentQuiz.quizOrder = currentValue.quiz_order;
 
         quizset.push(currentQuiz);
         previousArray.push(currentValue.id);
@@ -81,6 +82,9 @@ class Rooms {
         quizset[quizIndex].answers.push(currentValue.item_order);
       }
     });
+
+    quizset.sort((first, second) => first.quizOrder - second.quizOrder);
+
     this.getRoom(roomNumber).quizSet = quizset;
   }
 
