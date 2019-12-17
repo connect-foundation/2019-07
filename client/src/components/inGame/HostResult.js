@@ -21,6 +21,7 @@ const ButtonContainer = styled.div`
   right: 0;
   position: absolute;
   margin: 1rem;
+  z-index: 1;
 
   button {
     font-size: 1rem;
