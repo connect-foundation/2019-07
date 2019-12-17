@@ -38,7 +38,7 @@ const InfomationArea = styled.div`
   justify-content: space-between;
   font-weight: bold;
   font-size: 5vmin;
-  color: ${colors.TEXT_BLACK};
+  color: black;
   margin-bottom: 1vmin;
 `;
 
@@ -62,19 +62,14 @@ const PlayerList = styled.ul`
   overflow-y: auto;
   box-shadow: 0 0 1px 1px ${colors.BORDER_DARK_GRAY};
   border-radius: 5px;
+  padding: 0;
 
   li {
     display: inline-block;
-    margin: 1rem;
-    font-size: 2rem;
+    margin: 2vmin 4vmin;
+    font-size: 6vmin;
     font-weight: bold;
     color: ${colors.TEXT_BLACK};
-  }
-
-  @media (min-width: ${DESKTOP_MIN_WIDTH}) {
-    li {
-      font-size: 3rem;
-    }
   }
 `;
 
