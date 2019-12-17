@@ -5,8 +5,11 @@ import * as colors from '../../constants/colors';
 
 const graphMargin = '0.75vw';
 const countFontSize = '3vw';
+const answerFontSize = '2vw';
+
 const getItemColor = index =>
   index < colors.ITEM_COLOR.length ? colors.ITEM_COLOR[index] : 'salmon';
+
 const Container = styled.div.attrs({
   className: 'scoreChartContainer',
 })`
@@ -19,6 +22,7 @@ const Container = styled.div.attrs({
   left: 50%;
   transform: translate(-50%, -50%);
 `;
+
 const GraphWrapper = styled.div`
   display: flex;
   flex-direction: column-reverse;
@@ -28,6 +32,7 @@ const GraphWrapper = styled.div`
   margin: auto;
   overflow: hidden;
 `;
+
 const GraphBottom = styled.div`
   display: inline-flex;
   flex: none;
@@ -38,6 +43,7 @@ const GraphBottom = styled.div`
   background-color: ${props => getItemColor(props.index)};
   margin-top: ${graphMargin};
 `;
+
 const ItemTitle = styled.span`
   max-width: 100%;
   max-height: 100%;
@@ -48,16 +54,19 @@ const ItemTitle = styled.span`
   text-overflow: ellipsis;
   white-space: nowrap;
 `;
+
 const GraphTopWrapper = styled.div`
   display: flex;
   flex-direction: column-reverse;
   flex: 1;
   width: 100%;
 `;
+
 const GraphTopLimiter = styled.div`
   width: 100%;
-  height: calc(${graphMargin} + ${countFontSize});
+  height: calc(${graphMargin} + ${countFontSize} + 1.5vw);
 `;
+
 const GraphTop = styled.div`
   position: relative;
   width: 100%;
@@ -67,26 +76,34 @@ const GraphTop = styled.div`
   animation-duration: 2s;
   animation-timing-function: linear;
 `;
+
 const GraphCount = styled.span`
   position: absolute;
   width: 100%;
   text-align: center;
-  top: calc(-${graphMargin} - ${countFontSize});
+  top: calc(-${graphMargin} - ${countFontSize} - 1vw);
   font-size: ${countFontSize};
   font-weight: bold;
   color: ${props => getItemColor(props.index)};
-  ${props =>
-    props.isAnswer &&
-    `&::before {
-      content: '✓'
-  }`}
 `;
+
+const AnswerMark = styled.span`
+  background-color: ${props => colors.ITEM_COLOR[props.index]};
+  color: white;
+  padding: 0 0.5vw;
+  border-radius: 0.5vw;
+  font-size: ${answerFontSize};
+  margin-right: 0.5vw;
+`;
+
 function findMaxHandler(previous, current) {
   return previous.playerCount > current.playerCount ? previous : current;
 }
+
 function findMaxCount(array) {
   return array.reduce(findMaxHandler).playerCount;
 }
+
 function getAnimation(item, maxCount) {
   const scorePercent = (item.playerCount / maxCount) * 100;
   const animationName = keyframes`
@@ -102,6 +119,7 @@ function getAnimation(item, maxCount) {
   `;
   return animationName;
 }
+
 function convertDatasToItems(array, setState) {
   const maxCount = findMaxCount(array);
   for (let index = 0; index < array.length; index += 1) {
@@ -111,6 +129,7 @@ function convertDatasToItems(array, setState) {
   }
   setState(array);
 }
+
 function ScoreChart({ itemDatas }) {
   const [items, setItems] = useState([]);
   const graphWidth = `calc(${100 / items.length}% - ${graphMargin})`;
@@ -129,6 +148,7 @@ function ScoreChart({ itemDatas }) {
             <GraphTopWrapper>
               <GraphTop index={index} animationName={item.animationName}>
                 <GraphCount index={index} isAnswer={item.isAnswer}>
+                  {item.isAnswer && <AnswerMark index={index}>정답</AnswerMark>}
                   {item.playerCount}
                 </GraphCount>
               </GraphTop>
