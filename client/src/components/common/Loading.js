@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+
 import LoadingCircle from './LoadingCircle';
 
 const LoadingContainer = styled.div`
@@ -10,6 +11,7 @@ const LoadingContainer = styled.div`
   left: 0;
   right: 0;
   z-index: 9999;
+
   &::before {
     position: absolute;
     content: '';
@@ -19,6 +21,7 @@ const LoadingContainer = styled.div`
     height: 100%;
   }
 `;
+
 const LoadingText = styled.span`
   position: absolute;
   color: white;
@@ -29,6 +32,7 @@ const LoadingText = styled.span`
   top: 90%;
   transform: translateY(-100%);
 `;
+
 function Loading({ message }) {
   return (
     <LoadingContainer>
@@ -37,10 +41,13 @@ function Loading({ message }) {
     </LoadingContainer>
   );
 }
+
 Loading.defaultProps = {
   message: '로딩 중입니다',
 };
+
 Loading.propTypes = {
   message: PropTypes.string,
 };
+
 export default Loading;

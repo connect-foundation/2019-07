@@ -14,14 +14,11 @@ const RemainTime = styled.span`
   user-select: none;
 `;
 
-const ImageContainer = styled.div`
+const QuizImage = styled.img.attrs({
+  src: props => props.src,
+})`
   width: 100%;
   height: 100%;
-
-  background-image: url(${props => props.image});
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
 `;
 
 function HostPlaying() {
@@ -54,7 +51,7 @@ function HostPlaying() {
             dispatcher({ type: HostGameAction.REQUEST_SUB_RESULT });
           }}
         >
-          정답확인
+          다음퀴즈
         </GreenButton>
       </layout.NextButtonWrapper>
       <layout.CenterLeftPanel>
@@ -62,9 +59,7 @@ function HostPlaying() {
         <RemainTime>{remainTime}</RemainTime>
       </layout.CenterLeftPanel>
       <layout.ImagePanel>
-        <ImageContainer
-          image={roomState.currentQuiz.image || multipleChoiceImage}
-        />
+        <QuizImage src={roomState.currentQuiz.image || multipleChoiceImage} />
       </layout.ImagePanel>
       <layout.CenterRightPanel>
         <layout.RemainPeople>

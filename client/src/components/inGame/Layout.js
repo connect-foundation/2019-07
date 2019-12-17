@@ -60,21 +60,7 @@ const NextButtonWrapper = styled.div`
     display: inline-block;
   }
   button {
-    font-size: 2vw;
-    padding: 0.4vh 0.75vw;
-  }
-`;
-
-const CloseButtonWrapper = styled.div`
-  align-self: flex-start;
-  div.buttonWrapper {
-    position: absolute;
-    left: 0;
-    flex: none;
-    display: inline-block;
-  }
-  button {
-    font-size: 2vw;
+    font-size: 1.5vw;
     padding: 0.4vh 0.75vw;
   }
 `;
@@ -156,7 +142,6 @@ export {
   Bottom,
   CenterContentContainer,
   NextButtonWrapper,
-  CloseButtonWrapper,
   CenterLeftPanel,
   CenterRightPanel,
   RemainPeople,

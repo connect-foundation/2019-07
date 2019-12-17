@@ -29,7 +29,7 @@ const Main = styled.main`
   align-items: center;
 `;
 
-function PlayerWaiting({ roomNumber, setQuizSet }) {
+function PlayerWaiting({ setQuizSet, roomNumber }) {
   useEffect(() => {
     fetchQuizSet(roomNumber).then(response => {
       if (response.isSuccess) {
@@ -39,7 +39,7 @@ function PlayerWaiting({ roomNumber, setQuizSet }) {
         window.location.href = '/';
       }
     });
-  }, [roomNumber, setQuizSet]);
+  }, []);
 
   return (
     <Main>

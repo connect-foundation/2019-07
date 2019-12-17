@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import NaverLogin from '../../utils/naverLoginSdk';
 import loginImage from '../../assets/images/naverLoginButton_long.PNG';
 
+const callbackPageFullUrl = `${process.env.REACT_APP_HOST}/callback`;
 const clientId = process.env.REACT_APP_NAVER_LOGIN_API_CLIENT_ID;
 
 const NoStyleButton = styled.button`
@@ -24,7 +25,7 @@ function LoginPage() {
   return (
     <NaverLogin
       clientId={clientId}
-      callbackUrl={`http://${window.location.host}/callback`}
+      callbackUrl={callbackPageFullUrl}
       render={({ onClick }) => (
         <NoStyleButton type="button" onClick={onClick} />
       )}
