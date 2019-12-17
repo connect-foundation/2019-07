@@ -42,7 +42,7 @@ function HostLoading() {
         data: response.quizSet,
       });
     });
-  }, []);
+  }, [roomState.currentQuiz]);
 
   return (
     <Container>

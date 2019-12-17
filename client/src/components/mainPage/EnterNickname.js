@@ -55,14 +55,15 @@ function EnterNickname({ history }) {
     moveWaitingRoom();
   }
 
-  function handlePressEnter(e) {
+  function handleKeyUp(e) {
     if (e.key === 'Enter') {
       handleCreateButtonClick();
       return;
     }
 
-    if (!/[ㄱ-힣\w]+/g.test(e.key)) {
+    if (/[^ㄱ-힣\w]+/g.test(e.target.value)) {
       e.target.value = e.target.value.replace(/[^ㄱ-힣\w]+/g, '');
+      setNickname(e.target.value);
       onToast('닉네임에 특수문자는 입력할 수 없습니다');
     }
   }
@@ -72,7 +73,7 @@ function EnterNickname({ history }) {
       <Input
         placeholder="닉네임"
         onChange={handleInputChange}
-        onKeyUp={handlePressEnter}
+        onKeyUp={handleKeyUp}
       />
       <ButtonContainer>
         <GreenButton onClick={handleCreateButtonClick}>

@@ -6,7 +6,8 @@ export const ModalContext = createContext();
 function ModalProvider({ children }) {
   const [isModalOn, setModalOn] = useState(false);
 
-  function closeModal() {
+  function closeModal(e) {
+    if (e && e.defaultPrevented) return;
     setModalOn(false);
   }
 
