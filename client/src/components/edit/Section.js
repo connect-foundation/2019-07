@@ -10,6 +10,8 @@ import * as ingameLayout from '../inGame/Layout';
 import { EditContext } from './EditContextProvider';
 import { readQuizset } from '../../utils/fetch';
 import Loading from '../common/Loading';
+import OptionPanel from './OptionPanel';
+import * as colors from '../../constants/colors';
 
 const MAIN_PADDING = '3vmin';
 
@@ -37,7 +39,15 @@ const MainContentContainer = styled.div`
   bottom: ${MAIN_PADDING};
   left: ${MAIN_PADDING};
   right: ${MAIN_PADDING};
-  background-color: blue;
+`;
+
+const CenterRightPanel = styled.div`
+  position: relative;
+  width: 30%;
+  height: 100%;
+  background-color: ${colors.BACKGROUND_LIGHT_WHITE};
+  border-radius: 5px;
+  box-shadow: 0px 2px 2px 2px ${colors.BORDER_DARK_GRAY};
 `;
 
 function Section({ roomId, quizsetId }) {
@@ -82,11 +92,12 @@ function Section({ roomId, quizsetId }) {
                 </ingameLayout.TitleContainer>
                 <ingameLayout.Center>
                   <ingameLayout.CenterContentContainer>
-                    <ingameLayout.CenterLeftPanel />
                     <ingameLayout.ImagePanel>
                       <ImageField />
                     </ingameLayout.ImagePanel>
-                    <ingameLayout.CenterRightPanel />
+                    <CenterRightPanel>
+                      <OptionPanel />
+                    </CenterRightPanel>
                   </ingameLayout.CenterContentContainer>
                 </ingameLayout.Center>
                 <ingameLayout.Bottom>
