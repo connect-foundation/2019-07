@@ -19,6 +19,7 @@ const LoadingContainer = styled.div`
     height: 100%;
   }
 `;
+
 const LoadingText = styled.span`
   position: absolute;
   color: white;
@@ -26,9 +27,10 @@ const LoadingText = styled.span`
   font-size: 4vmin;
   width: 100%;
   text-align: center;
-  top: 90%;
+  top: 80%;
   transform: translateY(-100%);
 `;
+
 function Loading({ message }) {
   return (
     <LoadingContainer>

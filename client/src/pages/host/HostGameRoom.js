@@ -49,7 +49,7 @@ function HostGameRoom({ location }) {
       socket.emit('closeRoom');
       window.removeEventListener('beforeunload', blockClose);
     };
-  }, []);
+  }, [location.state.roomId]);
 
   socket.on('enterPlayer', players => {
     dispatcher({ type: HostGameAction.SET_PLAYERS, players });
