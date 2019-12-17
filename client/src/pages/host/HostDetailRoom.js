@@ -41,12 +41,15 @@ function DetailRoom({ history, location }) {
   }
 
   useEffect(() => {
+    if (quizsetId) return;
     async function getQuizsetId() {
-      const { data } = await readQuizsetId(roomId);
+      const { isSuccess, data } = await readQuizsetId(roomId);
+      if (!isSuccess) return;
       setQuizsetId(data.quizsetId);
     }
+
     getQuizsetId();
-  }, []);
+  }, [quizsetId]);
 
   return (
     <Background>

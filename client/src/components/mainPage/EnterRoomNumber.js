@@ -12,7 +12,14 @@ const ButtonContainer = styled.div`
   margin-top: ${BUTTON_MARGIN_TOP};
 `;
 
-const Input = styled.input`
+const Input = styled.input.attrs({
+  type: 'number',
+  pattern: '\d*',
+})`
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
   ${styles.InputStyle}
 `;
 
@@ -59,9 +66,18 @@ function EnterRoomNumber({ history }) {
   }
 
   function handlePressEnter(e) {
+    if (e.ctrlKey || e.key === 'Backspace') return;
     if (e.key === 'Enter') {
       handleEnterButtonClick();
+      return;
     }
+
+    if (!/\d/.test(e.key)) {
+      onToast('방번호는 숫자만 입력할 수 있습니다');
+      return;
+    }
+
+    if (e.target.value.length >= 6) e.preventDefault();
   }
 
   return (
@@ -69,7 +85,7 @@ function EnterRoomNumber({ history }) {
       <Input
         placeholder="방 번호"
         onChange={handleInputChange}
-        onKeyUp={handlePressEnter}
+        onKeyDown={handlePressEnter}
       />
       <ButtonContainer>
         <GreenButton onClick={handleEnterButtonClick}>입장하기</GreenButton>

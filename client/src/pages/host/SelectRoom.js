@@ -11,6 +11,7 @@ import FlexibleInput from '../../components/common/FlexibleInput';
 import { fetchRooms, addRoom } from '../../utils/fetch';
 import RoomList from '../../components/selectRoom/RoomList';
 import { parseCookie } from '../../utils/util';
+import DESKTOP_MIN_WIDTH from '../../constants/media';
 
 const Container = styled.div`
   position: relative;
@@ -63,13 +64,18 @@ const RoomContainer = styled.div`
   width: 100%;
 `;
 
-async function getRooms({ userId }) {
-  const result = await fetchRooms({ userId }).then(response => {
-    if (response.isSuccess) return response.data;
-    return [];
-  });
-  return result;
-}
+const Notify = styled.div`
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background-color: #ffc6c6;
+  border-radius: 5px;
+  color: white;
+  text-align: center;
+  font-weight: bold;
+  @media (min-width: ${DESKTOP_MIN_WIDTH}) {
+    font-size: 2rem;
+  }
+`;
 
 function parsingUserNaverId() {
   const cookies = parseCookie(document.cookie);
@@ -80,6 +86,7 @@ function SelectRoom({ history }) {
   const [rooms, setRooms] = useState([]);
   const [userId, setUserId] = useState('');
   const [inputValue, setInputValue] = useState('');
+  const [message, setMessage] = useState('');
   const { openModal } = useContext(ModalContext);
 
   useEffect(() => {
@@ -91,31 +98,55 @@ function SelectRoom({ history }) {
   }, []);
 
   useEffect(() => {
-    if (userId)
-      getRooms({ userId }).then(roomList => {
-        setRooms(roomList);
-      });
+    async function getRooms() {
+      const { isSuccess, data } = await fetchRooms({ userId });
+
+      if (!isSuccess) {
+        alert('오류로 인해 방을 가져올 수 없습니다');
+        return;
+      }
+
+      setRooms(data);
+    }
+    if (userId) getRooms();
   }, [userId]);
+
+  useEffect(() => {
+    const clearMessage = setTimeout(() => {
+      setMessage('');
+    }, 1500);
+
+    return () => {
+      clearTimeout(clearMessage);
+    };
+  }, [message]);
 
   function handleCreateButtonClick() {
     if (!inputValue.trim()) {
-      alert('방의 이름을 입력하세요');
+      setMessage('방의 이름을 입력하세요');
       return false;
     }
 
     if (rooms.find(room => room.title === inputValue)) {
-      alert('방의 이름은 중복될 수 없습니다');
+      setMessage('방의 이름은 중복될 수 없습니다');
       return false;
     }
 
-    addRoom({ userId, roomTitle: inputValue.trim() }).then(response => {
-      if (response.isError) {
+    async function createNewRoom() {
+      const { isSuccess, data } = await addRoom({
+        userId,
+        roomTitle: inputValue.trim(),
+      });
+
+      if (!isSuccess) {
         alert('방이 오류로 인해 추가되지 못했습니다');
         return;
       }
-      setRooms([...rooms, { id: response.data.insertId, title: inputValue }]);
-    });
 
+      setRooms([...rooms, { id: data.insertId, title: inputValue }]);
+    }
+
+    createNewRoom();
     return true;
   }
 
@@ -143,6 +174,7 @@ function SelectRoom({ history }) {
           maxLength={26}
           callback={setInputValue}
         />
+        {message && <Notify>{message}</Notify>}
       </Modal>
     </Container>
   );
