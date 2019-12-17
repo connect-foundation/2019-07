@@ -37,6 +37,20 @@ function isItemUpdated(item, readedItem) {
   );
 }
 
+function updateItemsOrder(items) {
+  const third = items[2];
+  const fourth = items[3];
+  if (!(third.title.length === 0 && fourth.title.length > 0)) return items;
+
+  function swapItem({ id }, { title, isAnswer, itemOrder }) {
+    return { id, title, isAnswer, itemOrder };
+  }
+
+  const newThird = swapItem(third, fourth);
+  const newFourth = swapItem(fourth, third);
+  return [items[0], items[1], newThird, newFourth];
+}
+
 async function createItems(quizId, items) {
   const refinedItems = items.reduce((array, item) => {
     return [...array, refineItem(item)];
@@ -68,9 +82,9 @@ async function createQuiz(roomId, quizsetId, quiz) {
   const formData = getQuizFormData(roomId, quiz);
   formData.append('quizsetId', quizsetId);
   const { isSuccess, data } = await fetcher.createQuiz(formData);
-  if (!isSuccess) return;
+  if (!isSuccess) return undefined;
   const { quizId } = data;
-  createItems(quizId, quiz.items);
+  return quizId;
 }
 
 async function updateQuiz(roomId, quiz, readedQuiz) {
@@ -87,23 +101,25 @@ async function deleteQuiz(roomId, quizId) {
   const { isSuccess } = await fetcher.deleteQuiz(roomId, quizId);
 }
 
-function updateItems(quiz, readedQuiz) {
+function updateItems(items, readedQuiz) {
   for (let index = 0; index < 4; index += 1) {
-    const item = quiz.items[index];
+    const item = items[index];
     const readedItem = readedQuiz.items[index];
     if (isItemUpdated(item, readedItem)) updateItem(item);
   }
 }
 
 function updateQuizzes(roomId, quizset, quizsetId, readedQuizset) {
-  quizset.forEach(quiz => {
+  quizset.forEach(async quiz => {
+    const items = updateItemsOrder(quiz.items);
     const isNewQuiz = quiz.id === undefined;
     if (isNewQuiz) {
-      createQuiz(roomId, quizsetId, quiz);
+      const quizId = await createQuiz(roomId, quizsetId, quiz);
+      createItems(quizId, items);
       return;
     }
     const readedQuiz = findReadedQuiz(quiz.id, readedQuizset);
-    updateItems(quiz, readedQuiz);
+    updateItems(items, readedQuiz);
     updateQuiz(roomId, quiz, readedQuiz);
   });
 }
