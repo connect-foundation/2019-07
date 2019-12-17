@@ -5,9 +5,7 @@ import PropTypes from 'prop-types';
 import * as colors from '../../constants/colors';
 import DESKTOP_MIN_WIDTH from '../../constants/media';
 
-const HeaderArea = styled.div.attrs({
-  className: 'headerArea',
-})`
+const HeaderArea = styled.div`
   position: relative;
   box-shadow: 5px 5px 5px ${colors.BACKGROUND_DEEP_GRAY};
   background-color: ${colors.PRIMARY_DEEP_GREEN};
