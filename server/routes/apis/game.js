@@ -9,7 +9,7 @@ const {
 } = require('../../middleware/validations');
 
 /**
- * @api {get} /room/:roomNumber/quiz 현재 방에서 진행 할 퀴즈 세트를 가져오는 API
+ * @api {get} /api/room/:roomNumber/quiz 현재 방에서 진행 할 퀴즈 세트를 가져오는 API
  * @apiName quiz
  * @apiGroup room
  *
@@ -17,7 +17,7 @@ const {
  *
  * @apiSuccess {Object} quizDataSet 퀴즈 세트
  */
-router.get('/room/:roomNumber/quiz', async (req, res) => {
+router.get('/:roomNumber/quiz', async (req, res) => {
   const { roomNumber } = req.params;
 
   try {
@@ -38,7 +38,7 @@ router.get('/room/:roomNumber/quiz', async (req, res) => {
 
 /**
  * 유저의 점수 총 합을 알려주는 API
- * @api {get} /room/:roomNumber/user/:nickname
+ * @api {get} /api/room/:roomNumber/user/:nickname
  * @apiName subResult
  * @apiGroup room
  *
@@ -49,7 +49,7 @@ router.get('/room/:roomNumber/quiz', async (req, res) => {
  * @apiSuccess {Integer} scores 최신 상태의 점수 (int)
  */
 router.get(
-  '/room/:roomNumber/player/:nickname',
+  '/:roomNumber/player/:nickname',
   isRoomExist,
   isNicknameExist,
   async (req, res) => {
@@ -66,7 +66,7 @@ router.get(
 
 /**
  * 퀴즈가 끝나고 특정 유저의 결과 (등수, 점수)를 알려주는 API
- * @api {get} /room/:roomNumber/player/:nickname/result
+ * @api {get} /api/room/:roomNumber/player/:nickname/result
  * @apiName getResult
  * @apiGroup room
  *
@@ -78,7 +78,7 @@ router.get(
  * @apiSuccess {int} 등수 (int)
  */
 router.get(
-  '/room/:roomNumber/player/:nickname/result',
+  '/:roomNumber/player/:nickname/result',
   isRoomExist,
   isNicknameExist,
   async (req, res) => {
@@ -110,7 +110,7 @@ router.get(
 /**
  * 플레이어가 문항을 선택했을 때 카운트를 증가시키고,
  * 정답, 오답여부를 판별해주는 API
- * @api {post} /room/player/choose/check
+ * @api {post} /api/room/player/choose/check
  * @apiName choose
  * @apiGroup room
  *
@@ -123,7 +123,7 @@ router.get(
  * @apiSuccess {int} score 갱신된 점수
  */
 router.post(
-  '/room/player/choose/check',
+  '/player/choose/check',
   isRoomExist,
   isNicknameExist,
   async (req, res) => {
