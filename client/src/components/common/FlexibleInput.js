@@ -101,7 +101,7 @@ function FlexibleInput({
 
   useEffect(() => {
     if (!inputValue) callback(inputValue);
-    if (!title) return;
+    if (title === undefined) return;
 
     inputRef.current.textContent = title;
     callback(title);
@@ -111,8 +111,9 @@ function FlexibleInput({
       setMessage('');
       return;
     }
+
     setMessage(`${maxLength}자까지 입력할 수 있습니다`);
-  }, [inputValue, title]);
+  }, [title]);
 
   function handleKeyDown(event) {
     if (event.keyCode === ENTER) event.preventDefault();
