@@ -77,7 +77,7 @@ function getShakeAnimation() {
 function HostFooter({ roomNumber }) {
   const [shakeTrigger, setShakeTrigger] = useState(false);
   const inputRef = useRef();
-  const url = `${DOMAIN}/${roomNumber}`;
+  const url = `${DOMAIN}/join/${roomNumber}`;
   return (
     <Footer>
       <RoomUrl
