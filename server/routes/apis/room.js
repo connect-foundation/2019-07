@@ -16,7 +16,7 @@ router.get('/', (req, res) => {
 });
 
 /**
- * @api {get} /room/:roomNumber 유효한 방인지 확인 요청
+ * @api {get} /api/room/:roomNumber 유효한 방인지 확인 요청
  * @apiName checkValidRoomNumber
  * @apiGroup room
  *
@@ -52,7 +52,7 @@ router.get('/:roomNumber/name', isRoomNumberValid, isRoomExist, (req, res) => {
 });
 
 /**
- * @api {get} /room/:roomNumber/:nickname 방에서 유효한 닉네임인지 확인 요청
+ * @api {get} /api/room/:roomNumber/:nickname 방에서 유효한 닉네임인지 확인 요청
  * @apiName checkValidNickname
  * @apiGroup room
  *
