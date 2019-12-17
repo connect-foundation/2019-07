@@ -19,7 +19,7 @@ async function fetchGet({ url }) {
 
 async function addRoom({ userId, roomTitle }) {
   const response = await fetchPost({
-    url: `/user/room`,
+    url: `/api/user/room`,
     data: {
       title: roomTitle,
       userId,
@@ -30,7 +30,7 @@ async function addRoom({ userId, roomTitle }) {
 
 async function updateRoomTitle({ roomId, title }) {
   const response = await fetchPost({
-    url: `/user/room`,
+    url: `/api/user/room`,
     data: {
       roomId,
       title,
@@ -42,7 +42,7 @@ async function updateRoomTitle({ roomId, title }) {
 
 async function deleteRoom({ roomId }) {
   const response = await fetchPost({
-    url: `/user/room`,
+    url: `/api/user/room`,
     data: {
       roomId,
     },
@@ -53,20 +53,20 @@ async function deleteRoom({ roomId }) {
 
 async function fetchRooms({ userId }) {
   const response = await fetchGet({
-    url: `/user/${userId}/rooms`,
+    url: `/api/user/${userId}/rooms`,
   });
   return response;
 }
 
 async function fetchRoomTitle({ roomId }) {
   const response = await fetchGet({
-    url: `/user/room/${roomId}`,
+    url: `/api/user/room/${roomId}`,
   });
   return response;
 }
 
 async function readAnswer(roomNumber, nickname, quizIndex, choose) {
-  const url = `/room/player/choose/check`;
+  const url = `/api/room/player/choose/check`;
   const response = await fetchPost({
     url,
     data: {
@@ -81,27 +81,27 @@ async function readAnswer(roomNumber, nickname, quizIndex, choose) {
 
 async function fetchRoomNumber(roomNumber) {
   const response = await fetchGet({
-    url: `/room/${roomNumber}`,
+    url: `/api/room/${roomNumber}`,
   });
   return response;
 }
 
 async function fetchNickname(nickname, roomNumber) {
   const response = await fetchGet({
-    url: `/room/${roomNumber}/name/${nickname}`,
+    url: `/api/room/${roomNumber}/name/${nickname}`,
   });
   return response;
 }
 
 async function fetchQuizSet(roomNumber) {
   const response = await fetchGet({
-    url: `/room/${roomNumber}/quiz`,
+    url: `/api/room/${roomNumber}/quiz`,
   });
   return response;
 }
 
 async function readRank(roomNumber, nickname) {
-  const url = `/room/${roomNumber}/player/${nickname}/result`;
+  const url = `/api/room/${roomNumber}/player/${nickname}/result`;
   const response = await fetchGet({
     url,
   });
@@ -110,19 +110,19 @@ async function readRank(roomNumber, nickname) {
 
 async function getToken(data) {
   const response = await fetchGet({
-    url: `/login/token/${data.access_token}`,
+    url: `/api/login/token/${data.access_token}`,
   });
   return response;
 }
 
 async function readQuizsetId(roomId) {
-  const url = `/user/quizset/${roomId}`;
+  const url = `/api/user/quizset/${roomId}`;
   const response = await fetchGet({ url });
   return response;
 }
 
 async function createQuizset(roomId, quizsetTitle, quizsetOrder) {
-  const url = `/edit/quizset`;
+  const url = `/api/edit/quizset`;
   const response = await fetchPost({
     url,
     data: { roomId, quizsetTitle, quizsetOrder },
@@ -131,13 +131,13 @@ async function createQuizset(roomId, quizsetTitle, quizsetOrder) {
 }
 
 async function readQuizset(quizsetId) {
-  const url = `/edit/quizset/${quizsetId}`;
+  const url = `/api/edit/quizset/${quizsetId}`;
   const response = await fetchGet({ url });
   return response;
 }
 
 async function fetchForm({ data, method }) {
-  const url = '/edit/quiz';
+  const url = `/api/edit/quiz`;
   const response = await fetch(url, {
     method,
     body: data,
@@ -163,13 +163,13 @@ async function updateQuiz(formData) {
 }
 
 async function createItems(quizId, items) {
-  const url = '/edit/items';
+  const url = `/api/edit/items`;
   const response = await fetchPost({ url, data: { quizId, items } });
   return response;
 }
 
 async function updateItem(item) {
-  const url = '/edit/item';
+  const url = `/api/edit/item`;
   const response = await fetchPost({
     url,
     data: { item },
@@ -179,7 +179,7 @@ async function updateItem(item) {
 }
 
 async function deleteQuiz(roomId, quizId) {
-  const url = '/edit/quiz';
+  const url = `/api/edit/quiz`;
   const response = await fetchPost({
     url,
     data: { roomId, quizId },
