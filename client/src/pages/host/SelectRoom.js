@@ -11,6 +11,8 @@ import { fetchRooms, addRoom } from '../../utils/fetch';
 import RoomList from '../../components/selectRoom/RoomList';
 import { parseCookie } from '../../utils/util';
 import DESKTOP_MIN_WIDTH from '../../constants/media';
+import MainContainer from '../../components/common/MainContainer';
+import InformationArea from '../../components/common/InformationArea';
 
 const Container = styled.div`
   position: relative;
@@ -20,40 +22,17 @@ const Container = styled.div`
   height: 100vh;
 `;
 
-const Main = styled.main`
+const ButtonContainer = styled.div`
   position: relative;
-  flex: 1;
-  flex-direction: column;
-  padding: 4vmin;
-  background-color: ${colors.BACKGROUND_LIGHT_GRAY};
-`;
-
-const ListHeader = styled.div`
-  position: relative;
-  display: flex;
-  align-items: center;
-  width: 100%;
-  height: 5vmin;
-  box-sizing: border-box;
-  margin: 2vmin 0;
-
-  div.buttonWrapper {
-    position: relative;
-    margin-left: auto;
-    justify-self: flex-end;
-    transform: translateY(-10%);
-  }
   button {
-    font-size: 2.5vmin;
-    padding: 1.75vmin;
+    font-size: 3vmin;
+    padding: 0.75vmin 1.25vmin;
+    transform: translateY(-0.4vmin);
   }
 `;
 
 const RoomCounter = styled.span`
   position: relative;
-  color: ${colors.TEXT_GRAY};
-  font-size: 4vmin;
-  font-weight: bold;
   user-select: none;
 `;
 
@@ -152,15 +131,17 @@ function SelectRoom() {
   return (
     <Container>
       <Header />
-      <Main>
-        <ListHeader>
+      <MainContainer>
+        <InformationArea>
           <RoomCounter>{`방 ${rooms.length}개`}</RoomCounter>
-          <YellowButton onClick={openModal}>방 만들기</YellowButton>
-        </ListHeader>
+          <ButtonContainer>
+            <YellowButton onClick={openModal}>방 만들기</YellowButton>
+          </ButtonContainer>
+        </InformationArea>
         <RoomContainer>
           <RoomList rooms={rooms} setRooms={setRooms} />
         </RoomContainer>
-      </Main>
+      </MainContainer>
       <Modal
         title="새로운 방 추가"
         description="새로 추가할 방의 이름을 입력하세요"
