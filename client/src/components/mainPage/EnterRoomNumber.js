@@ -15,7 +15,7 @@ const ButtonContainer = styled.div`
 
 const Input = styled.input.attrs({
   type: 'number',
-  pattern: '\d*',
+  pattern: 'd*',
 })`
   &::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -31,10 +31,7 @@ function EnterRoomNumber() {
   useEffect(offToast, []);
 
   function moveNicknamePage() {
-    history.push({
-      pathname: '/nickname',
-      state: { roomNumber },
-    });
+    history.push(`/join/${roomNumber}`);
   }
 
   function moveLoginPage() {
