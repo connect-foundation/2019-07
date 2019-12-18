@@ -11,6 +11,7 @@ const { isUserValid } = require('../../middleware/validations');
 router.use(isUserValid);
 
 function getQuizset(quizzes, items) {
+  quizzes.sort((quiz1, quiz2) => quiz1.quiz_order - quiz2.quiz_order);
   function pushQuiz(quizset, quiz) {
     const matchedItems = items.filter((item) => item.quiz_id === quiz.id);
     const newQuiz = {
@@ -103,7 +104,15 @@ router.post('/quiz', upload.single('file'), async (req, res) => {
 });
 
 router.put('/quiz', upload.single('file'), async (req, res) => {
-  const { roomId, id, title, quizOrder, score, timeLimit } = req.body;
+  const {
+    roomId,
+    id,
+    title,
+    quizOrder,
+    score,
+    timeLimit,
+    requestDeleteImage,
+  } = req.body;
   const { file } = req;
   const { isError } = await dbManager.quiz.updateQuiz({
     id,
@@ -113,12 +122,18 @@ router.put('/quiz', upload.single('file'), async (req, res) => {
     timeLimit,
   });
   const isSuccess = isError === undefined;
-  if (file !== undefined) {
+  const quizId = id;
+  if (file) {
     const { buffer, originalname } = file;
-    await objectStorage.uploadImage(roomId, id, originalname, buffer);
-    const newImagePath = getImagePath(roomId, id, originalname);
-    await dbManager.quiz.updateImagePath(id, newImagePath);
+    await objectStorage.uploadImage(roomId, quizId, originalname, buffer);
+    const newImagePath = getImagePath(roomId, quizId, originalname);
+    await dbManager.quiz.updateImagePath(quizId, newImagePath);
   }
+  if (requestDeleteImage) {
+    await objectStorage.deleteQuizFolder(roomId, quizId);
+    await dbManager.quiz.updateImagePath(quizId, null);
+  }
+
   res.json({
     isSuccess,
   });
@@ -137,7 +152,7 @@ router.delete('/quiz', async (req, res) => {
 router.post('/items', async (req, res) => {
   const { quizId, items } = req.body;
   const { isError } = await dbManager.item.createItems(quizId, items);
-  const isSuccess = isError !== undefined;
+  const isSuccess = isError === undefined;
   res.json({
     isSuccess,
   });

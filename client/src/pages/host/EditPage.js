@@ -17,25 +17,18 @@ const Background = styled.div`
   background-color: ${colors.BACKGROUND_DEEP_GRAY};
 `;
 
-const HeaderWrapper = styled.div`
-  div.headerArea {
-    height: 8vmin;
-  }
-  header {
-    height: 8vmin;
-  }
-`;
-
 function EditPage({ history, location }) {
+  if (location.state === undefined) {
+    history.push('/gameover');
+    return '';
+  }
   const { roomId, quizsetId } = location.state;
   return (
     <EditContextProvider>
       <Background>
-        <HeaderWrapper>
-          <Header>
-            <SaveButton history={history} />
-          </Header>
-        </HeaderWrapper>
+        <Header>
+          <SaveButton history={history} />
+        </Header>
         <Section roomId={roomId} quizsetId={quizsetId} />
       </Background>
     </EditContextProvider>
@@ -46,7 +39,7 @@ EditPage.propTypes = {
   history: PropTypes.shape().isRequired,
   location: PropTypes.shape({
     state: PropTypes.shape({
-      roomId: PropTypes.number.isRequired,
+      roomId: PropTypes.number,
       quizsetId: PropTypes.number,
     }),
   }).isRequired,
