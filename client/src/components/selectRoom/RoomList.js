@@ -1,4 +1,5 @@
 import React from 'react';
+import { useHistory } from 'react-router';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import * as colors from '../../constants/colors';
@@ -80,7 +81,9 @@ const DeleteRoomButton = styled.img.attrs({
   }
 `;
 
-function RoomList({ rooms, history, setRooms }) {
+function RoomList({ rooms, setRooms }) {
+  const history = useHistory();
+
   function handleRoomClick(e) {
     if (e.defaultPrevented) return;
 

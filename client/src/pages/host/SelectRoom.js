@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
 
 import * as colors from '../../constants/colors';
 import Header from '../../components/common/Header';
@@ -82,7 +81,7 @@ function parsingUserNaverId() {
   return cookies.naverId;
 }
 
-function SelectRoom({ history }) {
+function SelectRoom() {
   const [rooms, setRooms] = useState([]);
   const [userId, setUserId] = useState('');
   const [inputValue, setInputValue] = useState('');
@@ -159,7 +158,7 @@ function SelectRoom({ history }) {
           <YellowButton onClick={openModal}>방 만들기</YellowButton>
         </ListHeader>
         <RoomContainer>
-          <RoomList rooms={rooms} history={history} setRooms={setRooms} />
+          <RoomList rooms={rooms} setRooms={setRooms} />
         </RoomContainer>
       </Main>
       <Modal
@@ -179,11 +178,5 @@ function SelectRoom({ history }) {
     </Container>
   );
 }
-
-SelectRoom.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
-};
 
 export default SelectRoom;

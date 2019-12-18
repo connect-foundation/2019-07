@@ -1,6 +1,6 @@
 import React from 'react';
+import { useHistory, useLocation } from 'react-router';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
 
 import * as colors from '../../constants/colors';
 import Header from '../../components/common/Header';
@@ -17,7 +17,9 @@ const Background = styled.div`
   background-color: ${colors.BACKGROUND_DEEP_GRAY};
 `;
 
-function EditPage({ history, location }) {
+function EditPage() {
+  const history = useHistory();
+  const location = useLocation();
   if (location.state === undefined) {
     history.push('/gameover');
     return '';
@@ -26,23 +28,11 @@ function EditPage({ history, location }) {
   return (
     <EditContextProvider>
       <Background>
-        <Header>
-          <SaveButton history={history} />
-        </Header>
+        <Header button={<SaveButton />} />
         <Section roomId={roomId} quizsetId={quizsetId} />
       </Background>
     </EditContextProvider>
   );
 }
-
-EditPage.propTypes = {
-  history: PropTypes.shape().isRequired,
-  location: PropTypes.shape({
-    state: PropTypes.shape({
-      roomId: PropTypes.number,
-      quizsetId: PropTypes.number,
-    }),
-  }).isRequired,
-};
 
 export default EditPage;

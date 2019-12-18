@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
+import { useHistory } from 'react-router';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
+
 import * as styles from '../../styles/common';
 import { GreenButton } from '../common/Buttons';
 import { fetchRoomNumber } from '../../utils/fetch';
@@ -23,7 +24,8 @@ const Input = styled.input.attrs({
   ${styles.InputStyle}
 `;
 
-function EnterRoomNumber({ history }) {
+function EnterRoomNumber() {
+  const history = useHistory();
   const [roomNumber, setRoomNumber] = useState('');
   const { onToast, offToast } = useContext(ToastContext);
   useEffect(offToast, []);
@@ -96,9 +98,5 @@ function EnterRoomNumber({ history }) {
     </>
   );
 }
-
-EnterRoomNumber.propTypes = {
-  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
-};
 
 export default EnterRoomNumber;

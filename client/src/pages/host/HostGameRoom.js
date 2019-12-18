@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useReducer } from 'react';
-import { Prompt } from 'react-router';
+import { Prompt, useLocation } from 'react-router';
 import styled from 'styled-components';
 import io from 'socket.io-client';
-import PropTypes from 'prop-types';
 
 import HostFooter from '../../components/inGame/HostFooter';
 import HostWaitingRoom from '../../components/inGame/HostWaitingRoom';
@@ -46,7 +45,8 @@ const RoomNumber = styled.span`
   }
 `;
 
-function HostGameRoom({ location }) {
+function HostGameRoom() {
+  const location = useLocation();
   if (!location.state) {
     window.location.href = '/host/room/select';
   }
@@ -132,11 +132,5 @@ function HostGameRoom({ location }) {
     </Container>
   );
 }
-
-HostGameRoom.propTypes = {
-  location: PropTypes.shape({
-    state: PropTypes.object.isRequired,
-  }).isRequired,
-};
 
 export default HostGameRoom;

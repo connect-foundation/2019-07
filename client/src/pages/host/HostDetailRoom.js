@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import { useHistory, useLocation } from 'react-router';
 import styled from 'styled-components';
+
 import * as colors from '../../constants/colors';
 import Header from '../../components/common/Header';
 import { YellowButton } from '../../components/common/Buttons';
@@ -23,7 +24,9 @@ const ButtonContainer = styled.div`
   transform: translateY(-50%);
 `;
 
-function DetailRoom({ history, location }) {
+function DetailRoom() {
+  const history = useHistory();
+  const location = useLocation();
   if (!location.state) {
     window.location.href = '/host/room/select';
   }
@@ -65,14 +68,5 @@ function DetailRoom({ history, location }) {
     </Background>
   );
 }
-
-DetailRoom.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
-  location: PropTypes.shape({
-    state: PropTypes.object,
-  }).isRequired,
-};
 
 export default DetailRoom;

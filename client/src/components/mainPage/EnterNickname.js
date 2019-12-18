@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import { useHistory } from 'react-router';
 import styled from 'styled-components';
+
 import * as styles from '../../styles/common';
 import { GreenButton } from '../common/Buttons';
 import { fetchNickname } from '../../utils/fetch';
@@ -18,7 +19,8 @@ const Input = styled.input.attrs({
   ${styles.InputStyle}
 `;
 
-function EnterNickname({ history }) {
+function EnterNickname() {
+  const history = useHistory();
   if (!history.location.state) {
     window.location.href = '/';
   }
@@ -83,16 +85,5 @@ function EnterNickname({ history }) {
     </>
   );
 }
-
-EnterNickname.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-    location: PropTypes.shape({
-      state: PropTypes.shape({
-        roomNumber: PropTypes.string.isRequired,
-      }),
-    }),
-  }).isRequired,
-};
 
 export default EnterNickname;
