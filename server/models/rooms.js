@@ -140,16 +140,20 @@ class Rooms {
     const roomList = this.rooms.entries();
 
     const findHostRoom = () => {
-      if (!this.rooms.size) return false;
       const { done, value } = roomList.next();
-      const [roomNumber, roomInformation] = value;
+      try {
+        const [roomNumber, roomInformation] = value;
 
-      if (hostId === roomInformation.hostId) return roomNumber;
-      if (done) return false;
+        if (hostId === roomInformation.hostId) return roomNumber;
+        if (done) return false;
 
-      return findHostRoom();
+        return findHostRoom();
+      } catch (err) {
+        return false;
+      }
     };
 
+    if (!this.rooms.size) return false;
     const roomNumber = findHostRoom();
 
     if (roomNumber) {
