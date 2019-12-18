@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
+import { useHistory } from 'react-router';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
 
 import { YellowButton } from '../common/Buttons';
 import { EditContext } from './EditContextProvider';
@@ -235,7 +235,8 @@ function moveToDetailPage(history, roomId) {
   });
 }
 
-function SaveButton({ history }) {
+function SaveButton() {
+  const history = useHistory();
   const { quizsetState, dispatch, actionTypes, loadingTypes } = useContext(
     EditContext,
   );
@@ -273,11 +274,5 @@ function SaveButton({ history }) {
     </ButtonWrapper>
   );
 }
-
-SaveButton.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
-};
 
 export default SaveButton;

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
@@ -22,7 +23,8 @@ const QuizContainer = styled.div`
   margin-top: 5rem;
 `;
 
-function QuizTab({ history, roomId, quizsetId }) {
+function QuizTab({ roomId, quizsetId }) {
+  const history = useHistory();
   const [quizData, setQuizdata] = useState([
     {
       id: -1,
@@ -76,9 +78,6 @@ QuizTab.defaultProps = {
 };
 
 QuizTab.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
   roomId: PropTypes.number.isRequired,
   quizsetId: PropTypes.number,
 };
