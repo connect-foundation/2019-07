@@ -61,8 +61,8 @@ class Rooms {
     const previousArray = [];
     let quizIndex = -1;
 
-    data.forEach(currentValue => {
-      if (!previousArray.find(element => element === currentValue.id)) {
+    data.forEach((currentValue) => {
+      if (!previousArray.find((element) => element === currentValue.id)) {
         const currentQuiz = quizTemplate();
         currentQuiz.title = currentValue.quizTitle;
         currentQuiz.score = currentValue.score;
