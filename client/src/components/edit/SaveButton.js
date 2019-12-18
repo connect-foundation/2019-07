@@ -1,17 +1,9 @@
 import React, { useContext, useEffect } from 'react';
 import { useHistory } from 'react-router';
-import styled from 'styled-components';
 
 import { YellowButton } from '../common/Buttons';
 import { EditContext } from './EditContextProvider';
 import * as fetcher from '../../utils/fetch';
-
-const ButtonWrapper = styled.div`
-  position: absolute;
-  right: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-`;
 
 const refineQuiz = ({ id, title, imagePath, quizOrder, score, timeLimit }) => {
   return { id, title, imagePath, quizOrder, score, timeLimit };
@@ -262,16 +254,14 @@ function SaveButton() {
   }, [loadingType]);
 
   return (
-    <ButtonWrapper>
-      <YellowButton
-        onClick={async () => {
-          if (!checkQuizsetCanSave(quizset, changeCurrentIndex)) return;
-          changeLoading(loadingTypes.UPDATE_DATA);
-        }}
-      >
-        저장
-      </YellowButton>
-    </ButtonWrapper>
+    <YellowButton
+      onClick={async () => {
+        if (!checkQuizsetCanSave(quizset, changeCurrentIndex)) return;
+        changeLoading(loadingTypes.UPDATE_DATA);
+      }}
+    >
+      저장
+    </YellowButton>
   );
 }
 
