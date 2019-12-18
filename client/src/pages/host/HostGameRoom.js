@@ -43,11 +43,17 @@ function HostGameRoom({ location }) {
       e.returnValue = 'warning';
     }
 
+    function closeRoom() {
+      socket.close();
+    }
+
     window.addEventListener('beforeunload', blockClose);
-    window.addEventListener('unload', () => socket.emit('closeRoom'));
+    window.addEventListener('unload', closeRoom);
+
     return () => {
-      socket.emit('closeRoom');
+      closeRoom();
       window.removeEventListener('beforeunload', blockClose);
+      window.removeEventListener('unload', closeRoom);
     };
   }, [location.state.roomId]);
 
