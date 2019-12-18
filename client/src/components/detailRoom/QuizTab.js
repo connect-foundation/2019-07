@@ -1,26 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router';
 
 import { YellowButton } from '../common/Buttons';
 import { readQuizset } from '../../utils/fetch';
 import QuizList from './QuizList';
-
-const Background = styled.div`
-  padding: 1rem;
-`;
+import RoomInformation from './RoomInformation';
+import InformationArea from '../common/InformationArea';
+import MainContainer from '../common/MainContainer';
 
 const ButtonContainer = styled.div`
-  position: absolute;
-  right: 1rem;
+  position: relative;
   button {
-    font-size: 1.5rem;
+    font-size: 3vmin;
+    padding: 0.75vmin 1.25vmin;
+    transform: translateY(-0.4vmin);
   }
-`;
-
-const QuizContainer = styled.div`
-  margin-top: 5rem;
 `;
 
 function QuizTab({ roomId, quizsetId }) {
@@ -60,16 +56,17 @@ function QuizTab({ roomId, quizsetId }) {
   }, [quizsetId]);
 
   return (
-    <Background>
-      <ButtonContainer>
-        <YellowButton onClick={editPage}>
-          {quizsetId === undefined ? '퀴즈 생성' : '퀴즈 편집'}
-        </YellowButton>
-      </ButtonContainer>
-      <QuizContainer>
-        <QuizList quizData={quizData} />
-      </QuizContainer>
-    </Background>
+    <MainContainer>
+      <InformationArea>
+        <RoomInformation roomId={roomId} />
+        <ButtonContainer>
+          <YellowButton onClick={editPage}>
+            {quizsetId === undefined ? '퀴즈 생성' : '퀴즈 편집'}
+          </YellowButton>
+        </ButtonContainer>
+      </InformationArea>
+      <QuizList quizData={quizData} />
+    </MainContainer>
   );
 }
 

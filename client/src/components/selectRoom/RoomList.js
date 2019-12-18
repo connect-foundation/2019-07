@@ -12,7 +12,7 @@ const RoomWrapper = styled.div`
   align-items: center;
   width: 100%;
   height: 12.5vmin;
-  margin-top: 2vmin;
+  margin-bottom: 2vmin;
   box-sizing: border-box;
   padding: 1vmin;
   background-color: white;

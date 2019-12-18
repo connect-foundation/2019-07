@@ -2,45 +2,11 @@ import React, { useContext } from 'react';
 import styled from 'styled-components';
 
 import * as colors from '../../constants/colors';
-import DESKTOP_MIN_WIDTH from '../../constants/media';
 import Header from '../common/Header';
 import { YellowButton } from '../common/Buttons';
 import { HostGameAction, HostGameContext } from '../../reducer/hostGameReducer';
-
-const ButtonContainer = styled.div`
-  position: absolute;
-  right: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  button {
-    font-size: 1.5rem;
-  }
-  @media (min-width: ${DESKTOP_MIN_WIDTH}) {
-    button {
-      font-size: 2rem;
-    }
-  }
-`;
-
-const Main = styled.main`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  justify-content: flex-end;
-  background-color: ${colors.BACKGROUND_LIGHT_GRAY};
-  padding: 4vmin 4vmin 2vmin 4vmin;
-  overflow: hidden;
-`;
-
-const InfomationArea = styled.div`
-  position: relative;
-  display: flex;
-  justify-content: space-between;
-  font-weight: bold;
-  font-size: 5vmin;
-  color: black;
-  margin-bottom: 1vmin;
-`;
+import InformationArea from '../common/InformationArea';
+import MainContainer from '../common/MainContainer';
 
 const RoomInformation = styled.div`
   position: relative;
@@ -60,9 +26,10 @@ const PlayerList = styled.ul`
   background-color: white;
   flex: 1;
   overflow-y: auto;
-  box-shadow: 0 0 1px 1px ${colors.BORDER_DARK_GRAY};
+  box-shadow: 1px 1px 3px gray;
   border-radius: 5px;
   padding: 0;
+  margin: 0;
 
   li {
     display: inline-block;
@@ -80,24 +47,22 @@ function HostWaitingRoom() {
   }
   return (
     <>
-      <Header>
-        <ButtonContainer>
-          <YellowButton onClick={startQuiz}>퀴즈 시작</YellowButton>
-        </ButtonContainer>
-      </Header>
-      <Main>
-        <InfomationArea>
+      <Header
+        button={<YellowButton onClick={startQuiz}>퀴즈 시작</YellowButton>}
+      />
+      <MainContainer>
+        <InformationArea>
           <RoomInformation>
             <strong>{roomState.roomNumber}</strong>
           </RoomInformation>
           <PlayerCount>{`대기자 ${roomState.players.length}명`}</PlayerCount>
-        </InfomationArea>
+        </InformationArea>
         <PlayerList>
           {roomState.players.map(player => (
             <li key={player.nickname}>{player.nickname}</li>
           ))}
         </PlayerList>
-      </Main>
+      </MainContainer>
     </>
   );
 }
