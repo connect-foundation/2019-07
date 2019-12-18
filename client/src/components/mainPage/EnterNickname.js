@@ -1,10 +1,10 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { useHistory } from 'react-router';
+import { useHistory, useRouteMatch } from 'react-router';
 import styled from 'styled-components';
 
 import * as styles from '../../styles/common';
 import { GreenButton } from '../common/Buttons';
-import { fetchNickname } from '../../utils/fetch';
+import { fetchNickname, fetchRoomNumber } from '../../utils/fetch';
 import { ToastContext } from '../common/ToastProvider';
 
 const BUTTON_MARGIN_TOP = '1.5rem';
@@ -21,11 +21,21 @@ const Input = styled.input.attrs({
 
 function EnterNickname() {
   const history = useHistory();
-  if (!history.location.state) {
-    window.location.href = '/';
-  }
+  const match = useRouteMatch();
+  const { roomNumber } = match.params;
 
-  const { roomNumber } = history.location.state;
+  useEffect(() => {
+    async function validateRoomNumber() {
+      const { isSuccess } = await fetchRoomNumber(roomNumber);
+      if (!isSuccess) {
+        history.push('/');
+        alert('존재하지 않는 방번호입니다');
+      }
+    }
+
+    validateRoomNumber();
+  }, [roomNumber]);
+
   const [nickname, setNickname] = useState('');
   const { onToast, offToast } = useContext(ToastContext);
   useEffect(offToast, []);
