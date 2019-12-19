@@ -82,7 +82,10 @@ function SelectRoom() {
         return;
       }
       const { isSuccess, data } = await fetchRooms({ userId });
-      if (!isSuccess) getRooms(count - 1);
+      if (!isSuccess) {
+        getRooms(count - 1);
+        return;
+      }
       setRooms(data);
     }
     if (userId) getRooms(3);

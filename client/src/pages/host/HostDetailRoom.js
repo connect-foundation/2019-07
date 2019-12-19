@@ -57,7 +57,7 @@ function DetailRoom() {
           )
         }
       />
-      <QuizTab roomId={roomId} quizsetId={quizsetId} />
+      <QuizTab roomId={roomId} />
     </Background>
   );
 }
