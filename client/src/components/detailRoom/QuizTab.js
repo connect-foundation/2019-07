@@ -44,15 +44,19 @@ function QuizTab({ roomId, quizsetId }) {
   useEffect(() => {
     if (!quizsetId) return;
 
-    readQuizset(quizsetId).then(response => {
-      if (!response.isSuccess) {
+    async function getQuizset(count) {
+      if (count === 0) {
         alert('오류로 인해 퀴즈 데이터를 받는 데 실패했습니다');
+        return;
       }
-      const quizset = response.data.quizset.sort((quiz1, quiz2) => {
+      const { isSuccess, data } = await readQuizset(quizsetId);
+      if (!isSuccess) getQuizset(count - 1);
+      const quizset = data.quizset.sort((quiz1, quiz2) => {
         return quiz1.quiz_order - quiz2.quiz_order;
       });
       setQuizdata(quizset);
-    });
+    }
+    getQuizset(3);
   }, [quizsetId]);
 
   return (

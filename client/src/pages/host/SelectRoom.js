@@ -76,17 +76,16 @@ function SelectRoom() {
   }, []);
 
   useEffect(() => {
-    async function getRooms() {
-      const { isSuccess, data } = await fetchRooms({ userId });
-
-      if (!isSuccess) {
+    async function getRooms(count) {
+      if (count === 0) {
         alert('오류로 인해 방을 가져올 수 없습니다');
         return;
       }
-
+      const { isSuccess, data } = await fetchRooms({ userId });
+      if (!isSuccess) getRooms(count - 1);
       setRooms(data);
     }
-    if (userId) getRooms();
+    if (userId) getRooms(3);
   }, [userId]);
 
   useEffect(() => {
