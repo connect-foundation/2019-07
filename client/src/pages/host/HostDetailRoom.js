@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useHistory, useLocation } from 'react-router';
 import styled from 'styled-components';
 
@@ -6,7 +6,6 @@ import * as colors from '../../constants/colors';
 import Header from '../../components/common/Header';
 import { YellowButton } from '../../components/common/Buttons';
 import QuizTab from '../../components/detailRoom/QuizTab';
-import { readQuizsetId } from '../../utils/fetch';
 
 const Background = styled.div`
   position: relative;

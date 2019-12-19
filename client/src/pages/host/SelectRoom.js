@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import styled from 'styled-components';
 
-import * as colors from '../../constants/colors';
 import Header from '../../components/common/Header';
 import { YellowButton } from '../../components/common/Buttons';
 import Modal from '../../components/common/Modal';
