@@ -7,7 +7,6 @@ const {
 } = require('../../middleware/validations');
 
 const router = express.Router();
-const dbManager = require('../../models/database/dbManager');
 
 router.get('/', (req, res) => {
   res.json({
@@ -17,7 +16,7 @@ router.get('/', (req, res) => {
 });
 
 /**
- * @api {get} /room/:roomNumber 유효한 방인지 확인 요청
+ * @api {get} /api/room/:roomNumber 유효한 방인지 확인 요청
  * @apiName checkValidRoomNumber
  * @apiGroup room
  *
@@ -53,7 +52,7 @@ router.get('/:roomNumber/name', isRoomNumberValid, isRoomExist, (req, res) => {
 });
 
 /**
- * @api {get} /room/:roomNumber/:nickname 방에서 유효한 닉네임인지 확인 요청
+ * @api {get} /api/room/:roomNumber/:nickname 방에서 유효한 닉네임인지 확인 요청
  * @apiName checkValidNickname
  * @apiGroup room
  *
@@ -75,19 +74,5 @@ router.get(
     });
   },
 );
-
-router.get('/quizset/:roomId', async (req, res) => {
-  const { roomId } = req.params;
-  const { isError, data } = await dbManager.quizset.readLastQuizsetId(roomId);
-  const isSuccess = isError === undefined && data.length > 0;
-  const quizsetId = isSuccess ? data[0].id : undefined;
-  // undefined를 front에서 사용하기 때문에 보냄
-  res.json({
-    isSuccess,
-    data: {
-      quizsetId,
-    },
-  });
-});
 
 module.exports = router;

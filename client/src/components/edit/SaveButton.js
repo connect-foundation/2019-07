@@ -1,25 +1,9 @@
 import React, { useContext, useEffect } from 'react';
-import styled from 'styled-components';
-import PropTypes from 'prop-types';
+import { useHistory } from 'react-router';
 
 import { YellowButton } from '../common/Buttons';
 import { EditContext } from './EditContextProvider';
 import * as fetcher from '../../utils/fetch';
-
-const ButtonWrapper = styled.div`
-  position: absolute;
-  right: 2vmin;
-  top: 50%;
-  transform: translateY(-50%);
-
-  div.buttonWrapper {
-    display: inline-block;
-  }
-  button {
-    font-size: 2vmin;
-    padding: 1vmin 2vmin;
-  }
-`;
 
 const refineQuiz = ({ id, title, imagePath, quizOrder, score, timeLimit }) => {
   return { id, title, imagePath, quizOrder, score, timeLimit };
@@ -33,8 +17,7 @@ function findReadedQuiz(quizId, readedQuizset) {
   return readedQuiz;
 }
 
-function isQuizUpdated(quiz, readedQuizset) {
-  const readedQuiz = findReadedQuiz(quiz.id, readedQuizset);
+function isQuizUpdated(quiz, readedQuiz) {
   return (
     JSON.stringify(refineQuiz(quiz)) !== JSON.stringify(refineQuiz(readedQuiz))
   );
@@ -46,17 +29,32 @@ function isItemUpdated(item, readedItem) {
   );
 }
 
+function updateItemsOrder(items) {
+  const third = items[2];
+  const fourth = items[3];
+  if (!(third.title.length === 0 && fourth.title.length > 0)) return items;
+
+  function swapItem({ id }, { title, isAnswer, itemOrder }) {
+    return { id, title, isAnswer, itemOrder };
+  }
+
+  const newThird = swapItem(third, fourth);
+  const newFourth = swapItem(fourth, third);
+  return [items[0], items[1], newThird, newFourth];
+}
+
 async function createItems(quizId, items) {
   const refinedItems = items.reduce((array, item) => {
     return [...array, refineItem(item)];
   }, []);
-  //isSuccess가 실패할 경우 재요청하거나 오류를 알려줘야함
-  const { isSucess } = await fetcher.createItems(quizId, refinedItems);
+
+  // isSuccess가 실패할 경우 재요청하거나 오류를 알려줘야함
+  const { isSuccess } = await fetcher.createItems(quizId, refinedItems);
 }
 
 async function updateItem(item) {
   const refinedItem = refineItem(item);
-  //isSuccess가 실패할 경우 재요청하거나 오류를 알려줘야함
+  // isSuccess가 실패할 경우 재요청하거나 오류를 알려줘야함
   const { isSuccess } = await fetcher.updateItem(refinedItem);
 }
 
@@ -76,40 +74,45 @@ async function createQuiz(roomId, quizsetId, quiz) {
   const formData = getQuizFormData(roomId, quiz);
   formData.append('quizsetId', quizsetId);
   const { isSuccess, data } = await fetcher.createQuiz(formData);
-  if (!isSuccess) return;
+  if (!isSuccess) return undefined;
   const { quizId } = data;
-  createItems(quizId, quiz.items);
+  return quizId;
 }
 
-async function updateQuiz(roomId, quiz, readedQuizset) {
-  if (!isQuizUpdated(quiz, readedQuizset)) return;
+async function updateQuiz(roomId, quiz, readedQuiz) {
+  if (!isQuizUpdated(quiz, readedQuiz)) return;
   const formData = getQuizFormData(roomId, quiz);
+
+  if (readedQuiz.imagePath && !quiz.imagePath)
+    formData.append('requestDeleteImage', true);
   const { isSuccess } = await fetcher.updateQuiz(formData);
 }
 
 async function deleteQuiz(roomId, quizId) {
-  //isSuccess가 실패할 경우 재요청하거나 오류를 알려줘야함
+  // isSuccess가 실패할 경우 재요청하거나 오류를 알려줘야함
   const { isSuccess } = await fetcher.deleteQuiz(roomId, quizId);
 }
 
-function updateItems(quiz, readedQuizset) {
-  const readedQuiz = findReadedQuiz(quiz.id, readedQuizset);
+function updateItems(items, readedQuiz) {
   for (let index = 0; index < 4; index += 1) {
-    const item = quiz.items[index];
+    const item = items[index];
     const readedItem = readedQuiz.items[index];
     if (isItemUpdated(item, readedItem)) updateItem(item);
   }
 }
 
-async function updateQuizzes(roomId, quizset, quizsetId, readedQuizset) {
-  quizset.forEach(quiz => {
+function updateQuizzes(roomId, quizset, quizsetId, readedQuizset) {
+  quizset.forEach(async quiz => {
+    const items = updateItemsOrder(quiz.items);
     const isNewQuiz = quiz.id === undefined;
     if (isNewQuiz) {
-      createQuiz(roomId, quizsetId, quiz);
+      const quizId = await createQuiz(roomId, quizsetId, quiz);
+      createItems(quizId, items);
       return;
     }
-    updateItems(quiz, readedQuizset);
-    updateQuiz(roomId, quiz, readedQuizset);
+    const readedQuiz = findReadedQuiz(quiz.id, readedQuizset);
+    updateItems(items, readedQuiz);
+    updateQuiz(roomId, quiz, readedQuiz);
   });
 }
 
@@ -141,16 +144,16 @@ function checkItemsCanSave(items) {
         item.title.length === 0
           ? state.titleArray
           : [...state.titleArray, item.title];
-      //보기 중 정답체크가 하나라도 되어있으면 true, 아니면 false
+      // 보기 중 정답체크가 하나라도 되어있으면 true, 아니면 false
       const isAnswer = state.isAnswer || item.isAnswer === 1;
-      //보기1과 보기2의 title이 전부 입력했으면 true 하나라도 비어있으면 false
+      // 보기1과 보기2의 title이 전부 입력했으면 true 하나라도 비어있으면 false
       const essentialTitle =
         index < 2
           ? state.essentialTitle && item.title.length > 0
           : state.essentialTitle;
 
       const hasDuplicateTitle = state.titleArray.indexOf(item.title) >= 0;
-      //items에서 중복된 title이 있는지 여부를 판단함
+      // items에서 중복된 title이 있는지 여부를 판단함
       const duplicateTitle = state.duplicateTitle || hasDuplicateTitle;
       return { titleArray, isAnswer, essentialTitle, duplicateTitle };
     },
@@ -189,6 +192,7 @@ function alertMustFill({
     (result, message) => `${result}${message}`,
     indexMessage,
   );
+  // eslint-disable-next-line no-alert
   alert(alertMessage);
 }
 
@@ -214,16 +218,12 @@ function checkQuizsetCanSave(quizset, changeCurrentIndex) {
   return true;
 }
 
-function moveToDetailPage(history, roomId) {
-  history.push({
-    pathname: '/host/room/detail',
-    state: {
-      roomId,
-    },
-  });
+function moveToDetailPage(history) {
+  history.go(-1);
 }
 
-function SaveButton({ history }) {
+function SaveButton() {
+  const history = useHistory();
   const { quizsetState, dispatch, actionTypes, loadingTypes } = useContext(
     EditContext,
   );
@@ -243,29 +243,21 @@ function SaveButton({ history }) {
       const quizsetId = await readQuizsetId(quizsetState, roomId);
       await updateQuizset(roomId, quizset, quizsetId, quizsetState);
       changeLoading(loadingTypes.IDLE);
-      moveToDetailPage(history, roomId);
+      moveToDetailPage(history);
     }
     communicateWithServer();
   }, [loadingType]);
 
   return (
-    <ButtonWrapper>
-      <YellowButton
-        onClick={async () => {
-          if (!checkQuizsetCanSave(quizset, changeCurrentIndex)) return;
-          changeLoading(loadingTypes.UPDATE_DATA);
-        }}
-      >
-        저장
-      </YellowButton>
-    </ButtonWrapper>
+    <YellowButton
+      onClick={async () => {
+        if (!checkQuizsetCanSave(quizset, changeCurrentIndex)) return;
+        changeLoading(loadingTypes.UPDATE_DATA);
+      }}
+    >
+      저장
+    </YellowButton>
   );
 }
-
-SaveButton.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
-};
 
 export default SaveButton;

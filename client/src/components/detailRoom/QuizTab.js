@@ -1,37 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router';
 
 import { YellowButton } from '../common/Buttons';
-import { readQuizset } from '../../utils/fetch';
+import { readQuizset, readQuizsetId } from '../../utils/fetch';
 import QuizList from './QuizList';
-
-const Background = styled.div`
-  padding: 1rem;
-`;
+import RoomInformation from './RoomInformation';
+import InformationArea from '../common/InformationArea';
+import MainContainer from '../common/MainContainer';
+import Loading from '../common/Loading';
 
 const ButtonContainer = styled.div`
-  position: absolute;
-  right: 1rem;
+  position: relative;
   button {
-    font-size: 1.5rem;
+    font-size: 3vmin;
+    padding: 0.75vmin 1.25vmin;
+    transform: translateY(-0.4vmin);
   }
 `;
 
-const QuizContainer = styled.div`
-  margin-top: 5rem;
-`;
-
-function QuizTab({ history, roomId, quizsetId }) {
-  const [quizData, setQuizdata] = useState([
-    {
-      id: -1,
-      quiz_order: -1,
-      title: '퀴즈가 없으면 어떻게 될까요? 퀴즈를 생성하세요!',
-      score: 0,
-      time_limit: 'infinity',
-    },
-  ]);
+function QuizTab({ roomId, setId }) {
+  const history = useHistory();
+  const [quizsetId, setQuizsetId] = useState('');
+  const [isLoading, setLoading] = useState(true);
+  const [quizData, setQuizdata] = useState([]);
 
   function editPage() {
     history.push({
@@ -44,43 +37,79 @@ function QuizTab({ history, roomId, quizsetId }) {
   }
 
   useEffect(() => {
-    if (!quizsetId) return;
+    const initQuizData = [
+      {
+        id: -1,
+        quiz_order: -1,
+        title: '퀴즈가 없으면 어떻게 될까요? 퀴즈를 생성하세요!',
+        score: 0,
+        time_limit: 'infinity',
+      },
+    ];
 
-    readQuizset(quizsetId).then(response => {
-      if (!response.isSuccess) {
-        alert('오류로 인해 퀴즈 데이터를 받는 데 실패했습니다');
+    async function getQuizsetId() {
+      const { isSuccess, data } = await readQuizsetId(roomId);
+      if (!isSuccess) {
+        setQuizdata(initQuizData);
+        setLoading(false);
       }
-      const quizset = response.data.quizset.sort((quiz1, quiz2) => {
+      setQuizsetId(data.quizsetId);
+      setId(data.quizsetId);
+    }
+
+    getQuizsetId();
+
+    if (!quizsetId) {
+      return;
+    }
+
+    async function getQuizset(count) {
+      if (count === 0) {
+        alert('오류로 인해 퀴즈 데이터를 받는 데 실패했습니다');
+        setQuizdata(initQuizData);
+        return;
+      }
+
+      const { isSuccess, data } = await readQuizset(quizsetId);
+
+      if (!isSuccess) {
+        getQuizset(count - 1);
+        return;
+      }
+
+      const quizset = data.quizset.sort((quiz1, quiz2) => {
         return quiz1.quiz_order - quiz2.quiz_order;
       });
+
+      setLoading(false);
       setQuizdata(quizset);
-    });
+    }
+
+    getQuizset(3);
   }, [quizsetId]);
 
   return (
-    <Background>
-      <ButtonContainer>
-        <YellowButton onClick={editPage}>
-          {quizsetId === undefined ? '퀴즈 생성' : '퀴즈 편집'}
-        </YellowButton>
-      </ButtonContainer>
-      <QuizContainer>
+    <MainContainer>
+      <InformationArea>
+        <RoomInformation roomId={roomId} />
+        <ButtonContainer>
+          <YellowButton onClick={editPage}>
+            {quizsetId === undefined ? '퀴즈 생성' : '퀴즈 편집'}
+          </YellowButton>
+        </ButtonContainer>
+      </InformationArea>
+      {isLoading ? (
+        <Loading message="퀴즈를 로딩 중입니다..." />
+      ) : (
         <QuizList quizData={quizData} />
-      </QuizContainer>
-    </Background>
+      )}
+    </MainContainer>
   );
 }
 
-QuizTab.defaultProps = {
-  quizsetId: undefined,
-};
-
 QuizTab.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
   roomId: PropTypes.number.isRequired,
-  quizsetId: PropTypes.number,
+  setId: PropTypes.func.isRequired,
 };
 
 export default QuizTab;

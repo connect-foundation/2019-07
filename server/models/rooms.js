@@ -68,6 +68,7 @@ class Rooms {
         currentQuiz.score = currentValue.score;
         currentQuiz.timeLimit = currentValue.time_limit;
         currentQuiz.image = currentValue.image_path;
+        currentQuiz.quizOrder = currentValue.quiz_order;
 
         quizset.push(currentQuiz);
         previousArray.push(currentValue.id);
@@ -81,6 +82,9 @@ class Rooms {
         quizset[quizIndex].answers.push(currentValue.item_order);
       }
     });
+
+    quizset.sort((first, second) => first.quizOrder - second.quizOrder);
+
     this.getRoom(roomNumber).quizSet = quizset;
   }
 
@@ -133,13 +137,31 @@ class Rooms {
   }
 
   deleteRoom(hostId) {
-    this.rooms.forEach((room, roomNumber) => {
-      if (room.hostId === hostId) {
-        const result = this.rooms.delete(roomNumber);
-        return result ? roomNumber : false;
+    const roomList = this.rooms.entries();
+
+    const findHostRoom = () => {
+      const { done, value } = roomList.next();
+      try {
+        const [roomNumber, roomInformation] = value;
+
+        if (hostId === roomInformation.hostId) return roomNumber;
+        if (done) return false;
+
+        return findHostRoom();
+      } catch (err) {
+        return false;
       }
-      return false;
-    });
+    };
+
+    if (!this.rooms.size) return false;
+    const roomNumber = findHostRoom();
+
+    if (roomNumber) {
+      const isDeleted = this.rooms.delete(roomNumber);
+      return isDeleted ? roomNumber : false;
+    }
+
+    return false;
   }
 
   isRoomExist(roomNumber) {

@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useReducer } from 'react';
-import { Prompt } from 'react-router';
+import { Prompt, useLocation } from 'react-router';
 import styled from 'styled-components';
 import io from 'socket.io-client';
-import PropTypes from 'prop-types';
 
 import HostFooter from '../../components/inGame/HostFooter';
 import HostWaitingRoom from '../../components/inGame/HostWaitingRoom';
@@ -15,6 +14,8 @@ import {
   HostGameAction,
   HostGameContext,
 } from '../../reducer/hostGameReducer';
+import Loading from '../../components/common/Loading';
+import Header from '../../components/common/Header';
 
 const Container = styled.div`
   display: flex;
@@ -23,7 +24,29 @@ const Container = styled.div`
   height: 100vh;
 `;
 
-function HostGameRoom({ location }) {
+const LoadingWrapper = styled.div`
+  position: relative;
+  flex: 1;
+`;
+
+const RoomNumber = styled.span`
+  position: absolute;
+  color: white;
+  font-size: 10vmin;
+  font-weight: bold;
+  width: 100%;
+  text-align: center;
+  z-index: 10000;
+  top: 50%;
+  transform: translateY(-250%);
+
+  &::before {
+    content: '방 번호 ';
+  }
+`;
+
+function HostGameRoom() {
+  const location = useLocation();
   if (!location.state) {
     window.location.href = '/host/room/select';
   }
@@ -31,6 +54,7 @@ function HostGameRoom({ location }) {
   const socket = io.connect(process.env.REACT_APP_BACKEND_HOST);
   const [roomState, dispatcher] = useReducer(roomReducer, initialRoomState);
   const [ranking, setRanking] = useState([]);
+  const isEmptyRoom = roomState.players.length === 0;
 
   useEffect(() => {
     dispatcher({ type: HostGameAction.SET_SOCKET, socket });
@@ -43,13 +67,19 @@ function HostGameRoom({ location }) {
       e.returnValue = 'warning';
     }
 
+    function closeRoom() {
+      socket.close();
+    }
+
     window.addEventListener('beforeunload', blockClose);
-    window.addEventListener('unload', () => socket.emit('closeRoom'));
+    window.addEventListener('unload', closeRoom);
+
     return () => {
-      socket.emit('closeRoom');
+      closeRoom();
       window.removeEventListener('beforeunload', blockClose);
+      window.removeEventListener('unload', closeRoom);
     };
-  }, []);
+  }, [location.state.roomId]);
 
   socket.on('enterPlayer', players => {
     dispatcher({ type: HostGameAction.SET_PLAYERS, players });
@@ -77,25 +107,30 @@ function HostGameRoom({ location }) {
       {roomState.pageState !== 'END' && (
         <Prompt message="페이지를 이동하면 방이 닫힐 수 있습니다. 계속 하시겠습니까?" />
       )}
-      <HostGameContext.Provider value={{ dispatcher, roomState }}>
-        {
+      {isEmptyRoom ? (
+        <>
+          <Header />
+          <LoadingWrapper>
+            <Loading message="참가자를 기다리고 있습니다..." />
+            <RoomNumber>{roomState.roomNumber}</RoomNumber>
+          </LoadingWrapper>
+        </>
+      ) : (
+        <HostGameContext.Provider value={{ dispatcher, roomState }}>
           {
-            WAITING: <HostWaitingRoom />,
-            LOADING: <HostLoading />,
-            PLAYING: <HostQuizPlayingRoom />,
-            END: <GameResult ranking={ranking} />,
-          }[roomState.pageState]
-        }
-      </HostGameContext.Provider>
+            {
+              WAITING: <HostWaitingRoom />,
+              LOADING: <HostLoading />,
+              PLAYING: <HostQuizPlayingRoom />,
+              END: <GameResult ranking={ranking} />,
+            }[roomState.pageState]
+          }
+        </HostGameContext.Provider>
+      )}
+
       <HostFooter roomNumber={roomState.roomNumber} />
     </Container>
   );
 }
-
-HostGameRoom.propTypes = {
-  location: PropTypes.shape({
-    state: PropTypes.object.isRequired,
-  }).isRequired,
-};
 
 export default HostGameRoom;

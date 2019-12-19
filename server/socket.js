@@ -6,6 +6,7 @@ async function handleOpenRoom({ roomId }) {
 
   await inMemory.room.setQuizSet(roomNumber, roomId);
 
+  this.host = true;
   this.join(roomNumber, () => {
     io.to(inMemory.room.getRoomHostId(roomNumber)).emit('openRoom', {
       roomNumber,
@@ -82,6 +83,7 @@ function handleLeavePlayer({ roomNumber, nickname }) {
 }
 
 function handleCloseRoom() {
+  if (!this.host) return;
   const roomNumber = inMemory.room.deleteRoom(this.id);
   io.to(roomNumber).emit('closeRoom');
 }
@@ -89,7 +91,6 @@ function handleCloseRoom() {
 io.on('connection', (socket) => {
   socket.on('disconnect', handleCloseRoom.bind(socket));
   socket.on('openRoom', handleOpenRoom.bind(socket));
-  socket.on('closeRoom', handleCloseRoom.bind(socket));
   socket.on('start', handleStartQuiz.bind(socket));
   socket.on('next', handleNextQuiz.bind(socket));
   socket.on('break', handleBreakQuiz.bind(socket));

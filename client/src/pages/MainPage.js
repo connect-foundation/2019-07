@@ -74,7 +74,7 @@ function MainPage() {
           <RoutingContainer>
             <Switch>
               <Route exact path="/" component={EnterRoomNumber} />
-              <Route path="/nickname" component={EnterNickname} />
+              <Route path="/join/:roomNumber" component={EnterNickname} />
               <Route path="/login" component={NaverLogin} />
             </Switch>
           </RoutingContainer>

@@ -2,60 +2,91 @@ import React, { useState, useEffect, useContext } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
-import * as colors from '../../constants/colors';
+import DESKTOP_MIN_WIDTH from '../../constants/media';
 import { fetchRoomTitle, updateRoomTitle } from '../../utils/fetch';
 import Modal from '../common/Modal';
 import FlexibleInput from '../common/FlexibleInput';
 import { ModalContext } from '../common/ModalProvider';
 import editRoomImage from '../../assets/images/edit_room.png';
 
-const RoomInformationContainer = styled.div`
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  align-items: center;
-  span {
-    color: ${colors.TEXT_WHITE};
-    font-weight: bold;
-    font-size: 2rem;
-    text-shadow: 1px 1px 3px ${colors.TEXT_BLACK};
-    margin-left: 1rem;
-  }
+const TitleUpdateContainer = styled.div.attrs({
+  title: '방 이름 수정하기',
+})`
+  position: relative;
+  height: 100%;
+  user-select: none;
+  text-decoration: underline;
+  cursor: pointer;
 `;
 
 const EditRoomNameImage = styled.img.attrs({
   src: editRoomImage,
 })`
-  width: 2.5rem;
-  cursor: pointer;
-  opacity: 0.6;
+  position: absolute;
+  height: 100%;
   margin-left: 1rem;
-  &:hover {
-    text-decoration: underline;
-    opacity: 1;
+`;
+
+const Notify = styled.div`
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background-color: #ffc6c6;
+  border-radius: 5px;
+  color: white;
+  text-align: center;
+  font-weight: bold;
+  @media (min-width: ${DESKTOP_MIN_WIDTH}) {
+    font-size: 2rem;
   }
 `;
 
 function RoomInformation({ roomId }) {
   const [roomName, setRoomName] = useState('');
   const [inputValue, setInputValue] = useState('');
+  const [message, setMessage] = useState('');
   const { openModal } = useContext(ModalContext);
 
   useEffect(() => {
-    fetchRoomTitle({ roomId }).then(response => {
-      setRoomName(response.data[0].title);
-    });
-  }, []);
+    if (roomName) return;
 
-  function handleRoomName() {
-    updateRoomTitle({ roomId, title: inputValue }).then(response => {
-      if (response.isSuccess) {
-        setRoomName(inputValue);
+    async function getRoomTitle() {
+      const { isSuccess, data } = await fetchRoomTitle({ roomId });
+
+      if (!isSuccess) {
+        alert('오류로 인해 방의 정보를 불러올 수 없습니다');
         return;
       }
-      alert('오류로 인해 방의 이름을 수정할 수 없습니다');
+
+      const [roomInformation] = data;
+      setRoomName(roomInformation.title);
+    }
+
+    getRoomTitle();
+  }, [roomName]);
+
+  useEffect(() => {
+    const clearMessage = setTimeout(() => {
+      setMessage('');
+    }, 1500);
+
+    return () => {
+      clearTimeout(clearMessage);
+    };
+  }, [message]);
+
+  function handleRoomName() {
+    if (!inputValue) {
+      setMessage('수정할 방의 이름을 입력하세요');
+      return false;
+    }
+
+    updateRoomTitle({ roomId, title: inputValue }).then(({ isSuccess }) => {
+      if (!isSuccess) {
+        alert('오류로 인해 방의 이름을 수정할 수 없습니다');
+        return false;
+      }
+      setRoomName(inputValue);
+      return true;
     });
 
     return true;
@@ -63,10 +94,11 @@ function RoomInformation({ roomId }) {
 
   return (
     <>
-      <RoomInformationContainer>
-        <span>{roomName}</span>
-        <EditRoomNameImage title="이름 수정하기" onClick={openModal} />
-      </RoomInformationContainer>
+      <TitleUpdateContainer onClick={openModal}>
+        {roomName}
+        <EditRoomNameImage />
+      </TitleUpdateContainer>
+
       <Modal
         title="방 이름 수정"
         description="수정할 방의 이름을 입력하세요"
@@ -79,6 +111,7 @@ function RoomInformation({ roomId }) {
           maxLength={26}
           placeholder="방 이름을 입력하세요"
         />
+        {message && <Notify>{message}</Notify>}
       </Modal>
     </>
   );

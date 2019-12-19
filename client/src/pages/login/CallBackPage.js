@@ -1,6 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { useHistory } from 'react-router';
 import { getToken } from '../../utils/fetch';
+
+import LoadingCircle from '../../components/common/LoadingCircle';
+import * as colors from '../../constants/colors';
 
 const loginPageUrl = '/login';
 
@@ -19,14 +22,15 @@ function splitHash(rawHash) {
   return object;
 }
 
-function LoginPage({ history }) {
+function LoginPage() {
+  const history = useHistory();
   const { hash } = window.location;
 
   const tokenObject = splitHash(hash);
 
   getToken(tokenObject).then(response => {
     if (response.isSuccess) {
-      history.push({
+      history.replace({
         pathname: '/host/room/select',
       });
     } else {
@@ -36,18 +40,7 @@ function LoginPage({ history }) {
     }
   });
 
-  return <></>;
+  return <LoadingCircle color={colors.PRIMARY_DEEP_GREEN} />;
 }
-
-LoginPage.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-    location: PropTypes.shape({
-      state: PropTypes.shape({
-        roomNumber: PropTypes.string.isRequired,
-      }),
-    }),
-  }).isRequired,
-};
 
 export default LoginPage;

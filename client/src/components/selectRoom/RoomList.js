@@ -1,4 +1,5 @@
 import React from 'react';
+import { useHistory } from 'react-router';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import * as colors from '../../constants/colors';
@@ -11,7 +12,7 @@ const RoomWrapper = styled.div`
   align-items: center;
   width: 100%;
   height: 12.5vmin;
-  margin-top: 2vmin;
+  margin-bottom: 2vmin;
   box-sizing: border-box;
   padding: 1vmin;
   background-color: white;
@@ -80,7 +81,9 @@ const DeleteRoomButton = styled.img.attrs({
   }
 `;
 
-function RoomList({ rooms, history, setRooms }) {
+function RoomList({ rooms, setRooms }) {
+  const history = useHistory();
+
   function handleRoomClick(e) {
     if (e.defaultPrevented) return;
 
@@ -99,14 +102,18 @@ function RoomList({ rooms, history, setRooms }) {
     const roomTitle = e.target.previousElementSibling.textContent;
     const roomId = rooms.find(room => room.title === roomTitle).id;
 
-    deleteRoom({ roomId }).then(response => {
-      if (response.isError) {
+    async function removeRoom() {
+      const { isSuccess } = await deleteRoom({ roomId });
+
+      if (!isSuccess) {
         alert('오류로 인해 방이 삭제되지 않았습니다');
         return;
       }
-      setRooms(rooms.filter(room => room.id !== roomId));
-    });
 
+      setRooms(rooms.filter(room => room.id !== roomId));
+    }
+
+    removeRoom();
     e.preventDefault();
   }
 

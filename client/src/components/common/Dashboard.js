@@ -148,7 +148,7 @@ function DashBoard({ ranking }) {
     datas[0].order = 0;
     for (let index = 0; index < datas.length; index += 1) {
       const data = datas[index];
-      const scorePercent = (data.score / maxScore) * maxScoreLinePercent;
+      const scorePercent = (data.score / maxScore) * maxScoreLinePercent || 0;
       const animationName = keyframes`
         from{
           width: 0%;

@@ -12,6 +12,6 @@ router.use('/room', room);
 router.use('/login', login);
 router.use('/user', user);
 router.use('/edit', edit);
-router.use('/', game);
+router.use('/room', game);
 
 module.exports = router;

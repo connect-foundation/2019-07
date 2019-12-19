@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+
 import { EditContext } from './EditContextProvider';
 import * as colors from '../../constants/colors';
 import * as ingameLayout from '../inGame/Layout';
@@ -13,10 +14,10 @@ const MARGIN_RIGHT = '0.5vmin';
 const ThumbnailBackground = styled.div`
   position: relative;
   flex: none;
-
-  background-color: ${props => (props.isActive ? 'cyan' : 'white')};
+  background-color: ${props => (props.isActive ? '#00c3ff' : 'white')};
   width: 100%;
   height: calc(${SIDE_BAR_SIZE} / 1.5);
+  user-select: none;
 
   @media (orientation: portrait) {
     height: 100%;

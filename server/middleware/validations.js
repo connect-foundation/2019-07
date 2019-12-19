@@ -1,5 +1,8 @@
 const { check, validationResult } = require('express-validator');
+const jwt = require('jsonwebtoken');
 const inMemory = require('../models/inMemory');
+
+require('dotenv').config();
 
 /**
  * 방 번호를 입력 받아서 값이 유효한지 확인함. (6자리 체크, 숫자가 아닌지 체크)
@@ -164,10 +167,28 @@ function isNicknameExist(req, res, next) {
   next();
 }
 
+function isUserValid(req, res, next) {
+  const { cookies } = req;
+  const jwtObj = {
+    secret: process.env.JWT_SECRET,
+  };
+
+  try {
+    jwt.verify(cookies.jwt, jwtObj.secret);
+    next();
+  } catch (err) {
+    res.json({
+      isError: true,
+      message: '유효하지 않은 접근 토큰입니다',
+    });
+  }
+}
+
 module.exports = {
   isRoomExist,
   isRoomNumberValid,
   isNicknameOverlap,
   isValidNickname,
   isNicknameExist,
+  isUserValid,
 };
