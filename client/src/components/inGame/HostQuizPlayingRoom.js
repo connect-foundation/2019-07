@@ -30,7 +30,7 @@ const ItemList = styled.div`
     width: 100%;
     margin: 0;
     color: ${colors.TEXT_WHITE};
-    font-size: 1.5vh;
+    font-size: 3vmin;
     font-weight: bold;
     text-align: center;
   }
