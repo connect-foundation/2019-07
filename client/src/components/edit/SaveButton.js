@@ -48,13 +48,13 @@ async function createItems(quizId, items) {
     return [...array, refineItem(item)];
   }, []);
 
-  //isSuccess가 실패할 경우 재요청하거나 오류를 알려줘야함
+  // isSuccess가 실패할 경우 재요청하거나 오류를 알려줘야함
   const { isSuccess } = await fetcher.createItems(quizId, refinedItems);
 }
 
 async function updateItem(item) {
   const refinedItem = refineItem(item);
-  //isSuccess가 실패할 경우 재요청하거나 오류를 알려줘야함
+  // isSuccess가 실패할 경우 재요청하거나 오류를 알려줘야함
   const { isSuccess } = await fetcher.updateItem(refinedItem);
 }
 
@@ -89,7 +89,7 @@ async function updateQuiz(roomId, quiz, readedQuiz) {
 }
 
 async function deleteQuiz(roomId, quizId) {
-  //isSuccess가 실패할 경우 재요청하거나 오류를 알려줘야함
+  // isSuccess가 실패할 경우 재요청하거나 오류를 알려줘야함
   const { isSuccess } = await fetcher.deleteQuiz(roomId, quizId);
 }
 
@@ -144,16 +144,16 @@ function checkItemsCanSave(items) {
         item.title.length === 0
           ? state.titleArray
           : [...state.titleArray, item.title];
-      //보기 중 정답체크가 하나라도 되어있으면 true, 아니면 false
+      // 보기 중 정답체크가 하나라도 되어있으면 true, 아니면 false
       const isAnswer = state.isAnswer || item.isAnswer === 1;
-      //보기1과 보기2의 title이 전부 입력했으면 true 하나라도 비어있으면 false
+      // 보기1과 보기2의 title이 전부 입력했으면 true 하나라도 비어있으면 false
       const essentialTitle =
         index < 2
           ? state.essentialTitle && item.title.length > 0
           : state.essentialTitle;
 
       const hasDuplicateTitle = state.titleArray.indexOf(item.title) >= 0;
-      //items에서 중복된 title이 있는지 여부를 판단함
+      // items에서 중복된 title이 있는지 여부를 판단함
       const duplicateTitle = state.duplicateTitle || hasDuplicateTitle;
       return { titleArray, isAnswer, essentialTitle, duplicateTitle };
     },
@@ -218,13 +218,8 @@ function checkQuizsetCanSave(quizset, changeCurrentIndex) {
   return true;
 }
 
-function moveToDetailPage(history, roomId) {
-  history.push({
-    pathname: '/host/room/detail',
-    state: {
-      roomId,
-    },
-  });
+function moveToDetailPage(history) {
+  history.go(-1);
 }
 
 function SaveButton() {
@@ -248,7 +243,7 @@ function SaveButton() {
       const quizsetId = await readQuizsetId(quizsetState, roomId);
       await updateQuizset(roomId, quizset, quizsetId, quizsetState);
       changeLoading(loadingTypes.IDLE);
-      moveToDetailPage(history, roomId);
+      moveToDetailPage(history);
     }
     communicateWithServer();
   }, [loadingType]);

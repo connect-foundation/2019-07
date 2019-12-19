@@ -37,17 +37,6 @@ function DetailRoom() {
     });
   }
 
-  useEffect(() => {
-    if (quizsetId) return;
-    async function getQuizsetId() {
-      const { isSuccess, data } = await readQuizsetId(roomId);
-      if (!isSuccess) return;
-      setQuizsetId(data.quizsetId);
-    }
-
-    getQuizsetId();
-  }, [quizsetId]);
-
   return (
     <Background>
       <Header
@@ -57,7 +46,7 @@ function DetailRoom() {
           )
         }
       />
-      <QuizTab roomId={roomId} />
+      <QuizTab roomId={roomId} setId={setQuizsetId} />
     </Background>
   );
 }
