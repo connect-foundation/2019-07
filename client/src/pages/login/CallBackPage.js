@@ -30,7 +30,7 @@ function LoginPage() {
 
   getToken(tokenObject).then(response => {
     if (response.isSuccess) {
-      history.push({
+      history.replace({
         pathname: '/host/room/select',
       });
     } else {

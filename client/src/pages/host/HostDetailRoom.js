@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useHistory, useLocation } from 'react-router';
 import styled from 'styled-components';
 
@@ -6,7 +6,6 @@ import * as colors from '../../constants/colors';
 import Header from '../../components/common/Header';
 import { YellowButton } from '../../components/common/Buttons';
 import QuizTab from '../../components/detailRoom/QuizTab';
-import { readQuizsetId } from '../../utils/fetch';
 
 const Background = styled.div`
   position: relative;
@@ -37,17 +36,6 @@ function DetailRoom() {
     });
   }
 
-  useEffect(() => {
-    if (quizsetId) return;
-    async function getQuizsetId() {
-      const { isSuccess, data } = await readQuizsetId(roomId);
-      if (!isSuccess) return;
-      setQuizsetId(data.quizsetId);
-    }
-
-    getQuizsetId();
-  }, [quizsetId]);
-
   return (
     <Background>
       <Header
@@ -57,7 +45,7 @@ function DetailRoom() {
           )
         }
       />
-      <QuizTab roomId={roomId} quizsetId={quizsetId} />
+      <QuizTab roomId={roomId} setId={setQuizsetId} />
     </Background>
   );
 }

@@ -4,11 +4,12 @@ import PropTypes from 'prop-types';
 import { useHistory } from 'react-router';
 
 import { YellowButton } from '../common/Buttons';
-import { readQuizset } from '../../utils/fetch';
+import { readQuizset, readQuizsetId } from '../../utils/fetch';
 import QuizList from './QuizList';
 import RoomInformation from './RoomInformation';
 import InformationArea from '../common/InformationArea';
 import MainContainer from '../common/MainContainer';
+import Loading from '../common/Loading';
 
 const ButtonContainer = styled.div`
   position: relative;
@@ -19,17 +20,11 @@ const ButtonContainer = styled.div`
   }
 `;
 
-function QuizTab({ roomId, quizsetId }) {
+function QuizTab({ roomId, setId }) {
   const history = useHistory();
-  const [quizData, setQuizdata] = useState([
-    {
-      id: -1,
-      quiz_order: -1,
-      title: '퀴즈가 없으면 어떻게 될까요? 퀴즈를 생성하세요!',
-      score: 0,
-      time_limit: 'infinity',
-    },
-  ]);
+  const [quizsetId, setQuizsetId] = useState('');
+  const [isLoading, setLoading] = useState(true);
+  const [quizData, setQuizdata] = useState([]);
 
   function editPage() {
     history.push({
@@ -42,20 +37,54 @@ function QuizTab({ roomId, quizsetId }) {
   }
 
   useEffect(() => {
-    if (!quizsetId) return;
+    const initQuizData = [
+      {
+        id: -1,
+        quiz_order: -1,
+        title: '퀴즈가 없으면 어떻게 될까요? 퀴즈를 생성하세요!',
+        score: 0,
+        time_limit: 'infinity',
+      },
+    ];
+
+    async function getQuizsetId() {
+      const { isSuccess, data } = await readQuizsetId(roomId);
+      if (!isSuccess) {
+        setQuizdata(initQuizData);
+        setLoading(false);
+      }
+      setQuizsetId(data.quizsetId);
+      setId(data.quizsetId);
+    }
+
+    getQuizsetId();
+
+    if (!quizsetId) {
+      return;
+    }
 
     async function getQuizset(count) {
       if (count === 0) {
         alert('오류로 인해 퀴즈 데이터를 받는 데 실패했습니다');
+        setQuizdata(initQuizData);
         return;
       }
+
       const { isSuccess, data } = await readQuizset(quizsetId);
-      if (!isSuccess) getQuizset(count - 1);
+
+      if (!isSuccess) {
+        getQuizset(count - 1);
+        return;
+      }
+
       const quizset = data.quizset.sort((quiz1, quiz2) => {
         return quiz1.quiz_order - quiz2.quiz_order;
       });
+
+      setLoading(false);
       setQuizdata(quizset);
     }
+
     getQuizset(3);
   }, [quizsetId]);
 
@@ -69,18 +98,18 @@ function QuizTab({ roomId, quizsetId }) {
           </YellowButton>
         </ButtonContainer>
       </InformationArea>
-      <QuizList quizData={quizData} />
+      {isLoading ? (
+        <Loading message="퀴즈를 로딩 중입니다..." />
+      ) : (
+        <QuizList quizData={quizData} />
+      )}
     </MainContainer>
   );
 }
 
-QuizTab.defaultProps = {
-  quizsetId: undefined,
-};
-
 QuizTab.propTypes = {
   roomId: PropTypes.number.isRequired,
-  quizsetId: PropTypes.number,
+  setId: PropTypes.func.isRequired,
 };
 
 export default QuizTab;

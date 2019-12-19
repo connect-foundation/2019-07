@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import styled from 'styled-components';
 
-import * as colors from '../../constants/colors';
 import Header from '../../components/common/Header';
 import { YellowButton } from '../../components/common/Buttons';
 import Modal from '../../components/common/Modal';
@@ -82,7 +81,10 @@ function SelectRoom() {
         return;
       }
       const { isSuccess, data } = await fetchRooms({ userId });
-      if (!isSuccess) getRooms(count - 1);
+      if (!isSuccess) {
+        getRooms(count - 1);
+        return;
+      }
       setRooms(data);
     }
     if (userId) getRooms(3);
