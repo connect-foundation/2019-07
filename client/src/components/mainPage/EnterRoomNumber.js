@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
+import { useHistory } from 'react-router';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
+
 import * as styles from '../../styles/common';
 import { GreenButton } from '../common/Buttons';
 import { fetchRoomNumber } from '../../utils/fetch';
@@ -14,7 +15,7 @@ const ButtonContainer = styled.div`
 
 const Input = styled.input.attrs({
   type: 'number',
-  pattern: '\d*',
+  pattern: 'd*',
 })`
   &::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -23,16 +24,14 @@ const Input = styled.input.attrs({
   ${styles.InputStyle}
 `;
 
-function EnterRoomNumber({ history }) {
+function EnterRoomNumber() {
+  const history = useHistory();
   const [roomNumber, setRoomNumber] = useState('');
   const { onToast, offToast } = useContext(ToastContext);
   useEffect(offToast, []);
 
   function moveNicknamePage() {
-    history.push({
-      pathname: '/nickname',
-      state: { roomNumber },
-    });
+    history.push(`/join/${roomNumber}`);
   }
 
   function moveLoginPage() {
@@ -96,9 +95,5 @@ function EnterRoomNumber({ history }) {
     </>
   );
 }
-
-EnterRoomNumber.propTypes = {
-  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
-};
 
 export default EnterRoomNumber;

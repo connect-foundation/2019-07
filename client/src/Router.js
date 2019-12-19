@@ -14,7 +14,7 @@ export default function() {
     <Router>
       <Switch>
         <Route exact path="/" component={MainPage} />
-        <Route exact path="/nickname" component={MainPage} />
+        <Route path="/join/:roomNumber" component={MainPage} />
         <Route exact path="/login" component={MainPage} />
         <Route exact path="/host" component={HostGameRoom} />
         <Route exact path="/player" component={PlayerGameRoom} />

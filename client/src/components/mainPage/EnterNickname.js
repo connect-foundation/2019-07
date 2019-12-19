@@ -1,9 +1,10 @@
 import React, { useState, useContext, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import { useHistory, useRouteMatch } from 'react-router';
 import styled from 'styled-components';
+
 import * as styles from '../../styles/common';
 import { GreenButton } from '../common/Buttons';
-import { fetchNickname } from '../../utils/fetch';
+import { fetchNickname, fetchRoomNumber } from '../../utils/fetch';
 import { ToastContext } from '../common/ToastProvider';
 
 const BUTTON_MARGIN_TOP = '1.5rem';
@@ -18,12 +19,23 @@ const Input = styled.input.attrs({
   ${styles.InputStyle}
 `;
 
-function EnterNickname({ history }) {
-  if (!history.location.state) {
-    window.location.href = '/';
-  }
+function EnterNickname() {
+  const history = useHistory();
+  const match = useRouteMatch();
+  const { roomNumber } = match.params;
 
-  const { roomNumber } = history.location.state;
+  useEffect(() => {
+    async function validateRoomNumber() {
+      const { isSuccess } = await fetchRoomNumber(roomNumber);
+      if (!isSuccess) {
+        history.push('/');
+        alert('존재하지 않는 방번호입니다');
+      }
+    }
+
+    validateRoomNumber();
+  }, [roomNumber]);
+
   const [nickname, setNickname] = useState('');
   const { onToast, offToast } = useContext(ToastContext);
   useEffect(offToast, []);
@@ -83,16 +95,5 @@ function EnterNickname({ history }) {
     </>
   );
 }
-
-EnterNickname.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-    location: PropTypes.shape({
-      state: PropTypes.shape({
-        roomNumber: PropTypes.string.isRequired,
-      }),
-    }),
-  }).isRequired,
-};
 
 export default EnterNickname;
