@@ -20,7 +20,7 @@ const ButtonContainer = styled.div`
   }
 `;
 
-function QuizTab({ roomId }) {
+function QuizTab({ roomId, setId }) {
   const history = useHistory();
   const [quizsetId, setQuizsetId] = useState('');
   const [isLoading, setLoading] = useState(true);
@@ -54,6 +54,7 @@ function QuizTab({ roomId }) {
         setLoading(false);
       }
       setQuizsetId(data.quizsetId);
+      setId(data.quizsetId);
     }
 
     getQuizsetId();
@@ -106,13 +107,9 @@ function QuizTab({ roomId }) {
   );
 }
 
-QuizTab.defaultProps = {
-  quizsetId: undefined,
-};
-
 QuizTab.propTypes = {
   roomId: PropTypes.number.isRequired,
-  quizsetId: PropTypes.number,
+  setId: PropTypes.func.isRequired,
 };
 
 export default QuizTab;
