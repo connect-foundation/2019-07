@@ -9,7 +9,7 @@ const QuizSet = styled.div`
   display: flex;
   position: relative;
   background-color: ${BACKGROUND_LIGHT_WHITE};
-  margin-bottom: 1rem;
+  margin-bottom: 2vmin;
   border-radius: 5px;
   box-shadow: 1px 1px 3px gray;
   padding: 1rem;

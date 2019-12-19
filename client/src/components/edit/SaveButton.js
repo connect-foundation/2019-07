@@ -1,17 +1,9 @@
 import React, { useContext, useEffect } from 'react';
-import styled from 'styled-components';
-import PropTypes from 'prop-types';
+import { useHistory } from 'react-router';
 
 import { YellowButton } from '../common/Buttons';
 import { EditContext } from './EditContextProvider';
 import * as fetcher from '../../utils/fetch';
-
-const ButtonWrapper = styled.div`
-  position: absolute;
-  right: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-`;
 
 const refineQuiz = ({ id, title, imagePath, quizOrder, score, timeLimit }) => {
   return { id, title, imagePath, quizOrder, score, timeLimit };
@@ -235,7 +227,8 @@ function moveToDetailPage(history, roomId) {
   });
 }
 
-function SaveButton({ history }) {
+function SaveButton() {
+  const history = useHistory();
   const { quizsetState, dispatch, actionTypes, loadingTypes } = useContext(
     EditContext,
   );
@@ -261,23 +254,15 @@ function SaveButton({ history }) {
   }, [loadingType]);
 
   return (
-    <ButtonWrapper>
-      <YellowButton
-        onClick={async () => {
-          if (!checkQuizsetCanSave(quizset, changeCurrentIndex)) return;
-          changeLoading(loadingTypes.UPDATE_DATA);
-        }}
-      >
-        저장
-      </YellowButton>
-    </ButtonWrapper>
+    <YellowButton
+      onClick={async () => {
+        if (!checkQuizsetCanSave(quizset, changeCurrentIndex)) return;
+        changeLoading(loadingTypes.UPDATE_DATA);
+      }}
+    >
+      저장
+    </YellowButton>
   );
 }
-
-SaveButton.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
-};
 
 export default SaveButton;

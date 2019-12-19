@@ -1,28 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router';
 
 import { YellowButton } from '../common/Buttons';
 import { readQuizset } from '../../utils/fetch';
 import QuizList from './QuizList';
-
-const Background = styled.div`
-  padding: 1rem;
-`;
+import RoomInformation from './RoomInformation';
+import InformationArea from '../common/InformationArea';
+import MainContainer from '../common/MainContainer';
 
 const ButtonContainer = styled.div`
-  position: absolute;
-  right: 1rem;
+  position: relative;
   button {
-    font-size: 1.5rem;
+    font-size: 3vmin;
+    padding: 0.75vmin 1.25vmin;
+    transform: translateY(-0.4vmin);
   }
 `;
 
-const QuizContainer = styled.div`
-  margin-top: 5rem;
-`;
-
-function QuizTab({ history, roomId, quizsetId }) {
+function QuizTab({ roomId, quizsetId }) {
+  const history = useHistory();
   const [quizData, setQuizdata] = useState([
     {
       id: -1,
@@ -46,28 +44,33 @@ function QuizTab({ history, roomId, quizsetId }) {
   useEffect(() => {
     if (!quizsetId) return;
 
-    readQuizset(quizsetId).then(response => {
-      if (!response.isSuccess) {
+    async function getQuizset(count) {
+      if (count === 0) {
         alert('오류로 인해 퀴즈 데이터를 받는 데 실패했습니다');
+        return;
       }
-      const quizset = response.data.quizset.sort((quiz1, quiz2) => {
+      const { isSuccess, data } = await readQuizset(quizsetId);
+      if (!isSuccess) getQuizset(count - 1);
+      const quizset = data.quizset.sort((quiz1, quiz2) => {
         return quiz1.quiz_order - quiz2.quiz_order;
       });
       setQuizdata(quizset);
-    });
+    }
+    getQuizset(3);
   }, [quizsetId]);
 
   return (
-    <Background>
-      <ButtonContainer>
-        <YellowButton onClick={editPage}>
-          {quizsetId === undefined ? '퀴즈 생성' : '퀴즈 편집'}
-        </YellowButton>
-      </ButtonContainer>
-      <QuizContainer>
-        <QuizList quizData={quizData} />
-      </QuizContainer>
-    </Background>
+    <MainContainer>
+      <InformationArea>
+        <RoomInformation roomId={roomId} />
+        <ButtonContainer>
+          <YellowButton onClick={editPage}>
+            {quizsetId === undefined ? '퀴즈 생성' : '퀴즈 편집'}
+          </YellowButton>
+        </ButtonContainer>
+      </InformationArea>
+      <QuizList quizData={quizData} />
+    </MainContainer>
   );
 }
 
@@ -76,9 +79,6 @@ QuizTab.defaultProps = {
 };
 
 QuizTab.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
   roomId: PropTypes.number.isRequired,
   quizsetId: PropTypes.number,
 };

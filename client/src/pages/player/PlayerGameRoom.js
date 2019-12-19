@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation, Prompt } from 'react-router';
 import styled from 'styled-components';
 import io from 'socket.io-client';
-import PropTypes from 'prop-types';
-import { Prompt } from 'react-router';
+
 import PlayerFooter from '../../components/inGame/PlayerFooter';
 import PlayerWaiting from '../../components/inGame/PlayerWaiting';
 import PlayerQuizLoading from '../../components/inGame/PlayerQuizLoading';
@@ -26,12 +26,13 @@ const Container = styled.div`
   height: 100vh;
 `;
 
-function PlayerGameRoom({ location }) {
+function PlayerGameRoom() {
   /**
    * Cannot read property 에러의 경우 state가 없는 경우이므로
    * state가 undefined인지 검사해주면 된다.
    * 검사 후 문제가 있는 경우 메인페이지로 강제 이동시킴
    */
+  const location = useLocation();
   if (!location.state) {
     window.location.href = '/';
   }
@@ -153,18 +154,5 @@ function PlayerGameRoom({ location }) {
     </Container>
   );
 }
-
-PlayerGameRoom.propTypes = {
-  location: PropTypes.shape({
-    pathname: PropTypes.string.isRequired,
-    state: PropTypes.shape({
-      nickname: PropTypes.string.isRequired,
-      roomNumber: PropTypes.string.isRequired,
-    }),
-  }).isRequired,
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
-};
 
 export default PlayerGameRoom;
