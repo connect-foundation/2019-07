@@ -95,7 +95,7 @@
 
 > 링크를 누르면 소개 영상 페이지로 이동합니다
 
-<a href='https://youtu.be/dqIBenlNK0Q' align='middle'><img src='./docs/thumbnail.jpg' /></a>
+<a href='https://youtu.be/dqIBenlNK0Q' align='middle'><img src='./docs/thumbnail.gif' /></a>
 
 ### ⚙ 사용 기술
 
