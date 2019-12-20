@@ -92,7 +92,7 @@ function HostFooter({ roomNumber }) {
 
   function copyUrl() {
     const input = inputRef.current;
-    input.value = url;
+    input.value = `http://${url}`;
     input.select();
     document.execCommand('copy');
     setShakeTrigger(true);
