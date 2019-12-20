@@ -20,22 +20,25 @@ const Main = styled.div`
   padding: 0 2rem 2rem;
 `;
 
-const Saying = styled.span`
-  margin-top: auto;
-  justify-self: center;
-  font-size: 5vw;
-  font-style: italic;
+const Notify = styled.p`
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 0 2rem;
+  font-size: 2rem;
   text-align: center;
+  font-weight: bold;
+  color: ${colors.TEXT_BLACK};
 `;
 
 function PlayerQuizLoading() {
   return (
     <Container>
       <Main>
-        <Saying>
-          사람이 유머감각이 있는 게 아니다. <br />
-          유머 감각이 사람을 움직이는 것이다.
-        </Saying>
+        <Notify>
+          퀴즈가 준비 중이에요 <br />
+          잠시 기다려주세요
+        </Notify>
         <ProgressBar animationDurationSeconds={3} />
       </Main>
     </Container>

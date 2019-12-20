@@ -71,7 +71,7 @@ function EnterRoomNumber() {
       return;
     }
 
-    if (!/\d/.test(e.key)) {
+    if (/^\d/.test(e.key)) {
       onToast('방번호는 숫자만 입력할 수 있습니다');
       return;
     }

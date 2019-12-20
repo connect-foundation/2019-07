@@ -1,4 +1,5 @@
 import React from 'react';
+import { useHistory } from 'react-router';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
@@ -12,7 +13,7 @@ const Background = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   background-color: ${colors.BACKGROUND_LIGHT_GRAY};
   user-select: none;
 `;
@@ -35,8 +36,9 @@ const ButtonContainer = styled.div`
 `;
 
 function HostGameResult({ ranking }) {
+  const history = useHistory();
   function exit() {
-    window.location.href = '/host/room/select';
+    history.go(-1);
   }
 
   return (

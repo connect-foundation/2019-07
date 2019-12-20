@@ -14,7 +14,7 @@ const NoStyleButton = styled.button`
   margin: 0;
   padding: 0;
 
-  height: 6rem;
+  height: 5rem;
   background-image: url(${loginImage});
   background-repeat: no-repeat;
   background-size: contain;
