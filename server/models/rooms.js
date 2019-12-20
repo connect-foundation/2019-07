@@ -32,7 +32,9 @@ class Rooms {
   }
 
   getSubResult(roomNumber, quizIndex) {
-    return this.getRoom(roomNumber).quizSet[quizIndex].items;
+    const room = this.getRoom(roomNumber);
+    room.submittedPlayers.clear();
+    return room.quizSet[quizIndex].items;
   }
 
   getFinalResult(roomNumber) {
@@ -116,24 +118,24 @@ class Rooms {
   }
 
   updatePlayerScore({ roomNumber, quizIndex, choose, nickname }) {
-    const currentQuiz = this.getRoom(roomNumber).quizSet[quizIndex];
-
+    const room = this.getRoom(roomNumber);
+    const currentQuiz = room.quizSet[quizIndex];
     const isCorrect = currentQuiz.answers.includes(choose);
 
     if (isCorrect) {
-      const currentScore = this.getRoom(roomNumber).players.get(nickname);
-      this.rooms
-        .get(roomNumber)
-        .players.set(nickname, currentScore + currentQuiz.score);
+      const currentScore = room.players.get(nickname);
+      room.players.set(nickname, currentScore + currentQuiz.score);
     }
 
-    const score = this.getRoom(roomNumber).players.get(nickname);
+    const score = room.players.get(nickname);
 
     return [isCorrect, score];
   }
 
   deletePlayer(roomNumber, nickname) {
-    return this.getRoom(roomNumber).players.delete(nickname);
+    const room = this.getRoom(roomNumber);
+    room.submittedPlayers.delete(nickname);
+    return room.players.delete(nickname);
   }
 
   deleteRoom(hostId) {
@@ -170,6 +172,14 @@ class Rooms {
 
   isPlayerExist(roomNumber, nickname) {
     return this.getRoom(roomNumber).players.has(nickname);
+  }
+
+  isLastSubmit({ roomNumber, nickname }) {
+    const room = this.getRoom(roomNumber);
+    room.submittedPlayers.set(nickname, 0);
+    const submitSize = room.submittedPlayers.size;
+    const isLast = submitSize !== 0 && submitSize === room.players.size;
+    return isLast;
   }
 }
 
