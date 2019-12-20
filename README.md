@@ -110,7 +110,7 @@
 > 대표적인 기능인 🕹퀴즈 게임 진행의 소켓 통신 흐름도 입니다.  
 > 다른 서비스의 진행 흐름도 확인하고 싶으시다면 위키의 [서비스 진행 흐름](https://github.com/connect-foundation/2019-07/wiki/sequence-diagram)문서를 살펴보세요.
 
-<p align='middle'><a href='./docs/game_sequence_diagram.png'><img src='./docs/game_sequence_diagram.png' /></a></p>
+<p align='middle'><a href='https://github.com/connect-foundation/2019-07/wiki/sequence-diagram'><img src='https://user-images.githubusercontent.com/38618187/71227252-e7519d80-2321-11ea-8cf9-f92ce5ad3937.png' /></a></p>
 
 ### 📌프로젝트 목표
 
