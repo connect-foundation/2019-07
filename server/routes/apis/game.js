@@ -146,6 +146,21 @@ router.post(
       isCorrect,
       score,
     });
+
+    const isLast = inMemory.room.isLastSubmit({
+      roomNumber,
+      nickname,
+    });
+    const socket = req.app.io.sockets;
+    if (isLast) {
+      socket
+        .to(roomNumber)
+        .emit('subResult', inMemory.room.getSubResult(roomNumber, quizIndex));
+      socket.to(roomNumber).emit('break', {
+        roomNumber,
+        quizIndex,
+      });
+    }
   },
 );
 
