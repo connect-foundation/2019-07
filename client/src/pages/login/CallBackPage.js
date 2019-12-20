@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useHistory } from 'react-router';
 import { getToken } from '../../utils/fetch';
 
@@ -28,17 +28,19 @@ function LoginPage() {
 
   const tokenObject = splitHash(hash);
 
-  getToken(tokenObject).then(response => {
-    if (response.isSuccess) {
-      history.replace({
-        pathname: '/host/room/select',
-      });
-    } else {
-      history.push({
-        pathname: loginPageUrl,
-      });
-    }
-  });
+  useEffect(() => {
+    getToken(tokenObject).then(response => {
+      if (response.isSuccess) {
+        history.replace({
+          pathname: '/host/room/select',
+        });
+      } else {
+        history.push({
+          pathname: loginPageUrl,
+        });
+      }
+    });
+  }, [history]);
 
   return <LoadingCircle color={colors.PRIMARY_DEEP_GREEN} />;
 }

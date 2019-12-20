@@ -1,4 +1,5 @@
 import React from 'react';
+import { useHistory } from 'react-router';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
@@ -35,8 +36,9 @@ const ButtonContainer = styled.div`
 `;
 
 function HostGameResult({ ranking }) {
+  const history = useHistory();
   function exit() {
-    window.location.href = '/host/room/select';
+    history.go(-1);
   }
 
   return (
