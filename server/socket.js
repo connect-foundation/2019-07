@@ -32,13 +32,12 @@ function handleNextQuiz({ roomNumber, nextQuizIndex }) {
 
 function handleBreakQuiz({ roomNumber, quizIndex }) {
   if (!inMemory.room.isRoomExist(roomNumber)) return;
+  inMemory.room.clearDeletedPlayers(roomNumber);
 
-  this.join(roomNumber, () => {
-    io.to(this.id).emit(
-      'subResult',
-      inMemory.room.getSubResult(roomNumber, quizIndex),
-    );
-  });
+  io.to(this.id).emit(
+    'subResult',
+    inMemory.room.getSubResult(roomNumber, quizIndex),
+  );
 
   io.to(roomNumber).emit('break');
 }
@@ -52,16 +51,15 @@ function handleEndQuiz({ roomNumber }) {
 function handleEnterPlayer({ roomNumber, nickname }) {
   if (!inMemory.room.isRoomExist(roomNumber)) return;
 
-  if (inMemory.room.isPlayerExist(roomNumber, nickname)) {
-    const score = inMemory.room.getPlayerScore(roomNumber, nickname);
+  const score = inMemory.room.isRefreshingPlayer(roomNumber, nickname);
 
+  if (score !== undefined) {
     this.join(roomNumber, () => {
       io.to(this.id).emit('settingScore', score);
     });
-    return;
   }
 
-  const players = inMemory.room.setNewPlayer(roomNumber, nickname);
+  const players = inMemory.room.setNewPlayer(roomNumber, nickname, score);
 
   this.join(roomNumber, () => {
     io.to(inMemory.room.getRoomHostId(roomNumber)).emit('enterPlayer', players);
@@ -73,12 +71,10 @@ function handleLeavePlayer({ roomNumber, nickname }) {
   const result = inMemory.room.deletePlayer(roomNumber, nickname);
 
   if (result) {
-    this.join(roomNumber, () => {
-      io.to(inMemory.room.getRoomHostId(roomNumber)).emit(
-        'leavePlayer',
-        inMemory.room.getPlayers(roomNumber),
-      );
-    });
+    io.to(inMemory.room.getRoomHostId(roomNumber)).emit(
+      'leavePlayer',
+      inMemory.room.getPlayers(roomNumber),
+    );
   }
 }
 
@@ -88,7 +84,7 @@ function handleCloseRoom() {
   io.to(roomNumber).emit('closeRoom');
 }
 
-io.on('connection', (socket) => {
+io.on('connection', socket => {
   socket.on('disconnect', handleCloseRoom.bind(socket));
   socket.on('openRoom', handleOpenRoom.bind(socket));
   socket.on('start', handleStartQuiz.bind(socket));
