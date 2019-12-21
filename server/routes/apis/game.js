@@ -157,8 +157,9 @@ router.post(
     });
     const socket = req.app.io.sockets;
     if (isLast) {
+      const hostId = inMemory.room.getRoomHostId(roomNumber);
       socket
-        .to(roomNumber)
+        .to(hostId)
         .emit('subResult', inMemory.room.getSubResult(roomNumber, quizIndex));
       socket.to(roomNumber).emit('break');
     }
