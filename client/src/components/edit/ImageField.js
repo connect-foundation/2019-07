@@ -145,12 +145,14 @@ function ImageField() {
           <DropHereText>Drop Here</DropHereText>
         </DropHereContainer>
       )}
-      <DeleteButton
-        onClick={event => {
-          event.stopPropagation();
-          deleteImage();
-        }}
-      />
+      {imagePath && (
+        <DeleteButton
+          onClick={event => {
+            event.stopPropagation();
+            deleteImage();
+          }}
+        />
+      )}
     </Container>
   );
 }
