@@ -65,13 +65,13 @@ function EnterRoomNumber() {
   }
 
   function handlePressEnter(e) {
+    if (e.which === 229) return;
     if (e.ctrlKey || e.key === 'Backspace') return;
     if (e.key === 'Enter') {
       handleEnterButtonClick();
       return;
     }
-
-    if (/^\d/.test(e.key)) {
+    if (/[^0-9]/.test(e.key)) {
       onToast('방번호는 숫자만 입력할 수 있습니다');
       return;
     }

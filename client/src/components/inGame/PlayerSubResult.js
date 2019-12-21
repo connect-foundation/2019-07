@@ -43,7 +43,7 @@ function PlayerSubResult({ plusScore, score, setScore, isAnswer }) {
     if (isAnswer) {
       setScore(score + plusScore);
     }
-  }, [plusScore, setScore, isAnswer]);
+  }, [isAnswer]);
 
   return (
     <>
