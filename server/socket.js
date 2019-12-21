@@ -24,17 +24,17 @@ function handleStartQuiz({ roomNumber }) {
   }, 3000);
 }
 
-function handleNextQuiz({ roomNumber, nextQuizIndex }) {
+function handleNextQuiz({ roomNumber }) {
   if (!inMemory.room.isRoomExist(roomNumber)) return;
-
+  const nextQuizIndex = inMemory.room.setNextQuizIndex(roomNumber);
   io.to(roomNumber).emit('next', nextQuizIndex);
 }
 
-function handleBreakQuiz({ roomNumber, quizIndex }) {
+function handleBreakQuiz({ roomNumber }) {
   if (!inMemory.room.isRoomExist(roomNumber)) return;
-  inMemory.room.clearDeletedPlayers(roomNumber);
+  const quizIndex = inMemory.room.getQuizIndex(roomNumber);
 
-  io.to(this.id).emit(
+  io.to(roomNumber).emit(
     'subResult',
     inMemory.room.getSubResult(roomNumber, quizIndex),
   );
@@ -75,6 +75,14 @@ function handleLeavePlayer({ roomNumber, nickname }) {
       'leavePlayer',
       inMemory.room.getPlayers(roomNumber),
     );
+    const isLast = inMemory.room.isLastSubmit({
+      roomNumber,
+    });
+    if (isLast) {
+      handleBreakQuiz({
+        roomNumber,
+      });
+    }
   }
 }
 
@@ -84,7 +92,7 @@ function handleCloseRoom() {
   io.to(roomNumber).emit('closeRoom');
 }
 
-io.on('connection', socket => {
+io.on('connection', (socket) => {
   socket.on('disconnect', handleCloseRoom.bind(socket));
   socket.on('openRoom', handleOpenRoom.bind(socket));
   socket.on('start', handleStartQuiz.bind(socket));

@@ -4,6 +4,7 @@ const roomTemplate = () => ({
   deletedPlayers: new Map(),
   hostId: '',
   quizSet: [],
+  quizIndex: 0,
 });
 
 module.exports = {

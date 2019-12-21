@@ -52,6 +52,7 @@ function QuizTab({ roomId, setId }) {
       if (!isSuccess) {
         setQuizdata(initQuizData);
         setLoading(false);
+        return;
       }
       setQuizsetId(data.quizsetId);
       setId(data.quizsetId);
