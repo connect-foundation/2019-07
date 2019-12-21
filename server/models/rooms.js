@@ -57,7 +57,8 @@ class Rooms {
   }
 
   async setQuizSet(roomNumber, roomId) {
-    const { data } = await dbManager.quizset.getQuizset(roomId);
+    const { isSuccess, data } = await dbManager.quizset.getQuizset(roomId);
+    if(!isSuccess) return;
 
     const quizset = [];
     const previousArray = [];
