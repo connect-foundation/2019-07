@@ -57,14 +57,15 @@ class Rooms {
   }
 
   async setQuizSet(roomNumber, roomId) {
-    const { data } = await dbManager.quizset.getQuizset(roomId);
+    const { isSuccess, data } = await dbManager.quizset.getQuizset(roomId);
+    if (!isSuccess) return;
 
     const quizset = [];
     const previousArray = [];
     let quizIndex = -1;
 
-    data.forEach((currentValue) => {
-      if (!previousArray.find((element) => element === currentValue.id)) {
+    data.forEach(currentValue => {
+      if (!previousArray.find(element => element === currentValue.id)) {
         const currentQuiz = quizTemplate();
         currentQuiz.title = currentValue.quizTitle;
         currentQuiz.score = currentValue.score;
@@ -106,8 +107,8 @@ class Rooms {
     return String(newRoomNumber);
   }
 
-  setNewPlayer(roomNumber, nickname) {
-    this.getRoom(roomNumber).players.set(nickname, 0);
+  setNewPlayer(roomNumber, nickname, score = 0) {
+    this.getRoom(roomNumber).players.set(nickname, score);
 
     return this.getPlayers(roomNumber);
   }
@@ -135,6 +136,7 @@ class Rooms {
   deletePlayer(roomNumber, nickname) {
     const room = this.getRoom(roomNumber);
     room.submittedPlayers.delete(nickname);
+    room.deletedPlayers.set(nickname, room.players.get(nickname));
     return room.players.delete(nickname);
   }
 
@@ -166,12 +168,21 @@ class Rooms {
     return false;
   }
 
+  clearDeletedPlayers(roomNumber) {
+    this.getRoom(roomNumber).deletedPlayers.clear();
+    console.log(this.getRoom(roomNumber).deletedPlayers);
+  }
+
   isRoomExist(roomNumber) {
     return this.rooms.has(roomNumber);
   }
 
   isPlayerExist(roomNumber, nickname) {
     return this.getRoom(roomNumber).players.has(nickname);
+  }
+
+  isRefreshingPlayer(roomNumber, nickname) {
+    return this.getRoom(roomNumber).deletedPlayers.get(nickname);
   }
 
   isLastSubmit({ roomNumber, nickname }) {
