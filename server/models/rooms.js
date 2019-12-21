@@ -62,6 +62,17 @@ class Rooms {
       : -1;
   }
 
+  setWaitingPlayersToGame(roomNumber) {
+    const { waitingPlayers } = this.getRoom(roomNumber);
+
+    while (waitingPlayers.length) {
+      const { nickname, score } = waitingPlayers.pop();
+      this.setNewPlayer(roomNumber, nickname, score);
+    }
+
+    return this.getPlayers(roomNumber);
+  }
+
   setNextQuizIndex(roomNumber) {
     this.getRoom(roomNumber).quizIndex += 1;
     return this.getQuizIndex(roomNumber);
@@ -149,6 +160,13 @@ class Rooms {
     return [isCorrect, score];
   }
 
+  updateWaitingPlayers({ roomNumber, nickname, score }) {
+    this.getRoom(roomNumber).waitingPlayers.push({
+      nickname,
+      score,
+    });
+  }
+
   deletePlayer(roomNumber, nickname) {
     const room = this.getRoom(roomNumber);
     room.submittedPlayers.delete(nickname);
@@ -186,6 +204,10 @@ class Rooms {
 
   clearDeletedPlayers(roomNumber) {
     this.getRoom(roomNumber).deletedPlayers.clear();
+  }
+
+  isQuizPlaying(roomNumber) {
+    return this.getRoom(roomNumber).quizIndex > -1;
   }
 
   isRoomExist(roomNumber) {
