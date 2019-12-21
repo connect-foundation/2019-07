@@ -20,6 +20,7 @@ function handleStartQuiz({ roomNumber }) {
   io.to(roomNumber).emit('start');
 
   setTimeout(() => {
+    inMemory.room.setNextQuizIndex(roomNumber);
     io.to(roomNumber).emit('next', 0);
   }, 3000);
 }
@@ -27,6 +28,9 @@ function handleStartQuiz({ roomNumber }) {
 function handleNextQuiz({ roomNumber }) {
   if (!inMemory.room.isRoomExist(roomNumber)) return;
   const nextQuizIndex = inMemory.room.setNextQuizIndex(roomNumber);
+  const players = inMemory.room.setWaitingPlayersToGame(roomNumber);
+
+  io.to(this.id).emit('enterPlayer', players);
   io.to(roomNumber).emit('next', nextQuizIndex);
 }
 
@@ -57,6 +61,16 @@ function handleEnterPlayer({ roomNumber, nickname }) {
     this.join(roomNumber, () => {
       io.to(this.id).emit('settingScore', score);
     });
+  }
+
+  if (inMemory.room.isQuizPlaying(roomNumber)) {
+    inMemory.room.updateWaitingPlayers({
+      roomNumber,
+      nickname,
+      score,
+    });
+    this.join(roomNumber);
+    return;
   }
 
   const players = inMemory.room.setNewPlayer(roomNumber, nickname, score);
