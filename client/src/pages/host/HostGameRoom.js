@@ -114,7 +114,7 @@ function HostGameRoom() {
       {roomState.pageState !== 'END' && (
         <Prompt message="페이지를 이동하면 방이 닫힐 수 있습니다. 계속 하시겠습니까?" />
       )}
-      {isEmptyRoom ? (
+      {isEmptyRoom && roomState.pageState === 'WAITING' ? (
         <>
           <Header />
           <LoadingWrapper>
