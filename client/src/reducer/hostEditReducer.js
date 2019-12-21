@@ -141,6 +141,7 @@ const quizsetReducer = (quizsetState, action) => {
     case actionTypes.DELETE_QUIZ: {
       const { deletedQuizzes, deleteCount } = quizsetState;
       const [deletedQuiz] = quizset.splice(currentIndex, 1);
+      deletedQuiz.imagePath = null;
       if (deletedQuiz.id !== undefined) deletedQuizzes.push(deletedQuiz);
       const nextIndex = Math.min(currentIndex, Math.max(quizset.length - 1, 0));
       const nextQuizset = quizset.length > 0 ? quizset : [createQuiz()];

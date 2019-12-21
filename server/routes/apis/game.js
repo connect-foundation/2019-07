@@ -147,19 +147,21 @@ router.post(
       score,
     });
 
-    const isLast = inMemory.room.isLastSubmit({
+    inMemory.room.setSubmit({
       roomNumber,
       nickname,
     });
+
+    const isLast = inMemory.room.isLastSubmit({
+      roomNumber,
+    });
     const socket = req.app.io.sockets;
     if (isLast) {
+      const hostId = inMemory.room.getRoomHostId(roomNumber);
       socket
-        .to(roomNumber)
+        .to(hostId)
         .emit('subResult', inMemory.room.getSubResult(roomNumber, quizIndex));
-      socket.to(roomNumber).emit('break', {
-        roomNumber,
-        quizIndex,
-      });
+      socket.to(roomNumber).emit('break');
     }
   },
 );

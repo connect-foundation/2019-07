@@ -49,7 +49,6 @@ const roomReducer = (state, action) => {
     case HostGameAction.REQUEST_NEXT_QUIZ: {
       state.socket.emit('next', {
         roomNumber: state.roomNumber,
-        nextQuizIndex: state.currentQuiz.index + 1,
       });
 
       return state;
@@ -57,7 +56,6 @@ const roomReducer = (state, action) => {
     case HostGameAction.REQUEST_SUB_RESULT: {
       state.socket.emit('break', {
         roomNumber: state.roomNumber,
-        quizIndex: state.currentQuiz.index,
       });
 
       return state;
