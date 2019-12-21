@@ -73,12 +73,10 @@ function handleLeavePlayer({ roomNumber, nickname }) {
   const result = inMemory.room.deletePlayer(roomNumber, nickname);
 
   if (result) {
-    this.join(roomNumber, () => {
-      io.to(inMemory.room.getRoomHostId(roomNumber)).emit(
-        'leavePlayer',
-        inMemory.room.getPlayers(roomNumber),
-      );
-    });
+    io.to(inMemory.room.getRoomHostId(roomNumber)).emit(
+      'leavePlayer',
+      inMemory.room.getPlayers(roomNumber),
+    );
   }
 }
 
@@ -88,7 +86,7 @@ function handleCloseRoom() {
   io.to(roomNumber).emit('closeRoom');
 }
 
-io.on('connection', (socket) => {
+io.on('connection', socket => {
   socket.on('disconnect', handleCloseRoom.bind(socket));
   socket.on('openRoom', handleOpenRoom.bind(socket));
   socket.on('start', handleStartQuiz.bind(socket));
