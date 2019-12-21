@@ -55,29 +55,29 @@ function PlayerGameRoom() {
   }, [location.state.nickname, location.state.roomNumber]);
 
   useEffect(() => {
-    if(!socket) return;
+    if (!socket) return;
 
     socket.emit('enterPlayer', {
       nickname: location.state.nickname,
       roomNumber: location.state.roomNumber,
     });
-    
+
     socket.on('start', () => {
       setViewState(VIEW_STATE.LOADING);
       window.addEventListener('beforeunload', blockClose);
     });
-  
+
     // 다음 문제 (새로운 문제) 시작;
     socket.on('next', nextQuizIndex => {
       setCurrentQuiz(nextQuizIndex);
       setViewState(VIEW_STATE.IN_QUIZ);
     });
-  
+
     // 현재 문제 제한시간 끝, 중간 결과 페이지 출력
     socket.on('break', () => {
       setViewState(VIEW_STATE.SUB_RESULT);
     });
-  
+
     // 현재 방의 문제 세트 끝,
     socket.on('end', orderedRanking => {
       window.removeEventListener('beforeunload', blockClose);
@@ -85,12 +85,12 @@ function PlayerGameRoom() {
       setRanking(orderedRanking);
       socket.close();
     });
-  
+
     socket.on('closeRoom', () => {
       window.removeEventListener('beforeunload', blockClose);
       window.location.href = '/';
     });
-  
+
     socket.on('settingScore', existedScore => {
       setScore(existedScore);
     });
@@ -101,16 +101,16 @@ function PlayerGameRoom() {
         roomNumber: location.state.roomNumber,
       });
       socket.close();
-    }
+    };
 
     window.addEventListener('unload', closeSocket);
-    
+
     return () => {
       closeSocket();
       window.removeEventListener('beforeunload', blockClose);
       window.removeEventListener('unload', closeSocket);
     };
-  }, [socket]); 
+  }, [socket]);
 
   return (
     <Container>

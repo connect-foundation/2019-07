@@ -57,7 +57,7 @@ function HostGameRoom() {
 
   useEffect(() => {
     const socket = io.connect(process.env.REACT_APP_BACKEND_HOST);
-    
+
     dispatcher({ type: HostGameAction.SET_SOCKET, socket });
     socket.emit('openRoom', { roomId: location.state.roomId });
     socket.on('openRoom', ({ roomNumber }) => {
@@ -83,23 +83,26 @@ function HostGameRoom() {
   }, [location.state.roomId]);
 
   useEffect(() => {
-    if(!roomState.socket) return;
+    if (!roomState.socket) return;
     roomState.socket.on('enterPlayer', players => {
       dispatcher({ type: HostGameAction.SET_PLAYERS, players });
     });
-  
+
     roomState.socket.on('leavePlayer', players => {
       dispatcher({ type: HostGameAction.SET_PLAYERS, players });
     });
-  
+
     roomState.socket.on('next', nextQuizIndex => {
-      dispatcher({ type: HostGameAction.SET_CURRENT_QUIZ, index: nextQuizIndex });
+      dispatcher({
+        type: HostGameAction.SET_CURRENT_QUIZ,
+        index: nextQuizIndex,
+      });
     });
-  
+
     roomState.socket.on('subResult', subResult => {
       dispatcher({ type: HostGameAction.SET_SUB_RESULT, subResult });
     });
-  
+
     roomState.socket.on('end', orderedRanking => {
       setRanking(orderedRanking);
       dispatcher({ type: HostGameAction.SHOW_SCOREBOARD });
