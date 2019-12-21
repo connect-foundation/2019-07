@@ -33,8 +33,8 @@ function handleNextQuiz({ roomNumber }) {
 function handleBreakQuiz({ roomNumber }) {
   if (!inMemory.room.isRoomExist(roomNumber)) return;
   const quizIndex = inMemory.room.getQuizIndex(roomNumber);
-
-  io.to(roomNumber).emit(
+  const hostId = inMemory.room.getRoomHostId(roomNumber);
+  io.to(hostId).emit(
     'subResult',
     inMemory.room.getSubResult(roomNumber, quizIndex),
   );
