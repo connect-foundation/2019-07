@@ -56,6 +56,17 @@ class Rooms {
       : null;
   }
 
+  getQuizIndex(roomNumber) {
+    return this.isRoomExist(roomNumber)
+      ? this.getRoom(roomNumber).quizIndex
+      : -1;
+  }
+
+  setNextQuizIndex(roomNumber) {
+    this.getRoom(roomNumber).quizIndex += 1;
+    return this.getQuizIndex(roomNumber);
+  }
+
   async setQuizSet(roomNumber, roomId) {
     const { isSuccess, data } = await dbManager.quizset.getQuizset(roomId);
     if (!isSuccess) return;
@@ -64,8 +75,8 @@ class Rooms {
     const previousArray = [];
     let quizIndex = -1;
 
-    data.forEach(currentValue => {
-      if (!previousArray.find(element => element === currentValue.id)) {
+    data.forEach((currentValue) => {
+      if (!previousArray.find((element) => element === currentValue.id)) {
         const currentQuiz = quizTemplate();
         currentQuiz.title = currentValue.quizTitle;
         currentQuiz.score = currentValue.score;
@@ -111,6 +122,11 @@ class Rooms {
     this.getRoom(roomNumber).players.set(nickname, score);
 
     return this.getPlayers(roomNumber);
+  }
+
+  setSubmit({ roomNumber, nickname }) {
+    const room = this.getRoom(roomNumber);
+    room.submittedPlayers.set(nickname, 0);
   }
 
   updateQuizCount({ roomNumber, quizIndex, choose }) {
@@ -170,7 +186,6 @@ class Rooms {
 
   clearDeletedPlayers(roomNumber) {
     this.getRoom(roomNumber).deletedPlayers.clear();
-    console.log(this.getRoom(roomNumber).deletedPlayers);
   }
 
   isRoomExist(roomNumber) {
@@ -185,9 +200,8 @@ class Rooms {
     return this.getRoom(roomNumber).deletedPlayers.get(nickname);
   }
 
-  isLastSubmit({ roomNumber, nickname }) {
+  isLastSubmit({ roomNumber }) {
     const room = this.getRoom(roomNumber);
-    room.submittedPlayers.set(nickname, 0);
     const submitSize = room.submittedPlayers.size;
     const isLast = submitSize !== 0 && submitSize === room.players.size;
     return isLast;
