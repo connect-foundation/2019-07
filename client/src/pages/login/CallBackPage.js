@@ -2,8 +2,7 @@ import React, { useEffect } from 'react';
 import { useHistory } from 'react-router';
 import { getToken } from '../../utils/fetch';
 
-import LoadingCircle from '../../components/common/LoadingCircle';
-import * as colors from '../../constants/colors';
+import Loading from '../../components/common/Loading';
 
 const loginPageUrl = '/login';
 
@@ -42,7 +41,9 @@ function LoginPage() {
     });
   }, [history]);
 
-  return <LoadingCircle color={colors.PRIMARY_DEEP_GREEN} />;
+  return (
+    <Loading message="로그인 중... 이 페이지에서 벗어나지 않으면 새로고침을 시도하세요" />
+  );
 }
 
 export default LoginPage;
