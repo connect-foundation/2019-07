@@ -9,7 +9,7 @@ import Thumbnail from './Thumbnail';
 
 const SIDE_BAR_SIZE = '20vmin';
 const BUTTON_PADDING = '1vmin';
-const BUTTON_FONT_SIZE = '2vmin';
+const BUTTON_FONT_SIZE = '2.5vmin';
 const BUTTONS_CONTAINER_PADDING = '1vmin';
 const BUTTON_WRAPPER_SIZE = '3.5';
 
@@ -93,6 +93,7 @@ const ButtonWrapper = styled.div`
   button {
     padding: ${BUTTON_PADDING};
     font-size: ${BUTTON_FONT_SIZE};
+    text-shadow: none;
   }
 `;
 
