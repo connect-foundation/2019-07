@@ -22,7 +22,7 @@ const ButtonContainer = styled.div`
 
 function QuizTab({ roomId, setId }) {
   const history = useHistory();
-  const [quizsetId, setQuizsetId] = useState('');
+  const [quizsetId, setQuizsetId] = useState(undefined);
   const [isLoading, setLoading] = useState(true);
   const [quizData, setQuizdata] = useState([]);
 
