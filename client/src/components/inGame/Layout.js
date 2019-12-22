@@ -24,7 +24,7 @@ const TitleContainer = styled.div`
 `;
 
 const Title = styled.div`
-  font-size: 4vmin;
+  font-size: 4.5vmin;
   font-weight: bold;
   text-align: center;
   padding: ${VERTICAL_PADDING} ${HORIZONTAL_PADDING};
