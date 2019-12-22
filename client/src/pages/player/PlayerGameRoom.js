@@ -38,10 +38,8 @@ function PlayerGameRoom() {
   }
   const { nickname, roomNumber } = location.state;
 
-  const socket = io.connect(process.env.REACT_APP_BACKEND_HOST);
-
   const [viewState, setViewState] = useState(VIEW_STATE.WAITING);
-
+  const [socket, setSocket] = useState(null);
   const [quizSet, setQuizSet] = useState({});
   const [quizIndex, setCurrentQuiz] = useState(-1);
   const [score, setScore] = useState(0);
@@ -53,61 +51,66 @@ function PlayerGameRoom() {
   }
 
   useEffect(() => {
+    setSocket(io.connect(process.env.REACT_APP_BACKEND_HOST));
+  }, [location.state.nickname, location.state.roomNumber]);
+
+  useEffect(() => {
+    if (!socket) return;
+
     socket.emit('enterPlayer', {
       nickname: location.state.nickname,
       roomNumber: location.state.roomNumber,
     });
 
-    window.addEventListener('unload', () => {
-      if (document.readyState !== 'complete') {
-        socket.emit('leavePlayer', {
-          nickname: location.state.nickname,
-          roomNumber: location.state.roomNumber,
-        });
-      }
+    socket.on('start', () => {
+      setViewState(VIEW_STATE.LOADING);
+      window.addEventListener('beforeunload', blockClose);
     });
 
-    return () => {
+    // 다음 문제 (새로운 문제) 시작;
+    socket.on('next', nextQuizIndex => {
+      setCurrentQuiz(nextQuizIndex);
+      setViewState(VIEW_STATE.IN_QUIZ);
+    });
+
+    // 현재 문제 제한시간 끝, 중간 결과 페이지 출력
+    socket.on('break', () => {
+      setViewState(VIEW_STATE.SUB_RESULT);
+    });
+
+    // 현재 방의 문제 세트 끝,
+    socket.on('end', orderedRanking => {
+      window.removeEventListener('beforeunload', blockClose);
+      setViewState(VIEW_STATE.END);
+      setRanking(orderedRanking);
+      socket.close();
+    });
+
+    socket.on('closeRoom', () => {
+      window.removeEventListener('beforeunload', blockClose);
+      window.location.href = '/';
+    });
+
+    socket.on('settingScore', existedScore => {
+      setScore(existedScore);
+    });
+
+    const closeSocket = () => {
       socket.emit('leavePlayer', {
         nickname: location.state.nickname,
         roomNumber: location.state.roomNumber,
       });
-      window.removeEventListener('beforeunload', blockClose);
+      socket.close();
     };
-  }, [location.state.nickname, location.state.roomNumber]);
 
-  socket.on('start', () => {
-    setViewState(VIEW_STATE.LOADING);
-    window.addEventListener('beforeunload', blockClose);
-  });
+    window.addEventListener('unload', closeSocket);
 
-  // 다음 문제 (새로운 문제) 시작;
-  socket.on('next', nextQuizIndex => {
-    setCurrentQuiz(nextQuizIndex);
-    setViewState(VIEW_STATE.IN_QUIZ);
-  });
-
-  // 현재 문제 제한시간 끝, 중간 결과 페이지 출력
-  socket.on('break', () => {
-    setViewState(VIEW_STATE.SUB_RESULT);
-  });
-
-  // 현재 방의 문제 세트 끝,
-  socket.on('end', orderedRanking => {
-    window.removeEventListener('beforeunload', blockClose);
-    setViewState(VIEW_STATE.END);
-    setRanking(orderedRanking);
-    socket.close();
-  });
-
-  socket.on('closeRoom', () => {
-    window.removeEventListener('beforeunload', blockClose);
-    window.location.href = '/';
-  });
-
-  socket.on('settingScore', existedScore => {
-    setScore(existedScore);
-  });
+    return () => {
+      closeSocket();
+      window.removeEventListener('beforeunload', blockClose);
+      window.removeEventListener('unload', closeSocket);
+    };
+  }, [socket]);
 
   return (
     <Container>
